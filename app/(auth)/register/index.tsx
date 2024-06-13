@@ -31,24 +31,15 @@ const RegisterScreen = () => {
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
   );
-  function onPasswordChange(password: string, confirmed: boolean) {
+
+  const onPasswordChange = (password: string, confirmed: boolean) => {
+    setPassword(password);
     if (confirmed) {
-      // Passwords match and are not empty - handle valid password
       console.log("Password is valid:", password);
-
-      // Additional logic:
-      // - Send the password to your backend for validation/storage
-      // - Enable a submit button
-      // - Update the UI (e.g., show a success message)
     } else {
-      // Passwords don't match or are empty - handle invalid password
       console.log("Password is invalid");
-
-      // Additional logic:
-      // - Disable a submit button
-      // - Show an error message to the user
     }
-  }
+  };
 
   const handleLogin = async () => {
     const apiEndpoint = `http://127.0.0.1:8000/api-token-auth`;
@@ -73,19 +64,13 @@ const RegisterScreen = () => {
         // await AsyncStorage.setItem("authToken", token);
         await setItem("authToken", token);
 
-        // Navigate to the next screen (if applicable)
-        // ...
-
         setStatus("submitted");
       } else {
         console.error("Login failed:", response.statusText);
       }
     } catch (error) {
-      console.log("username", email);
-      console.log("password", password);
       console.error("Error during login:", error);
     } finally {
-      // Reset status even if there's an error
       setStatus("off");
     }
   };
@@ -94,7 +79,7 @@ const RegisterScreen = () => {
     <SafeAreaView style={styles.container}>
       <Form onSubmit={handleLogin} width={"100%"}>
         <YStack alignItems="center" justifyContent="center">
-          <Heading paddingVertical="$2">Registrarse</Heading>
+          <Heading paddingVertical="$2">Crear una cuenta</Heading>
           <Image
             source={{
               uri: nufogyLogoUri,
@@ -121,26 +106,20 @@ const RegisterScreen = () => {
             placeholder="ej. pedroelfire@gmail.com"
           />
         </YStack>
-        <YStack gap="$2">
-          <Label>Contraseña</Label>
-          <PasswordStrengthInputGroup
-            size={"$4"}
-            onPasswordChange={onPasswordChange}
-          />
-        </YStack>
+        <PasswordStrengthInputGroup
+          size={"$4"}
+          onPasswordChange={onPasswordChange}
+        />
         <Form.Trigger asChild disabled={status !== "off"} marginTop="$2">
           <Button
             backgroundColor={"$primary"}
             icon={status === "submitting" ? () => <Spinner /> : undefined}
             iconAfter={status === "off" ? () => <ChevronRight /> : undefined}
           >
-            Iniciar Sesión
+            Registrarse
           </Button>
         </Form.Trigger>
         <YStack>
-          <Button display="flex" alignSelf="center" chromeless>
-            ¿Olvidaste tu contraseña?
-          </Button>
           <SignUpWithGoogleButton />
           <XStack
             alignItems="center"
