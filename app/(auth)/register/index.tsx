@@ -41,43 +41,21 @@ const RegisterScreen = () => {
     }
   };
 
-  const handleLogin = async () => {
-    const apiEndpoint = `http://127.0.0.1:8000/api-token-auth`;
+  const handleRegister = async () => {
     setStatus("submitting");
-
     try {
-      const response = await fetch(apiEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: email,
-          password: password,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const token = data.token;
-        console.log("Login successful:", token);
-        // await AsyncStorage.setItem("authToken", token);
-        await setItem("authToken", token);
-
+      // Simulate a request to the server
+      setTimeout(() => {
         setStatus("submitted");
-      } else {
-        console.error("Login failed:", response.statusText);
-      }
+      }, 2000);
     } catch (error) {
-      console.error("Error during login:", error);
-    } finally {
-      setStatus("off");
+      console.error(error);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Form onSubmit={handleLogin} width={"100%"}>
+      <Form onSubmit={handleRegister} width={"100%"}>
         <YStack alignItems="center" justifyContent="center">
           <Heading paddingVertical="$2">Crear una cuenta</Heading>
           <Image

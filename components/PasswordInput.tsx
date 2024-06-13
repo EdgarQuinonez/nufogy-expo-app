@@ -1,5 +1,6 @@
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
-import React from "react";
+import React, { useState } from "react";
+import { RegisterOptions } from "react-hook-form";
 import { Button, Input, SizeTokens, XStack, useTheme } from "tamagui";
 
 export type Props = {
@@ -13,7 +14,7 @@ export default function PasswordInput({
   handleTextChange,
   size,
 }: Props): JSX.Element {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { borderColor, background025 } = useTheme();
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-
+import { useForm } from "react-hook-form";
 import {
   View,
   Input,
@@ -22,10 +22,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import PasswordInput from "@components/PasswordInput";
 import SignUpWithGoogleButton from "@components/SignUpWithGoogleButton";
 import { setItem } from "@utils/AsyncStorage";
+import axios from "axios";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
 const LoginScreen = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
@@ -33,23 +39,30 @@ const LoginScreen = () => {
   );
 
   const handleLogin = async () => {
-    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/api-token-auth/`;
+    // const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/api-token-auth/`;
+    const apiEndpoint = `http://127.0.0.1:8000/api-token-auth/`;
+
     setStatus("submitting");
 
     try {
-      const response = await fetch(apiEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: email,
-          password: password,
-        }),
+      // const response = await fetch(apiEndpoint, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     username: email,
+      //     password: password,
+      //   }),
+      // });
+
+      const response = await axios.post(apiEndpoint, {
+        username: email,
+        password: password,
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = await response.data;
         const token = data.token;
         console.log("Login successful:", token);
         // await AsyncStorage.setItem("authToken", token);
@@ -63,11 +76,8 @@ const LoginScreen = () => {
         console.error("Login failed:", response.statusText);
       }
     } catch (error) {
-      console.log("username", email);
-      console.log("password", password);
       console.error("Error during login:", error);
     } finally {
-      // Reset status even if there's an error
       setStatus("off");
     }
   };
@@ -92,7 +102,17 @@ const LoginScreen = () => {
             size={"$4"}
             onChangeText={setEmail}
             placeholder="ej. pedroelfire@gmail.com"
+            {...register("email", {
+              required: "Ingresa un correo",
+              pattern: {
+                value: /^\S+@\S+$/i,
+                message: "Ingresa un correo válido",
+              },
+            })}
           />
+          {errors.email && (
+            <Paragraph color="$red6">{errors.email.message}</Paragraph>
+          )}
         </YStack>
         <YStack gap="$2">
           <Label>Contraseña</Label>
@@ -101,6 +121,9 @@ const LoginScreen = () => {
             handleTextChange={setPassword}
             size={"$4"}
           />
+          {errors.password && (
+            <Paragraph color="$red6">{errors.password.message}</Paragraph>
+          )}
         </YStack>
         <Form.Trigger asChild disabled={status !== "off"} marginTop="$2">
           <Button
