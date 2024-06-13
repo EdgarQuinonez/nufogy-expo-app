@@ -48,9 +48,11 @@ export default function PasswordStrengthInputGroup({
         showPassword={showPassword}
         setShowPassword={setShowPassword}
       />
-      <Text fontSize="$2" color={strengthColor}>
-        {strength < 2 ? "Débil" : strength < 4 ? "Media" : "Fuerte"}
-      </Text>
+      {password.length > 0 && (
+        <Text fontSize="$2" color={strengthColor}>
+          {strength < 2 ? "Débil" : strength < 4 ? "Media" : "Fuerte"}
+        </Text>
+      )}
       <Label>Confirmar contraseña</Label>
       <PasswordInput
         size={size}

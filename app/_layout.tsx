@@ -47,14 +47,14 @@ export default function RootLayout() {
 function RootLayoutNav() {
   // const colorScheme = useColorScheme();
   const colorScheme = "light";
-  const isAuthenticated = false;
+  const isAuthenticated = true;
 
   return (
     <Provider>
       {/* <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}> */}
       <ThemeProvider value={DefaultTheme}>
         {isAuthenticated ? (
-          <Stack>
+          <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen
               name="(tabs)"
               options={{
@@ -63,7 +63,7 @@ function RootLayoutNav() {
             />
           </Stack>
         ) : (
-          <Stack>
+          <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen
               name="(auth)"
               options={{
