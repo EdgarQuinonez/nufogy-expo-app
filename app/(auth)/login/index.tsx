@@ -21,6 +21,7 @@ import nufogyLogo from "@assets/images/nufogy_logo.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PasswordInput from "@components/PasswordInput";
 import SignUpWithGoogleButton from "@components/SignUpWithGoogleButton";
+import { setItem } from "@utils/AsyncStorage";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
@@ -32,51 +33,44 @@ const LoginScreen = () => {
   );
 
   const handleLogin = async () => {
+    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/api-token-auth/`;
     setStatus("submitting");
+
     try {
-      const response = await fetch("YOUR_LOGIN_API_ENDPOINT", {
-        // Replace with your actual API endpoint
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user: email,
+          username: email,
           password: password,
         }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        const token = data.token; // Assuming your API returns a 'token' field
-
-        // Store the token in AsyncStorage
-        await AsyncStorage.setItem("authToken", token);
+        const token = data.token;
+        console.log("Login successful:", token);
+        // await AsyncStorage.setItem("authToken", token);
+        await setItem("authToken", token);
 
         // Navigate to the next screen (if applicable)
         // ...
 
         setStatus("submitted");
       } else {
-        // Handle login errors (e.g., display an error message)
         console.error("Login failed:", response.statusText);
       }
     } catch (error) {
+      console.log("username", email);
+      console.log("password", password);
       console.error("Error during login:", error);
     } finally {
       // Reset status even if there's an error
       setStatus("off");
     }
   };
-
-  useEffect(() => {
-    if (status === "submitting") {
-      const timer = setTimeout(() => setStatus("off"), 2000);
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-  }, [status]);
 
   return (
     <SafeAreaView style={styles.container}>
