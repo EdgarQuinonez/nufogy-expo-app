@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import {
   View,
   Input,
@@ -25,6 +25,7 @@ import { setItem } from "@utils/AsyncStorage";
 import axios from "axios";
 import { useToastController } from "@tamagui/toast";
 import { globalStyles } from "globalStyles";
+import { UserLogin } from "types";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
@@ -34,24 +35,23 @@ const LoginScreen = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
-  } = useForm();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  } = useForm<UserLogin>();
+
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
   );
 
-  const handleLogin = async () => {
-    // const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/api-token-auth/`;
+  const handleLogin: SubmitHandler<UserLogin> = async (data) => {
     const apiEndpoint = `https://nufogy-api.fly.dev/api-token-auth/`;
-
     setStatus("submitting");
+    console.log(data);
 
     try {
       const response = await axios.post(apiEndpoint, {
-        username: email.trim(),
-        password: password.trim(),
+        username: data.username.trim(),
+        password: data.password.trim(),
       });
 
       if (response.status === 200) {
@@ -90,30 +90,47 @@ const LoginScreen = () => {
         </YStack>
         <YStack>
           <Label>Correo o usuario</Label>
-          <Input
-            value={email}
-            size={"$4"}
-            onChangeText={setEmail}
-            placeholder="ej. pedroelfire@gmail.com o pedroelfire"
-            {...register("email", {
+          <Controller
+            control={control}
+            name="username"
+            rules={{
               required: "Ingresa un correo o usuario",
-              // pattern: {
-              //   value:
-              //     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$|^[a-zA-Z0-9_-]{3,16}$/i,
-              //   message: "Ingresa un correo válido",
-              // },
-            })}
+              pattern: {
+                value:
+                  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$|^[a-zA-Z0-9_-]{3,16}$/i,
+                message: "Ingresa un correo válido",
+              },
+            }}
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <Input
+                size={"$4"}
+                placeholder="ej. pedroelfire@gmail.com o pedroelfire"
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                ref={ref}
+              />
+            )}
           />
-          {errors.email && (
-            <Paragraph color="red">{errors.email.message}</Paragraph>
+          {errors.username && (
+            <Paragraph color="red">{errors.username.message}</Paragraph>
           )}
         </YStack>
         <YStack gap="$2">
           <Label>Contraseña</Label>
-          <PasswordInput
-            value={password}
-            handleTextChange={setPassword}
-            size={"$4"}
+          <Controller
+            control={control}
+            name="password"
+            rules={{ required: "Ingresa una contraseña" }}
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <PasswordInput
+                size={"$4"}
+                onChange={onChange}
+                onBlur={onBlur}
+                value={value}
+                inputRef={ref}
+              />
+            )}
           />
           {errors.password && (
             <Paragraph color="red">{errors.password.message}</Paragraph>

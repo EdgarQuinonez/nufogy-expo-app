@@ -1,17 +1,20 @@
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import React, { useState } from "react";
-import { RegisterOptions } from "react-hook-form";
+import { RefCallBack } from "react-hook-form";
 import { Button, Input, SizeTokens, XStack, useTheme } from "tamagui";
 
 export type Props = {
+  onChange: (text: string) => void;
+  onBlur: () => void;
   value: string;
-  handleTextChange: (text: string) => void;
+  inputRef: RefCallBack;
   size: SizeTokens;
 };
-
 export default function PasswordInput({
+  onChange,
+  onBlur,
   value,
-  handleTextChange,
+  inputRef,
   size,
 }: Props): JSX.Element {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,9 +33,11 @@ export default function PasswordInput({
       <Input
         unstyled={true}
         flex={1}
-        size={size}
+        onChangeText={onChange}
+        onBlur={onBlur}
         value={value}
-        onChangeText={handleTextChange}
+        ref={inputRef}
+        size={size}
         secureTextEntry={!showPassword}
       />
       <Button
