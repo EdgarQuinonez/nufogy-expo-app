@@ -25,7 +25,7 @@ export default function SearchBar({
       borderRadius="$4"
       px="$2"
     >
-      <Search size="$4" color={borderColor} />
+      <Search size="$2" />
       <Input
         unstyled={true}
         flex={1}
