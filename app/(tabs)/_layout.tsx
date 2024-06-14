@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import { useTheme } from "tamagui";
-import { Atom, Bot, LayoutGrid, Notebook, Salad } from "@tamagui/lucide-icons";
+import { Bot, LayoutGrid, Notebook, Salad } from "@tamagui/lucide-icons";
+import TopBar from "@components/TopBar";
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -9,7 +10,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: theme.red10.val,
-        headerShown: false,
+        header: () => <TopBar />,
       }}
     >
       <Tabs.Screen
@@ -17,7 +18,6 @@ export default function TabLayout() {
         options={{
           title: "Dashboard",
           tabBarIcon: ({ color }) => <LayoutGrid color={color} />,
-          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -25,7 +25,6 @@ export default function TabLayout() {
         options={{
           title: "Diario",
           tabBarIcon: ({ color }) => <Notebook color={color} />,
-          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -33,7 +32,6 @@ export default function TabLayout() {
         options={{
           title: "Dietas",
           tabBarIcon: ({ color }) => <Salad color={color} />,
-          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -41,7 +39,6 @@ export default function TabLayout() {
         options={{
           title: "Jack",
           tabBarIcon: ({ color }) => <Bot color={color} />,
-          headerShown: false,
         }}
       />
     </Tabs>

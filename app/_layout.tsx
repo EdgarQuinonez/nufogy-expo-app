@@ -1,7 +1,7 @@
 import "../tamagui-web.css";
 
-import { useEffect } from "react";
-import { useColorScheme } from "react-native";
+import { useEffect, useState } from "react";
+import { StatusBar, useColorScheme } from "react-native";
 import {
   DarkTheme,
   DefaultTheme,
@@ -10,6 +10,7 @@ import {
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { Provider } from "./Provider";
+import { getItem } from "@utils/AsyncStorage";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,9 +46,21 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  // const colorScheme = useColorScheme();
-  const colorScheme = "light";
-  const isAuthenticated = true;
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // State for authentication
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      StatusBar.setBarStyle("dark-content");
+      try {
+        const authToken = await getItem("authToken");
+        setIsAuthenticated(!!authToken);
+      } catch (error) {
+        console.error("Error checking auth status:", error);
+        setIsAuthenticated(false);
+      }
+    };
+    checkAuthStatus();
+  }, []);
 
   return (
     <Provider>

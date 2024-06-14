@@ -24,7 +24,7 @@ export function Provider({
       >
         {children}
         <CurrentToast />
-        <ToastViewport top="$8" left={0} right={0} />
+        <ToastViewport bottom="$8" left={0} right={0} />
       </ToastProvider>
     </TamaguiProvider>
   );

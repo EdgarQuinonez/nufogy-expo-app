@@ -16,17 +16,21 @@ import {
 import { Image } from "react-native";
 import { ArrowRight, ChevronRight, Eye, EyeOff } from "@tamagui/lucide-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import nufogyLogo from "@assets/images/nufogy_logo.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PasswordInput from "@components/PasswordInput";
 import SignUpWithGoogleButton from "@components/SignUpWithGoogleButton";
 import { setItem } from "@utils/AsyncStorage";
 import axios from "axios";
+import { useToastController } from "@tamagui/toast";
+import { globalStyles } from "globalStyles";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
 const LoginScreen = () => {
+  const router = useRouter();
+  const toast = useToastController();
   const {
     register,
     handleSubmit,
@@ -40,40 +44,29 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     // const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/api-token-auth/`;
-    const apiEndpoint = `http://127.0.0.1:8000/api-token-auth/`;
+    const apiEndpoint = `https://nufogy-api.fly.dev/api-token-auth/`;
 
     setStatus("submitting");
 
     try {
-      // const response = await fetch(apiEndpoint, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     username: email,
-      //     password: password,
-      //   }),
-      // });
-
       const response = await axios.post(apiEndpoint, {
-        username: email,
-        password: password,
+        username: email.trim(),
+        password: password.trim(),
       });
 
       if (response.status === 200) {
         const data = await response.data;
         const token = data.token;
-        console.log("Login successful:", token);
-        // await AsyncStorage.setItem("authToken", token);
         await setItem("authToken", token);
 
-        // Navigate to the next screen (if applicable)
-        // ...
-
         setStatus("submitted");
+
+        router.navigate("index");
       } else {
-        console.error("Login failed:", response.statusText);
+        setStatus("off");
+        toast.show("Error", {
+          message: "Hubo un error al iniciar sesión.",
+        });
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -83,8 +76,8 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Form onSubmit={handleLogin} width={"100%"}>
+    <SafeAreaView style={globalStyles.container}>
+      <Form onSubmit={handleSubmit(handleLogin)} width={"100%"}>
         <YStack alignItems="center" justifyContent="center">
           <Heading paddingVertical="$2">Iniciar Sesión</Heading>
           <Image
@@ -96,22 +89,23 @@ const LoginScreen = () => {
           />
         </YStack>
         <YStack>
-          <Label>Correo</Label>
+          <Label>Correo o usuario</Label>
           <Input
             value={email}
             size={"$4"}
             onChangeText={setEmail}
-            placeholder="ej. pedroelfire@gmail.com"
+            placeholder="ej. pedroelfire@gmail.com o pedroelfire"
             {...register("email", {
-              required: "Ingresa un correo",
-              pattern: {
-                value: /^\S+@\S+$/i,
-                message: "Ingresa un correo válido",
-              },
+              required: "Ingresa un correo o usuario",
+              // pattern: {
+              //   value:
+              //     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$|^[a-zA-Z0-9_-]{3,16}$/i,
+              //   message: "Ingresa un correo válido",
+              // },
             })}
           />
           {errors.email && (
-            <Paragraph color="$red6">{errors.email.message}</Paragraph>
+            <Paragraph color="red">{errors.email.message}</Paragraph>
           )}
         </YStack>
         <YStack gap="$2">
@@ -122,7 +116,7 @@ const LoginScreen = () => {
             size={"$4"}
           />
           {errors.password && (
-            <Paragraph color="$red6">{errors.password.message}</Paragraph>
+            <Paragraph color="red">{errors.password.message}</Paragraph>
           )}
         </YStack>
         <Form.Trigger asChild disabled={status !== "off"} marginTop="$2">
@@ -161,14 +155,5 @@ const LoginScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 16,
-  },
-});
 
 export default LoginScreen;

@@ -12,7 +12,9 @@ import {
   Form,
   Spinner,
 } from "tamagui";
+import { useToastController } from "@tamagui/toast";
 import { Image } from "react-native";
+import { useRouter } from "expo-router";
 import { ArrowRight, ChevronRight, Eye, EyeOff } from "@tamagui/lucide-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
@@ -21,16 +23,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import SignUpWithGoogleButton from "@components/SignUpWithGoogleButton";
 import { setItem } from "@utils/AsyncStorage";
 import PasswordStrengthInputGroup from "@components/PasswordStrengthInputGroup";
+import axios from "axios";
+import { globalStyles } from "globalStyles";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
 const RegisterScreen = () => {
+  const router = useRouter();
   const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
   );
+  const toast = useToastController();
 
   const onPasswordChange = (password: string, confirmed: boolean) => {
     setPassword(password);
@@ -42,19 +48,37 @@ const RegisterScreen = () => {
   };
 
   const handleRegister = async () => {
+    // const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/create`;
+    const apiEndpoint = `https://nufogy-api.fly.dev/users/account/create/`;
     setStatus("submitting");
+
     try {
-      // Simulate a request to the server
-      setTimeout(() => {
-        setStatus("submitted");
-      }, 2000);
+      const response = await axios.post(apiEndpoint, {
+        username: user.trim(),
+        email: email.trim(),
+        password: password.trim(),
+      });
+
+      if (response.status === 201) {
+        toast.show("¡Registro exitoso!", {
+          message: "¡Bienvenido a Nufogy!",
+        });
+        router.navigate("login/index");
+        // setItem("token", response.data.token);
+      } else {
+        toast.show("Error", {
+          message: "Hubo un error al registrar tu cuenta.",
+        });
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error during registration:", error);
+    } finally {
+      setStatus("off");
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={globalStyles.container}>
       <Form onSubmit={handleRegister} width={"100%"}>
         <YStack alignItems="center" justifyContent="center">
           <Heading paddingVertical="$2">Crear una cuenta</Heading>
@@ -117,14 +141,5 @@ const RegisterScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 16,
-  },
-});
 
 export default RegisterScreen;
