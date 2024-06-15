@@ -1,23 +1,32 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-export default function useAsync(callback: any, dependencies: any[]) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState();
-  const [value, setValue] = useState();
+interface AsyncState<T> {
+  loading: boolean;
+  error?: Error;
+  value?: T;
+}
 
-  const callbackMemoized = useCallback(() => {
-    setLoading(true);
-    setError(undefined);
-    setValue(undefined);
-    callback()
-      .then(setValue)
-      .catch(setError)
-      .finally(() => setLoading(false));
+export default function useAsync<T>(
+  callback: () => Promise<T>,
+  dependencies: any[] = []
+): AsyncState<T> {
+  const [state, setState] = useState<AsyncState<T>>({
+    loading: true,
+  });
+
+  const callbackMemoized = useCallback(async () => {
+    setState({ loading: true });
+    try {
+      const result = await callback();
+      setState({ loading: false, value: result });
+    } catch (error: any) {
+      setState({ loading: false, error: error as Error });
+    }
   }, dependencies);
 
   useEffect(() => {
     callbackMemoized();
   }, [callbackMemoized]);
 
-  return { loading, error, value };
+  return state;
 }

@@ -2,7 +2,7 @@ import { XCircle } from "@tamagui/lucide-icons";
 import { StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-native";
-import { Button, H1, View, XStack, YStack } from "tamagui";
+import { Button, H1, Paragraph, View, XStack, YStack } from "tamagui";
 import SearchBar from "@components/SearchBar";
 import FoodSearchItem from "@components/FoodSearchItem";
 import { FoodSearchItemType } from "@types";
@@ -19,7 +19,7 @@ export default function AddIngredientFormModal({
 }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   // const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/fs/searchList/?query=${searchQuery}`;
-  const apiEndpoint = `https://nufogy-api.fly.dev//diary/fs/searchList/?query=${searchQuery}`;
+  const apiEndpoint = `https://nufogy-api.fly.dev/diary/fs/searchList/?query=${searchQuery}`;
 
   // const foods: FoodSearchItemType[] = [
   //   {
@@ -47,7 +47,11 @@ export default function AddIngredientFormModal({
   //     food_description: "A crunchy and nutritious vegetable.",
   //   },
   // ];
-  const { value: foods } = useFetch(apiEndpoint, {}, [searchQuery]);
+  const {
+    loading,
+    error,
+    value: foods,
+  } = useFetch<FoodSearchItemType[]>(apiEndpoint, {}, [searchQuery]); // Specify the type here
   useEffect(() => {
     if (visible) {
       StatusBar.setBarStyle("dark-content");
@@ -96,13 +100,21 @@ export default function AddIngredientFormModal({
           borderWidth={1}
           borderRadius={"$2"}
         >
-          {foods.map((item) => (
-            <FoodSearchItem
-              key={item.food_id}
-              food_name={item.food_name}
-              food_description={item.food_description}
-            />
-          ))}
+          {foods ? (
+            foods.map((item) => (
+              <FoodSearchItem
+                key={item.food_id}
+                food_name={item.food_name}
+                food_description={item.food_description}
+              />
+            ))
+          ) : (
+            <Paragraph>
+              {loading
+                ? "Cargando alimentos..."
+                : "No se encontraron alimentos."}
+            </Paragraph>
+          )}
         </YStack>
         <XStack
           marginTop={"$4"}
