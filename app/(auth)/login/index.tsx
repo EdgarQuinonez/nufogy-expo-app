@@ -1,8 +1,6 @@
-import React, { forwardRef, useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import React, { useState } from "react";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import {
-  View,
   Input,
   Label,
   YStack,
@@ -14,8 +12,7 @@ import {
   Spinner,
 } from "tamagui";
 import { Image } from "react-native";
-import { ArrowRight, ChevronRight, Eye, EyeOff } from "@tamagui/lucide-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ChevronRight } from "@tamagui/lucide-icons";
 import { Link, useRouter } from "expo-router";
 import nufogyLogo from "@assets/images/nufogy_logo.png";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -25,7 +22,7 @@ import { setItem } from "@utils/AsyncStorage";
 import axios from "axios";
 import { useToastController } from "@tamagui/toast";
 import { globalStyles } from "globalStyles";
-import { UserLogin } from "types";
+import { UserLogin, UserLoginInputs } from "types";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
@@ -37,17 +34,15 @@ const LoginScreen = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<UserLogin>();
+  } = useForm<UserLoginInputs>();
 
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
   );
 
-  const handleLogin: SubmitHandler<UserLogin> = async (data) => {
-    const apiEndpoint = `https://nufogy-api.fly.dev/api-token-auth/`;
+  const handleLogin: SubmitHandler<UserLoginInputs> = async (data) => {
+    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/api-token-auth/`;
     setStatus("submitting");
-    console.log(data);
-
     try {
       const response = await axios.post(apiEndpoint, {
         username: data.username.trim(),

@@ -3,6 +3,24 @@ export interface UserLogin {
   password: string;
 }
 
+export interface UserRegistration {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface UserLoginInputs {
+  username: string;
+  password: string;
+}
+
+export interface UserRegistrationInputs {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 export interface FoodSearchItemType {
   food_id: number;
   food_name: string;

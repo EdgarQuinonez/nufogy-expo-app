@@ -18,6 +18,7 @@ export default function useAsync<T>(
     setState({ loading: true });
     try {
       const result = await callback();
+
       setState({ loading: false, value: result });
     } catch (error: any) {
       setState({ loading: false, error: error as Error });

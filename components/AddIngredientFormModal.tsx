@@ -51,7 +51,7 @@ export default function AddIngredientFormModal({
     loading,
     error,
     value: foods,
-  } = useFetch<FoodSearchItemType[]>(apiEndpoint, {}, [searchQuery]); // Specify the type here
+  } = useFetch<FoodSearchItemType[]>(apiEndpoint, {}, [searchQuery]);
   useEffect(() => {
     if (visible) {
       StatusBar.setBarStyle("dark-content");

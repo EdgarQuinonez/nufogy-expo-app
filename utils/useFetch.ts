@@ -18,13 +18,11 @@ export default function useFetch<T>(
   return useAsync<T>(async () => {
     try {
       const response = await axios(url, { ...DEFAULT_OPTIONS, ...options });
-      return response.data as T; // Type-cast response data
+      return response.data as T;
     } catch (error: any) {
-      // Handle Axios errors (e.g., network errors, server errors)
       if (axios.isAxiosError(error)) {
-        throw new Error(error.message); // Rethrow the Axios error message
+        throw new Error(error.message);
       } else {
-        // Handle other unexpected errors
         throw error;
       }
     }
