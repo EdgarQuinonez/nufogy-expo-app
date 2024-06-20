@@ -28,7 +28,6 @@ import {
   FormProvider,
   FieldValues,
 } from "react-hook-form";
-import { UserRegistration, UserRegistrationInputs } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
@@ -38,7 +37,7 @@ const registrationSchema = yup.object({
   username: yup
     .string()
     .trim()
-    .required("Este campo es requerido")
+    .required("Ingresa un usuario")
     .min(6, "El usuario debe tener al menos 6 caracteres")
     .matches(/^[a-zA-Z0-9_]*$/, {
       message: "El usuario solo puede contener letras, números y guiones bajos",
@@ -64,19 +63,17 @@ const RegisterScreen = () => {
   const toast = useToastController();
 
   const methods = useForm({
+    mode: "onChange",
     resolver: yupResolver(registrationSchema),
   });
 
   const {
-    register,
     handleSubmit,
     control,
     formState: { errors },
   } = methods;
 
-  const onPasswordChange = (password: string, confirmed: boolean) => {
-    console.log(password);
-  };
+  const onPasswordChange = (password: string, confirmed: boolean) => {};
 
   const handleRegister: SubmitHandler<FieldValues> = async (data) => {
     const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/create`;
@@ -122,21 +119,9 @@ const RegisterScreen = () => {
           </YStack>
           <YStack>
             <Label>Usuario</Label>
-            {/* <Controller
+            <Controller
               control={control}
               name="username"
-              rules={{
-                required: "Este campo es requerido",
-                minLength: {
-                  value: 6,
-                  message: "El usuario debe tener al menos 6 caracteres",
-                },
-                pattern: {
-                  value: /^[a-zA-Z0-9_]*$/,
-                  message:
-                    "El usuario solo puede contener letras, números y guiones bajos",
-                },
-              }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <Input
                   onChangeText={onChange}
@@ -147,11 +132,6 @@ const RegisterScreen = () => {
                   placeholder="ej. pedroelfire"
                 />
               )}
-            /> */}
-            <Input
-              {...register("username")}
-              size={"$4"}
-              placeholder="ej. pedroelfire"
             />
             {errors.username && (
               <Paragraph color="red">{errors.username.message}</Paragraph>
@@ -162,13 +142,6 @@ const RegisterScreen = () => {
             <Controller
               control={control}
               name="email"
-              rules={{
-                required: "Ingresa un correo",
-                pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
-                  message: "Ingresa un correo válido",
-                },
-              }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <Input
                   onChangeText={onChange}
@@ -188,7 +161,7 @@ const RegisterScreen = () => {
           <PasswordStrengthInputGroup
             size={"$4"}
             onPasswordChange={onPasswordChange}
-            register={register}
+            control={control}
             errors={errors}
           />
           <Form.Trigger asChild disabled={status !== "off"} marginTop="$2">

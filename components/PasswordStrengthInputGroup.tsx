@@ -2,6 +2,8 @@ import { CheckCircle, Eye, EyeOff } from "@tamagui/lucide-icons";
 import { UserRegistrationInputs } from "@types";
 import React, { useState, useEffect, useRef } from "react";
 import {
+  Control,
+  Controller,
   FieldErrors,
   FieldValues,
   UseFormRegister,
@@ -18,18 +20,18 @@ import {
   Paragraph,
 } from "tamagui";
 import zxcvbn from "zxcvbn";
-import { ConnectForm } from "./ConnectForm";
 
 export type Props = {
   size: SizeTokens;
   onPasswordChange: (password: string, confirmed: boolean) => void;
-  register: UseFormRegister<FieldValues>;
+  control: Control<UserRegistrationInputs>;
   errors: FieldErrors<FieldValues>;
 };
 
 export default function PasswordStrengthInputGroup({
   size,
   onPasswordChange,
+  control,
   errors,
 }: Props): JSX.Element {
   const [password, setPassword] = useState("");
@@ -52,7 +54,9 @@ export default function PasswordStrengthInputGroup({
     <YStack gap="$1" marginTop="$2">
       <Label>Contraseña</Label>
       <PasswordInput
+        control={control}
         size={size}
+        setPassword={setPassword}
         showPassword={showPassword}
         setShowPassword={setShowPassword}
         name="password"
@@ -67,7 +71,9 @@ export default function PasswordStrengthInputGroup({
       )}
       <Label>Confirmar contraseña</Label>
       <PasswordInput
+        control={control}
         size={size}
+        setPassword={setConfirmPassword}
         showPassword={showPassword}
         setShowPassword={setShowPassword}
         name="confirmPassword"
@@ -86,14 +92,18 @@ export default function PasswordStrengthInputGroup({
 }
 
 export type PasswordInputProps = {
+  control: Control<UserRegistrationInputs>;
   size: SizeTokens;
+  setPassword: (password: string) => void;
   showPassword: boolean;
   setShowPassword: (show: boolean) => void;
-  name: string;
+  name: "password" | "confirmPassword" | "username" | "email";
 };
 
 function PasswordInput({
+  control,
   size,
+  setPassword,
   showPassword,
   setShowPassword,
   name,
@@ -109,19 +119,26 @@ function PasswordInput({
         backgroundColor={background025}
         borderRadius={"$4"}
       >
-        <ConnectForm>
-          {({ register }) => {
-            return (
-              <Input
-                unstyled={true}
-                flex={1}
-                size={size}
-                secureTextEntry={!showPassword}
-                {...register(name)}
-              />
-            );
-          }}
-        </ConnectForm>
+        <Controller
+          control={control}
+          name={name}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <Input
+              onChangeText={(text) => {
+                onChange(text);
+                setPassword(text);
+              }}
+              onBlur={onBlur}
+              value={value}
+              ref={ref}
+              unstyled={true}
+              flex={1}
+              size={size}
+              secureTextEntry={!showPassword}
+            />
+          )}
+        />
+
         <Button
           size={size}
           onPress={() => setShowPassword(!showPassword)}
