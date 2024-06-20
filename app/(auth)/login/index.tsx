@@ -23,6 +23,7 @@ import axios from "axios";
 import { useToastController } from "@tamagui/toast";
 import { globalStyles } from "globalStyles";
 import { UserLogin, UserLoginInputs } from "types";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
@@ -72,98 +73,104 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView style={globalStyles.container}>
-      <Form onSubmit={handleSubmit(handleLogin)} width={"100%"}>
-        <YStack alignItems="center" justifyContent="center">
-          <Heading paddingVertical="$2">Iniciar Sesión</Heading>
-          <Image
-            source={{
-              uri: nufogyLogoUri,
-              width: 104,
-              height: 104,
-            }}
-          />
-        </YStack>
-        <YStack>
-          <Label>Correo o usuario</Label>
-          <Controller
-            control={control}
-            name="username"
-            rules={{
-              required: "Ingresa un correo o usuario",
-              pattern: {
-                value:
-                  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$|^[a-zA-Z0-9_-]{3,16}$/i,
-                message: "Ingresa un correo válido",
-              },
-            }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <Input
-                size={"$4"}
-                placeholder="ej. pedroelfire@gmail.com o pedroelfire"
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-                ref={ref}
-              />
+      <KeyboardAwareScrollView
+        extraScrollHeight={100}
+        enableOnAndroid={true}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <Form onSubmit={handleSubmit(handleLogin)} width={"100%"}>
+          <YStack alignItems="center" justifyContent="center">
+            <Heading paddingVertical="$2">Iniciar Sesión</Heading>
+            <Image
+              source={{
+                uri: nufogyLogoUri,
+                width: 104,
+                height: 104,
+              }}
+            />
+          </YStack>
+          <YStack>
+            <Label>Correo o usuario</Label>
+            <Controller
+              control={control}
+              name="username"
+              rules={{
+                required: "Ingresa un correo o usuario",
+                pattern: {
+                  value:
+                    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$|^[a-zA-Z0-9_-]{3,16}$/i,
+                  message: "Ingresa un correo válido",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <Input
+                  size={"$4"}
+                  placeholder="ej. pedroelfire@gmail.com o pedroelfire"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  ref={ref}
+                />
+              )}
+            />
+            {errors.username && (
+              <Paragraph color="red">{errors.username.message}</Paragraph>
             )}
-          />
-          {errors.username && (
-            <Paragraph color="red">{errors.username.message}</Paragraph>
-          )}
-        </YStack>
-        <YStack gap="$2">
-          <Label>Contraseña</Label>
-          <Controller
-            control={control}
-            name="password"
-            rules={{ required: "Ingresa una contraseña" }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <PasswordInput
-                size={"$4"}
-                onChange={onChange}
-                onBlur={onBlur}
-                value={value}
-                inputRef={ref}
-              />
+          </YStack>
+          <YStack gap="$2">
+            <Label>Contraseña</Label>
+            <Controller
+              control={control}
+              name="password"
+              rules={{ required: "Ingresa una contraseña" }}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <PasswordInput
+                  size={"$4"}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  inputRef={ref}
+                />
+              )}
+            />
+            {errors.password && (
+              <Paragraph color="red">{errors.password.message}</Paragraph>
             )}
-          />
-          {errors.password && (
-            <Paragraph color="red">{errors.password.message}</Paragraph>
-          )}
-        </YStack>
-        <Form.Trigger asChild disabled={status !== "off"} marginTop="$2">
-          <Button
-            backgroundColor={"$primary"}
-            icon={status === "submitting" ? () => <Spinner /> : undefined}
-            iconAfter={status === "off" ? () => <ChevronRight /> : undefined}
-          >
-            Iniciar Sesión
-          </Button>
-        </Form.Trigger>
-        <YStack>
-          <Button display="flex" alignSelf="center" chromeless>
-            ¿Olvidaste tu contraseña?
-          </Button>
-          <SignUpWithGoogleButton />
-          {/* <Paragraph>
+          </YStack>
+          <Form.Trigger asChild disabled={status !== "off"} marginTop="$2">
+            <Button
+              backgroundColor={"$primary"}
+              icon={status === "submitting" ? () => <Spinner /> : undefined}
+              iconAfter={status === "off" ? () => <ChevronRight /> : undefined}
+            >
+              Iniciar Sesión
+            </Button>
+          </Form.Trigger>
+          <YStack>
+            <Button display="flex" alignSelf="center" chromeless>
+              ¿Olvidaste tu contraseña?
+            </Button>
+            <SignUpWithGoogleButton />
+            {/* <Paragraph>
             Al continuar, aceptas nuestros Términos de Servicio y Política de
             Privacidad
           </Paragraph> */}
-          <XStack
-            alignItems="center"
-            justifyContent="center"
-            width={"100%"}
-            gap="$2"
-          >
-            <Label>¿No tienes una cuenta?</Label>
-            <Link href={"/register"} asChild>
-              <Button unstyled={true} chromeless fontWeight={"bold"}>
-                Regístrate
-              </Button>
-            </Link>
-          </XStack>
-        </YStack>
-      </Form>
+            <XStack
+              alignItems="center"
+              justifyContent="center"
+              width={"100%"}
+              gap="$2"
+            >
+              <Label>¿No tienes una cuenta?</Label>
+              <Link href={"/register"} asChild>
+                <Button unstyled={true} chromeless fontWeight={"bold"}>
+                  Regístrate
+                </Button>
+              </Link>
+            </XStack>
+          </YStack>
+        </Form>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
