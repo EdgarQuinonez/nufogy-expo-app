@@ -21,7 +21,7 @@ export interface UserRegistrationInputs {
   confirmPassword: string;
 }
 
-export interface FoodSearchItemType {
+export interface FoodSearchItem {
   food_id: number;
   food_name: string;
   brand_name: string;
