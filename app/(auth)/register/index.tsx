@@ -104,8 +104,8 @@ const RegisterScreen = () => {
   };
 
   return (
-    <SafeAreaView style={globalStyles.container}>
-      <KeyboardAwareScrollView extraScrollHeight={100} enableOnAndroid={true}>
+    <KeyboardAwareScrollView extraScrollHeight={100} enableOnAndroid={false}>
+      <SafeAreaView style={globalStyles.container}>
         <Form onSubmit={handleSubmit(handleRegister)} width={"100%"}>
           <YStack alignItems="center" justifyContent="center">
             <Heading paddingVertical="$2">Crear una cuenta</Heading>
@@ -190,8 +190,8 @@ const RegisterScreen = () => {
             </XStack>
           </YStack>
         </Form>
-      </KeyboardAwareScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAwareScrollView>
   );
 };
 

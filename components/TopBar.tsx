@@ -8,19 +8,22 @@ import {
   Paragraph,
   Heading,
   H1,
+  H2,
 } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const TopBar = () => {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ position: "absolute" }}>
       <XStack
         width="100%"
+        height={72}
         paddingHorizontal="$2"
         justifyContent="space-between"
         alignItems="center"
+        backgroundColor={"$colorTransparent"}
       >
-        <H1>Nufogy</H1>
+        <H2>Nufogy</H2>
 
         <Link href="/login" asChild>
           <Avatar circular size="$6">

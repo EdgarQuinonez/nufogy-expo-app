@@ -72,12 +72,12 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={globalStyles.container}>
-      <KeyboardAwareScrollView
-        extraScrollHeight={100}
-        enableOnAndroid={true}
-        contentContainerStyle={{ flexGrow: 1 }}
-      >
+    <KeyboardAwareScrollView
+      extraScrollHeight={100}
+      enableOnAndroid={false}
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <SafeAreaView style={globalStyles.container}>
         <Form onSubmit={handleSubmit(handleLogin)} width={"100%"}>
           <YStack alignItems="center" justifyContent="center">
             <Heading paddingVertical="$2">Iniciar Sesión</Heading>
@@ -170,8 +170,8 @@ const LoginScreen = () => {
             </XStack>
           </YStack>
         </Form>
-      </KeyboardAwareScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAwareScrollView>
   );
 };
 

@@ -78,22 +78,40 @@ export default function MonthWeekdayStrip({
         );
 
   return (
-    <YStack>
-      <XStack>
-        <Button onPress={handlePreviousMonth}>
+    <YStack ai={"center"} jc={"center"} maxWidth={"100%"}>
+      {/* Month nav */}
+      <XStack ai={"center"} jc={"center"} gap={"$2"}>
+        <Button onPress={handlePreviousMonth} chromeless>
           <ChevronLeft />
         </Button>
-        <Paragraph>{months[currentMonth].short}</Paragraph>
-        <Button onPress={handleNextMonth}>
+        <Paragraph fontWeight={"bold"} fontSize={"$6"}>
+          {months[currentMonth].short}
+        </Paragraph>
+        <Button onPress={handleNextMonth} chromeless>
           <ChevronRight />
         </Button>
       </XStack>
-      <XStack>
+      {/* Week Days Strip */}
+      <XStack ai={"center"} jc={"space-around"} w={"100%"} h={"$6"} px={"$2"}>
         {dayNumbers.map((day) => (
-          <Button key={day.getTime()}>
-            <YStack>
-              <Paragraph>{days[day.getDay()]}</Paragraph>
-              <Paragraph>{day.getDate()}</Paragraph>
+          <Button
+            key={day.getTime()}
+            ai={"center"}
+            jc={"center"} // Conditional Styling
+            backgroundColor={
+              day.toDateString() === selectedDate.toDateString()
+                ? "$blue10" // Example highlight color, replace with your desired color
+                : "transparent"
+            }
+            py={"$2"}
+            h={"100%"}
+            hoverStyle={{ opacity: 0.8 }}
+            pressStyle={{ opacity: 0.9 }}
+            chromeless
+          >
+            <YStack ai={"center"} jc={"center"} gap={"$2"}>
+              <Paragraph opacity={0.5}>{days[day.getDay()]}</Paragraph>
+              <Paragraph fontWeight={"bold"}>{day.getDate()}</Paragraph>
             </YStack>
           </Button>
         ))}
