@@ -85,7 +85,6 @@ const RegisterScreen = () => {
         password: data.password.trim(),
       });
 
-      console.log(data);
       if (response.status === 201) {
         toast.show("¡Registro exitoso!", {
           message: "¡Bienvenido a Nufogy!",

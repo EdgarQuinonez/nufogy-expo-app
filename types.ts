@@ -29,3 +29,8 @@ export interface FoodSearchItem {
   food_url: string;
   food_description: string;
 }
+
+export interface FoodSearchResponseData {
+  data: FoodSearchItem[];
+  message: string;
+}

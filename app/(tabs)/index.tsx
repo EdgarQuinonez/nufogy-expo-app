@@ -1,6 +1,5 @@
 import React from "react";
 import { H1, YStack } from "tamagui";
-import TopBar from "components/TopBar";
 
 export default function HomeScreen() {
   return (

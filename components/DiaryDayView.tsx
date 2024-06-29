@@ -16,12 +16,11 @@ export default function DiaryDayView() {
   return (
     <View p={"$4"} maxWidth={"100%"}>
       <H4 pl={"$2"}>Comidas del día</H4>
-      <ScrollView>
-        {/* Meal Types Cards */}
-        <YStack ai={"center"} jc={"flex-start"}>
-          <MealType />
-        </YStack>
-      </ScrollView>
+
+      {/* Meal Types Cards */}
+      <YStack ai={"center"} jc={"flex-start"}>
+        <MealType />
+      </YStack>
     </View>
   );
 }

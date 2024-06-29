@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
 import axios, { AxiosRequestConfig } from "axios";
 import useAsync from "@utils/useAsync";
 
 interface FetchOptions extends AxiosRequestConfig {
   // You can add any custom fetch options here if needed
+  Authorization?: string;
 }
 
 const DEFAULT_OPTIONS: FetchOptions = {

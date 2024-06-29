@@ -57,7 +57,7 @@ const LoginScreen = () => {
 
         setStatus("submitted");
 
-        router.navigate("index");
+        router.navigate("(tabs)/index");
       } else {
         setStatus("off");
         toast.show("Error", {

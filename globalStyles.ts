@@ -15,9 +15,9 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: "#EF7D7D",
   },
   carbs: {
-    backgroundColor: "#FFC857",
+    backgroundColor: "#41BF84",
   },
   fat: {
-    backgroundColor: "#A3D2CA",
+    backgroundColor: "#77ABD9",
   },
 });
