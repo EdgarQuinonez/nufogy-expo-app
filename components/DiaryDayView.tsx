@@ -14,11 +14,13 @@ import MealType from "@components/MealType";
 
 export default function DiaryDayView() {
   return (
-    <View p={"$4"} maxWidth={"100%"}>
-      <H4 pl={"$2"}>Comidas del día</H4>
+    <View maxWidth={"100%"}>
+      <H4 pl={"$4"} py={"$2"}>
+        Comidas del día
+      </H4>
 
       {/* Meal Types Cards */}
-      <YStack ai={"center"} jc={"flex-start"}>
+      <YStack ai={"center"} jc={"flex-start"} px={"$2"}>
         <MealType />
       </YStack>
     </View>

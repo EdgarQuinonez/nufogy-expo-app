@@ -13,6 +13,7 @@ import {
 import { useToastController } from "@tamagui/toast";
 import { Image } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { KeyboardAvoidingView } from "react-native";
 import { useRouter } from "expo-router";
 import { ChevronRight } from "@tamagui/lucide-icons";
 import { Link } from "expo-router";
@@ -103,8 +104,10 @@ const RegisterScreen = () => {
   };
 
   return (
-    <KeyboardAwareScrollView extraScrollHeight={100} enableOnAndroid={false}>
-      <SafeAreaView style={globalStyles.container}>
+    <SafeAreaView
+      style={{ ...globalStyles.container, justifyContent: "center" }}
+    >
+      <KeyboardAvoidingView>
         <Form onSubmit={handleSubmit(handleRegister)} width={"100%"}>
           <YStack alignItems="center" justifyContent="center">
             <Heading paddingVertical="$2">Crear una cuenta</Heading>
@@ -189,8 +192,8 @@ const RegisterScreen = () => {
             </XStack>
           </YStack>
         </Form>
-      </SafeAreaView>
-    </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

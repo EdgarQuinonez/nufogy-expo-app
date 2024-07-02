@@ -8,43 +8,40 @@ export default function TabLayout() {
   const theme = useTheme();
 
   return (
-    <FoodContextProvider>
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: theme.red10.val,
-          header: () => <TopBar />,
-          headerTransparent: true,
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: theme.red10.val,
+        header: () => <TopBar />,
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: "Dashboard",
+          tabBarIcon: ({ color }) => <LayoutGrid color={color} />,
         }}
-      >
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "Dashboard",
-            tabBarIcon: ({ color }) => <LayoutGrid color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="diary/index"
-          options={{
-            title: "Diario",
-            tabBarIcon: ({ color }) => <Notebook color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="diets/index"
-          options={{
-            title: "Dietas",
-            tabBarIcon: ({ color }) => <Salad color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="jack/index"
-          options={{
-            title: "Jack",
-            tabBarIcon: ({ color }) => <Bot color={color} />,
-          }}
-        />
-      </Tabs>
-    </FoodContextProvider>
+      />
+      <Tabs.Screen
+        name="diary/index"
+        options={{
+          title: "Diario",
+          tabBarIcon: ({ color }) => <Notebook color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="diets/index"
+        options={{
+          title: "Dietas",
+          tabBarIcon: ({ color }) => <Salad color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="jack/index"
+        options={{
+          title: "Jack",
+          tabBarIcon: ({ color }) => <Bot color={color} />,
+        }}
+      />
+    </Tabs>
   );
 }

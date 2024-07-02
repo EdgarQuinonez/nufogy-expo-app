@@ -24,6 +24,7 @@ import { useToastController } from "@tamagui/toast";
 import { globalStyles } from "globalStyles";
 import { UserLogin, UserLoginInputs } from "types";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { KeyboardAvoidingView } from "react-native";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
@@ -57,7 +58,7 @@ const LoginScreen = () => {
 
         setStatus("submitted");
 
-        router.navigate("(tabs)/index");
+        router.navigate("/(tabs)");
       } else {
         setStatus("off");
         toast.show("Error", {
@@ -72,12 +73,10 @@ const LoginScreen = () => {
   };
 
   return (
-    <KeyboardAwareScrollView
-      extraScrollHeight={100}
-      enableOnAndroid={false}
-      contentContainerStyle={{ flexGrow: 1 }}
+    <SafeAreaView
+      style={{ ...globalStyles.container, justifyContent: "center" }}
     >
-      <SafeAreaView style={globalStyles.container}>
+      <KeyboardAvoidingView>
         <Form onSubmit={handleSubmit(handleLogin)} width={"100%"}>
           <YStack alignItems="center" justifyContent="center">
             <Heading paddingVertical="$2">Iniciar Sesión</Heading>
@@ -170,8 +169,8 @@ const LoginScreen = () => {
             </XStack>
           </YStack>
         </Form>
-      </SafeAreaView>
-    </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

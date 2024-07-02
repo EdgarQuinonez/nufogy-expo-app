@@ -11,6 +11,7 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { Provider } from "./Provider";
 import { getItem } from "@utils/AsyncStorage";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -64,7 +65,6 @@ function RootLayoutNav() {
 
   return (
     <Provider>
-      {/* <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}> */}
       <ThemeProvider value={DefaultTheme}>
         {isAuthenticated ? (
           <Stack screenOptions={{ headerShown: false }}>

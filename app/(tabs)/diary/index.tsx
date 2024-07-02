@@ -19,7 +19,6 @@ import CircularProgress from "react-native-circular-progress-indicator";
 import { FoodContext, FoodContextProvider } from "@providers/FoodContext";
 
 export default function DiaryScreen() {
-  const { isModalVisible, handleModalClose } = useContext(FoodContext);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const onSelectedDateChange = (date: Date) => {
@@ -32,7 +31,7 @@ export default function DiaryScreen() {
         style={[globalStyles.diaryBackground, globalStyles.container]}
       >
         {/* Day summary  */}
-        <YStack py="$4" w={"100%"}>
+        <YStack px={"$2"} pb="$4" w={"100%"}>
           {/* Circle progress bar  */}
           <XStack ai={"center"} justifyContent={"space-between"}>
             <CircularProgress
@@ -170,24 +169,20 @@ export default function DiaryScreen() {
           </XStack>
         </YStack>
         {/* Lower 2 / 3. Calendar and Meal types  */}
-        <YStack
-          backgroundColor={"$background"}
-          borderRadius={"$7"}
-          borderBottomLeftRadius={"$0"}
-          borderBottomRightRadius={"$0"}
-          flex={1}
-        >
-          <MonthWeekdayStrip
-            selectedDate={selectedDate}
-            onSelectDateChange={onSelectedDateChange}
-          />
-          <DiaryDayView />
-        </YStack>
-
-        <AddIngredientFormModal
-          visible={isModalVisible}
-          onRequestClose={handleModalClose}
-        />
+        <View px={"$2"}>
+          <YStack
+            backgroundColor={"$background"}
+            borderRadius={"$7"}
+            borderBottomLeftRadius={"$0"}
+            borderBottomRightRadius={"$0"}
+          >
+            <MonthWeekdayStrip
+              selectedDate={selectedDate}
+              onSelectDateChange={onSelectedDateChange}
+            />
+            <DiaryDayView />
+          </YStack>
+        </View>
       </SafeAreaView>
     </ScrollView>
   );

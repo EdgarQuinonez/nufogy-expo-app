@@ -9,16 +9,15 @@ export type Props = {
 
 export default function FoodSearchItem({ food_name, food_description }: Props) {
   return (
-    <Button unstyled={true} asChild>
+    <Button width={"100%"} asChild>
       <XStack
         ai={"center"}
         jc={"flex-start"}
-        width={"100%"}
+        gap={"$2"}
         borderBottomWidth={1}
         borderBottomColor={"$borderColor"}
         px={"$4"}
-        py={"$2"}
-        gap={"$2"}
+        py={"$4"}
       >
         <Utensils />
         <YStack flex={1}>

@@ -1,19 +1,22 @@
 import { Search } from "@tamagui/lucide-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, SizeTokens, XStack, useTheme } from "tamagui";
 
 export type Props = {
-  value: string;
   setSearchQuery: (text: string) => void;
   size: SizeTokens;
 };
 
 export default function SearchBar({
-  value,
   setSearchQuery,
   size,
 }: Props): JSX.Element {
+  const [text, setText] = useState("");
   const { borderColor, background025 } = useTheme();
+
+  useEffect(() => {
+    setSearchQuery(text);
+  }, [text]);
 
   return (
     <XStack
@@ -30,8 +33,8 @@ export default function SearchBar({
         unstyled={true}
         flex={1}
         size={size}
-        value={value}
-        onChangeText={setSearchQuery}
+        value={text}
+        onChangeText={setText}
         placeholder="ej. Atún en agua masa drenada..."
       />
     </XStack>

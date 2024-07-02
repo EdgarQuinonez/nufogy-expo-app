@@ -5,8 +5,8 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingHorizontal: 16,
-    paddingTop: 72,
+    // paddingHorizontal: 16,
+    // paddingTop: 72,
   },
   diaryBackground: {
     backgroundColor: "#ABD3DB",

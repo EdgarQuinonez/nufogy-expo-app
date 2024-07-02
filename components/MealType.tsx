@@ -14,6 +14,7 @@ import React, { useContext } from "react";
 import { globalStyles } from "globalStyles";
 import FoodItem from "./FoodItem";
 import { FoodContext } from "@providers/FoodContext";
+import { Link } from "expo-router";
 
 export default function MealType() {
   const { handleAddFoodPress } = useContext(FoodContext);
@@ -28,9 +29,10 @@ export default function MealType() {
       px={"$2"}
       borderRadius={"$4"}
       py={"$2"}
+      gap={"$2"}
     >
       {/* Header */}
-      <XStack w={"100%"} ai={"center"} jc={"space-between"} pb={"$2"}>
+      <XStack w={"100%"} ai={"center"} jc={"space-between"}>
         {/* Icon */}
         <XStack ai={"center"} jc={"flex-start"} gap={"$2"} flex={1}>
           <EggFried />
@@ -148,18 +150,26 @@ export default function MealType() {
         <FoodItem />
       </YStack>
       {/* Add food item btn */}
-      <Button
-        icon={PlusCircle}
-        scaleIcon={1.5}
-        w={"100%"}
-        variant={"outlined"}
-        backgroundColor={"$background"}
-        onPress={() => {
-          handleAddFoodPress();
+      <Link
+        href={{
+          pathname: "/(addIngredientFormModal)/mealType/[mealTypeId]",
+          params: { mealTypeId: 1 }, // TODO: Replace with actual id from server fetch
         }}
+        asChild
       >
-        Agregar Comida
-      </Button>
+        <Button
+          icon={PlusCircle}
+          scaleIcon={1.5}
+          w={"100%"}
+          variant={"outlined"}
+          backgroundColor={"$background"}
+          onPress={() => {
+            handleAddFoodPress();
+          }}
+        >
+          Agregar Comida
+        </Button>
+      </Link>
     </YStack>
   );
 }

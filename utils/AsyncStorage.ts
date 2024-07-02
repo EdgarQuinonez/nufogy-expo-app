@@ -1,7 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// Define a type for your stored values (customize as needed)
-type StoredValue = string | number | boolean | object | null;
+import { StoredValue } from "@types";
 
 /**
  * Sets an item in AsyncStorage.

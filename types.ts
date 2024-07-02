@@ -34,3 +34,5 @@ export interface FoodSearchResponseData {
   data: FoodSearchItem[];
   message: string;
 }
+
+export type StoredValue = string | number | boolean | object | null;

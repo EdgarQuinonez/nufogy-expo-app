@@ -1,3 +1,4 @@
+import { Link } from "expo-router";
 import React from "react";
 import { H1, YStack } from "tamagui";
 

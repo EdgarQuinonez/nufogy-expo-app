@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const TopBar = () => {
   return (
-    <SafeAreaView style={{ position: "absolute" }}>
+    <SafeAreaView>
       <XStack
         width="100%"
         height={72}
