@@ -1,22 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AddIngredientFormModal from "@components/AddIngredientFormModal";
-import {
-  Button,
-  H1,
-  Paragraph,
-  ScrollView,
-  View,
-  XStack,
-  YStack,
-} from "tamagui";
+import { Button, Paragraph, ScrollView, View, XStack, YStack } from "tamagui";
 import { globalStyles } from "globalStyles";
 import { Beef, CakeSlice, X } from "@tamagui/lucide-icons";
 import Avocado from "@assets/icons/Avocado";
 import MonthWeekdayStrip from "@components/MonthWeekdayStrip";
 import DiaryDayView from "@components/DiaryDayView";
 import CircularProgress from "react-native-circular-progress-indicator";
-import { FoodContext, FoodContextProvider } from "@providers/FoodContext";
 
 export default function DiaryScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());

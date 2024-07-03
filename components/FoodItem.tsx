@@ -19,7 +19,13 @@ export default function FoodItem() {
       </View>
       {/* Amount and Unit Input */}
       <YStack ai={"center"} jc={"center"} pr={"$2"}>
-        <Input size={"$2"} placeholder="100" minWidth={"$3"} maxWidth={"$3"} />
+        <Input
+          keyboardType={"numeric"}
+          size={"$2"}
+          placeholder="100"
+          minWidth={"$3"}
+          maxWidth={"$3"}
+        />
         <Select size={"$2"}>
           <Select.Item index={0} value="g">
             g

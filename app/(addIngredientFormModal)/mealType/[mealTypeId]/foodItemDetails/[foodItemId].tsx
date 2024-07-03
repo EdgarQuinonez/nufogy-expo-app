@@ -6,13 +6,9 @@ import FoodItemDetailsView from "@components/FoodItemDetailsView";
 
 export default function FoodItemDetailsWrapper() {
   const { mealTypeId, foodItemId } = useLocalSearchParams();
-  console.log("mealTypeId in wrapper", mealTypeId);
 
   return (
     <SafeAreaView>
-      <Paragraph> What's up</Paragraph>
-
-      {/* <FoodItemDetailsView mealTypeId={mealTypeId} foodItemId={foodItemId} /> */}
       <FoodItemDetailsView mealTypeId={mealTypeId} foodItemId={foodItemId} />
     </SafeAreaView>
   );
