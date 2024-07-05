@@ -66,24 +66,26 @@ export default function FoodSearchView({ authToken }: Props) {
 
       {/* FoodSearchItems result container */}
 
-      <YStack
+      <View
         marginTop={"$4"}
         flex={1}
-        width={"100%"}
-        justifyContent="flex-start"
-        alignItems="flex-start"
         borderColor={"$border"}
         borderWidth={1}
         borderRadius={"$2"}
-        overflow={"scroll"}
       >
-        <ScrollView w={"100%"}>
-          {loading ? (
-            <Paragraph px={"$2"}>Cargando alimentos...</Paragraph>
-          ) : error ? (
-            <Paragraph px={"$2"}>Error: {error.message}</Paragraph>
-          ) : foods && foods.data && foods.data.length > 0 ? (
-            foods.data.map((item) => (
+        {loading ? (
+          <View flex={1} justifyContent="center" alignItems="center" w={"100%"}>
+            {/* Center the loading message */}
+            <Paragraph>Cargando alimentos...</Paragraph>
+          </View>
+        ) : error ? (
+          <View flex={1} justifyContent="center" alignItems="center" w={"100%"}>
+            {/* Center the error message */}
+            <Paragraph>Error: {error.message}</Paragraph>
+          </View>
+        ) : foods && foods.data && foods.data.length > 0 ? (
+          <ScrollView w={"100%"}>
+            {foods.data.map((item) => (
               <Link
                 key={item.food_id}
                 href={{
@@ -97,26 +99,51 @@ export default function FoodSearchView({ authToken }: Props) {
                   food_description={item.food_description}
                 />
               </Link>
-            ))
-          ) : (
-            <Paragraph px={"$2"}>No se encontraron alimentos.</Paragraph>
-          )}
-        </ScrollView>
-      </YStack>
-      <XStack py={"$4"} justifyContent="center" gap="$2" alignSelf="flex-end">
+            ))}
+          </ScrollView>
+        ) : (
+          <View flex={1} justifyContent="center" alignItems="center" w={"100%"}>
+            {/* Center the "No results" message */}
+            <Paragraph>No se encontraron alimentos.</Paragraph>
+          </View>
+        )}
+      </View>
+      {/* Save and cancel buttons */}
+      <XStack
+        w={"100%"}
+        ai={"center"}
+        jc={"flex-end"}
+        py={"$2"}
+        gap={"$1"}
+        alignSelf={"flex-end"}
+      >
         <Button
-          onPress={() => router.back()}
-          icon={<ArrowLeft />}
-          backgroundColor={"$red11Dark"}
+          unstyled={true}
+          backgroundColor={"#E15252"}
+          px={"$4"}
+          py={"$3"}
+          borderRadius={"$4"}
+          onPress={() => {
+            router.back();
+          }}
         >
-          Cancelar
+          <XStack gap={"$1"} ai={"center"} jc={"center"}>
+            <ArrowLeft color={"$background"} />
+            <Paragraph color={"$background"}>Cancelar</Paragraph>
+          </XStack>
         </Button>
         <Button
-          onPress={() => router.back()}
-          iconAfter={<Check />}
-          backgroundColor={"$blue11Dark"}
+          unstyled={true}
+          backgroundColor={"#1E1940"}
+          px={"$4"}
+          py={"$3"}
+          borderRadius={"$4"}
+          color={"$background"}
         >
-          Añadir
+          <XStack gap={"$1"} ai={"center"} jc={"center"}>
+            <Paragraph color={"$background"}>Guardar</Paragraph>
+            <Check color={"$background"} />
+          </XStack>
         </Button>
       </XStack>
     </View>

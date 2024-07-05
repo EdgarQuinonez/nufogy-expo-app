@@ -16,6 +16,7 @@ export default function SelectDropdown() {
     <Select value={selectedValue} onValueChange={setSelectedValue} native>
       <Select.Trigger
         unstyled={true}
+        backgroundColor={"$background0"}
         width={"100%"}
         iconAfter={<ChevronDown />}
       >
