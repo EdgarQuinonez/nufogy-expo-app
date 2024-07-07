@@ -42,7 +42,8 @@ import {
   StoredValue,
 } from "@types";
 import useFetch from "@utils/useFetch";
-import MicronutrientBar from "./MicronutrientBar";
+import MicronutrientBar from "@components/MicronutrientBar";
+import MacroInputField from "@components/MacroInputField";
 
 export type Props = {
   mealTypeId: string | string[] | undefined;
@@ -173,15 +174,21 @@ export default function FoodItemDetailsView({
         </YStack>
       ) : (
         foodItem &&
-        parsedFoodItem && (
+        parsedFoodItem &&
+        serving && (
           <YStack f={1} jc={"space-between"}>
             {/* Content */}
             <View>
               {/* Header */}
               <XStack ai={"center"} jc={"space-between"} w={"100%"} py={"$2"}>
-                <ArrowLeft />
+                <Button onPress={() => router.back()} chromeless>
+                  <ArrowLeft />
+                </Button>
+
                 <H3>Guardar Alimento</H3>
-                <Check />
+                <Button chromeless>
+                  <Check />
+                </Button>
               </XStack>
               {/* Food Name */}
               <H4 alignSelf="flex-start" py={"$4"} color={"$color12"}>
@@ -203,143 +210,30 @@ export default function FoodItemDetailsView({
 
                 {/* Macro Slide */}
                 <YStack gap="$2" flex={1} pl={"$4"}>
-                  <Button
-                    unstyled={true}
-                    backgroundColor={"#EF7D7D"}
-                    borderRadius={"$4"}
-                    ai={"center"}
-                    jc={"center"}
-                    pl={"$2"}
-                  >
-                    <XStack
-                      gap="$2"
-                      ai={"center"}
-                      w={"100%"}
-                      justifyContent={"space-between"}
-                    >
-                      <XStack gap="$2">
-                        <Beef />
-                        <Paragraph mr={"$2"} fontWeight={"bold"}>
-                          Proteína
-                        </Paragraph>
-                      </XStack>
-                      <XStack
-                        gap={"$1"}
-                        ai={"center"}
-                        justifyContent={"center"}
-                      >
-                        <View
-                          pl={"$3"}
-                          pr={"$2"}
-                          py={"$2"}
-                          backgroundColor={"$background"}
-                          borderTopLeftRadius={"$7"}
-                          borderBottomLeftRadius={"$7"}
-                          borderTopRightRadius={"$4"}
-                          borderBottomRightRadius={"$4"}
-                          ai={"center"}
-                          jc={"center"}
-                        >
-                          <Paragraph w={"$5"} textAlign="right">
-                            {serving?.protein}&nbsp;
-                            <Paragraph color={"$gray10"}>g</Paragraph>
-                          </Paragraph>
-                        </View>
-                      </XStack>
-                    </XStack>
-                  </Button>
-
-                  <Button
-                    unstyled={true}
-                    backgroundColor={"#41BF84"}
-                    borderRadius={"$4"}
-                    ai={"center"}
-                    jc={"center"}
-                    pl={"$2"}
-                  >
-                    <XStack
-                      gap="$2"
-                      ai={"center"}
-                      w={"100%"}
-                      justifyContent={"space-between"}
-                    >
-                      <XStack gap="$2">
-                        <CakeSlice />
-                        <Paragraph mr={"$2"} fontWeight={"bold"}>
-                          Carbohidratos
-                        </Paragraph>
-                      </XStack>
-                      <XStack
-                        gap={"$1"}
-                        ai={"center"}
-                        justifyContent={"center"}
-                      >
-                        <View
-                          pl={"$3"}
-                          pr={"$2"}
-                          py={"$2"}
-                          backgroundColor={"$background"}
-                          borderTopLeftRadius={"$7"}
-                          borderBottomLeftRadius={"$7"}
-                          borderTopRightRadius={"$4"}
-                          borderBottomRightRadius={"$4"}
-                          ai={"center"}
-                          jc={"center"}
-                        >
-                          <Paragraph w={"$5"} textAlign="right">
-                            {serving?.carbohydrate}&nbsp;
-                            <Paragraph color={"$gray10"}>g</Paragraph>
-                          </Paragraph>
-                        </View>
-                      </XStack>
-                    </XStack>
-                  </Button>
-
-                  <Button
-                    unstyled={true}
-                    backgroundColor={"#77ABD9"}
-                    borderRadius={"$4"}
-                    ai={"center"}
-                    jc={"center"}
-                    pl={"$2"}
-                  >
-                    <XStack
-                      gap="$2"
-                      ai={"center"}
-                      w={"100%"}
-                      justifyContent={"space-between"}
-                    >
-                      <XStack gap="$2">
-                        <Avocado width={26} height={26} />
-                        <Paragraph mr={"$2"} fontWeight={"bold"}>
-                          Grasas
-                        </Paragraph>
-                      </XStack>
-                      <XStack
-                        gap={"$1"}
-                        ai={"center"}
-                        justifyContent={"center"}
-                      >
-                        <View
-                          pl={"$3"}
-                          pr={"$2"}
-                          py={"$2"}
-                          backgroundColor={"$background"}
-                          borderTopLeftRadius={"$7"}
-                          borderBottomLeftRadius={"$7"}
-                          borderTopRightRadius={"$4"}
-                          borderBottomRightRadius={"$4"}
-                          ai={"center"}
-                          jc={"center"}
-                        >
-                          <Paragraph w={"$5"} textAlign="right">
-                            {serving?.fat}&nbsp;
-                            <Paragraph color={"$gray10"}>g</Paragraph>
-                          </Paragraph>
-                        </View>
-                      </XStack>
-                    </XStack>
-                  </Button>
+                  <MacroInputField
+                    icon={<Beef />}
+                    name={"Proteína"}
+                    amount={serving.protein}
+                    macrosSum={
+                      serving.protein + serving.carbohydrate + serving.fat
+                    }
+                  />
+                  <MacroInputField
+                    icon={<CakeSlice />}
+                    name={"Carbohidratos"}
+                    amount={serving.carbohydrate}
+                    macrosSum={
+                      serving.protein + serving.carbohydrate + serving.fat
+                    }
+                  />
+                  <MacroInputField
+                    icon={<Avocado />}
+                    name={"Grasas"}
+                    amount={serving.fat}
+                    macrosSum={
+                      serving.protein + serving.carbohydrate + serving.fat
+                    }
+                  />
                 </YStack>
               </XStack>
               {/* Kcal ratio label */}
