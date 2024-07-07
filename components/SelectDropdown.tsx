@@ -1,7 +1,14 @@
 import { ChevronDown } from "@tamagui/lucide-icons";
 import { FoodItemServing } from "@types";
 import React, { useState } from "react";
-import { Adapt, Select, SelectItemParentProvider, Sheet } from "tamagui";
+import {
+  Adapt,
+  Paragraph,
+  Select,
+  SelectItemParentProvider,
+  Sheet,
+  XStack,
+} from "tamagui";
 
 export type Props = {
   serving: FoodItemServing | FoodItemServing[];
@@ -9,21 +16,28 @@ export type Props = {
 
 export default function SelectDropdown({ serving }: Props) {
   const units = Array.isArray(serving) ? serving : [serving];
-  console.log(units.length);
 
   const [selectedValue, setSelectedValue] = useState(
     units[0].metric_serving_unit
   );
 
   return (
-    <Select value={selectedValue} onValueChange={setSelectedValue} native>
+    <Select
+      value={selectedValue}
+      onValueChange={setSelectedValue}
+      name="selectedUnit"
+      native
+    >
       <Select.Trigger
         unstyled={true}
         backgroundColor={"$background0"}
-        width={"100%"}
-        iconAfter={<ChevronDown />}
+        w={"100%"}
+        pos={"relative"}
+        ai={"center"}
+        jc={"center"}
       >
         <Select.Value />
+        <ChevronDown size={14} pos={"absolute"} r={0} />
       </Select.Trigger>
 
       <Adapt when="sm" platform="touch">
@@ -45,12 +59,14 @@ export default function SelectDropdown({ serving }: Props) {
               <Select.Item
                 index={i}
                 key={unit.serving_id}
-                value={unit.metric_serving_unit}
+                value={unit.measurement_description}
               >
-                <Select.ItemText overflow="hidden" textOverflow="ellipsis">
-                  {unit.metric_serving_amount} {unit.metric_serving_unit} -{" "}
-                  {unit.measurement_description}
-                </Select.ItemText>
+                <XStack gap="$1">
+                  <Paragraph>{unit.number_of_units}</Paragraph>
+                  <Select.ItemText overflow="hidden" textOverflow="ellipsis">
+                    {unit.measurement_description}
+                  </Select.ItemText>
+                </XStack>
               </Select.Item>
             ))}
           </Select.Group>

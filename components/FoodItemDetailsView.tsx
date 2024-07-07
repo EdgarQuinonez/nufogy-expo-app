@@ -142,7 +142,7 @@ export default function FoodItemDetailsView({
 
   const caloriePercentage = useMemo(() => {
     if (serving) {
-      const calorieTarget = 2000; // Example target
+      const calorieTarget = 2000; // TODO: Replace with actual target
       return Math.round((serving?.calories / calorieTarget) * 100);
     }
   }, [serving]);
@@ -274,8 +274,10 @@ export default function FoodItemDetailsView({
                       <Input
                         unstyled={true}
                         keyboardType="numeric"
-                        placeholder={"100"}
+                        placeholder={serving.number_of_units.toString()}
+                        textAlign="center"
                         px={"$2"}
+                        flex={1}
                       />
                     </XStack>
                     {/* Select dropdown for Units*/}
@@ -283,7 +285,7 @@ export default function FoodItemDetailsView({
                     <XStack
                       ai={"center"}
                       jc={"center"}
-                      w={"$7"}
+                      w={"40%"}
                       blw={1}
                       borderColor={"$color11"}
                     >
