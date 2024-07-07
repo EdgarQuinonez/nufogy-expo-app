@@ -1,16 +1,19 @@
 import { ChevronDown } from "@tamagui/lucide-icons";
+import { FoodItemServing } from "@types";
 import React, { useState } from "react";
 import { Adapt, Select, SelectItemParentProvider, Sheet } from "tamagui";
 
-export default function SelectDropdown() {
-  const weightUnits = [
-    { name: "gram", value: "g" },
-    { name: "kilogram", value: "kg" },
-    { name: "milligram", value: "mg" },
-    { name: "ounce", value: "oz" },
-    { name: "pound", value: "lb" },
-  ];
-  const [selectedValue, setSelectedValue] = useState(weightUnits[0].value);
+export type Props = {
+  serving: FoodItemServing | FoodItemServing[];
+};
+
+export default function SelectDropdown({ serving }: Props) {
+  const units = Array.isArray(serving) ? serving : [serving];
+  console.log(units.length);
+
+  const [selectedValue, setSelectedValue] = useState(
+    units[0].metric_serving_unit
+  );
 
   return (
     <Select value={selectedValue} onValueChange={setSelectedValue} native>
@@ -38,9 +41,16 @@ export default function SelectDropdown() {
         <Select.Viewport minWidth={200}>
           <Select.Group>
             <Select.Label>Unidades</Select.Label>
-            {weightUnits.map((unit, i) => (
-              <Select.Item index={i} key={unit.value} value={unit.value}>
-                <Select.ItemText>{unit.value}</Select.ItemText>
+            {units.map((unit, i) => (
+              <Select.Item
+                index={i}
+                key={unit.serving_id}
+                value={unit.metric_serving_unit}
+              >
+                <Select.ItemText overflow="hidden" textOverflow="ellipsis">
+                  {unit.metric_serving_amount} {unit.metric_serving_unit} -{" "}
+                  {unit.measurement_description}
+                </Select.ItemText>
               </Select.Item>
             ))}
           </Select.Group>
