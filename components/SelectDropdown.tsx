@@ -12,19 +12,33 @@ import {
 
 export type Props = {
   serving: FoodItemServing | FoodItemServing[];
+  onServingChange: (serving: FoodItemServing) => void;
 };
 
-export default function SelectDropdown({ serving }: Props) {
+export default function SelectDropdown({ serving, onServingChange }: Props) {
   const units = Array.isArray(serving) ? serving : [serving];
 
-  const [selectedValue, setSelectedValue] = useState(
-    units[0].metric_serving_unit
+  const [selectedServingId, setSelectedServingId] = useState(
+    units[0].serving_id.toString()
   );
+
+  const handleValueChange = (newServingId: string) => {
+    setSelectedServingId(newServingId);
+
+    const selectedServing = units.find(
+      (unit) => unit.serving_id.toString() === newServingId
+    );
+    if (!selectedServing) {
+      throw new Error("Selected serving not found");
+    } else {
+      onServingChange(selectedServing);
+    }
+  };
 
   return (
     <Select
-      value={selectedValue}
-      onValueChange={setSelectedValue}
+      value={selectedServingId}
+      onValueChange={handleValueChange}
       name="selectedUnit"
       native
     >
@@ -36,7 +50,7 @@ export default function SelectDropdown({ serving }: Props) {
         ai={"center"}
         jc={"center"}
       >
-        <Select.Value />
+        <Select.Value flex={1} />
         <ChevronDown size={14} pos={"absolute"} r={0} />
       </Select.Trigger>
 
@@ -54,12 +68,12 @@ export default function SelectDropdown({ serving }: Props) {
       <Select.Content zIndex={200000}>
         <Select.Viewport minWidth={200}>
           <Select.Group>
-            <Select.Label>Unidades</Select.Label>
+            <Select.Label>Raciones</Select.Label>
             {units.map((unit, i) => (
               <Select.Item
                 index={i}
                 key={unit.serving_id}
-                value={unit.measurement_description}
+                value={unit.serving_id.toString()}
               >
                 <XStack gap="$1">
                   <Paragraph>{unit.number_of_units}</Paragraph>

@@ -15,7 +15,7 @@ import {
   Circle,
   Square,
 } from "tamagui";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   ArrowLeft,
   Beef,
@@ -56,26 +56,10 @@ export default function FoodItemDetailsView({
   foodItemId,
   authToken,
 }: Props) {
-  const [dateTime, setDateTime] = useState(new Date()); // Store the selected date and time
-  const [showDatePicker, setShowDatePicker] = useState(false); // Control visibility of the picker
-
-  const router = useRouter();
+  const [dateTime, setDateTime] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/fs/getingridient/${foodItemId}`;
-
-  const saveFood = () => {
-    // ... your food logging logic
-  };
-
-  const onChangeDateTime = (event: any, selectedDate: Date | undefined) => {
-    setShowDatePicker(false);
-    if (selectedDate instanceof Date) {
-      setDateTime(selectedDate);
-    } else {
-      console.warn("Invalid date selected:", selectedDate);
-    }
-  };
-
   const {
     loading,
     error,
@@ -85,7 +69,6 @@ export default function FoodItemDetailsView({
     { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
     [authToken]
   );
-
   const parsedFoodItem: FoodItem | undefined = useMemo(() => {
     if (foodItem) {
       const { data } = foodItem;
@@ -134,37 +117,60 @@ export default function FoodItemDetailsView({
     }
   }, [foodItem]);
 
-  const serving = useMemo(() => {
-    return Array.isArray(parsedFoodItem?.servings.serving)
-      ? parsedFoodItem?.servings.serving[0]
-      : parsedFoodItem?.servings.serving;
-  }, [parsedFoodItem]);
+  const serving = Array.isArray(parsedFoodItem?.servings.serving)
+    ? parsedFoodItem?.servings.serving[0]
+    : parsedFoodItem?.servings.serving;
 
-  const caloriePercentage = useMemo(() => {
+  const [selectedServing, setSelectedServing] = useState(serving);
+
+  useEffect(() => {
     if (serving) {
-      const calorieTarget = 2000; // TODO: Replace with actual target
-      return Math.round((serving?.calories / calorieTarget) * 100);
+      setSelectedServing(serving);
     }
   }, [serving]);
+
+  const router = useRouter();
+
+  const saveFood = () => {
+    // ... your food logging logic
+  };
+
+  const onChangeDateTime = (event: any, selectedDate: Date | undefined) => {
+    setShowDatePicker(false);
+    if (selectedDate instanceof Date) {
+      setDateTime(selectedDate);
+    } else {
+      console.warn("Invalid date selected:", selectedDate);
+    }
+  };
+
+  const handleServingChange = (newServing: FoodItemServing) => {
+    setSelectedServing(newServing);
+  };
+
+  const caloriePercentage = useMemo(() => {
+    if (selectedServing) {
+      const calorieTarget = 2000; // TODO: Replace with actual target
+      return Math.round((selectedServing?.calories / calorieTarget) * 100);
+    }
+  }, [selectedServing]);
 
   return (
     <Form onSubmit={saveFood} px={"$2"} flex={1}>
       {loading ? (
-        <YStack f={1} jc={"space-between"}>
-          {/* Loading Placeholders */}
-          <XStack ai={"center"} jc={"space-between"} w={"100%"} py={"$2"}>
-            <Square size="$6" borderRadius="$2" />
-            <Square size="$10" borderRadius="$2" />
-            <Square size="$6" borderRadius="$2" />
-          </XStack>
-
-          <Square height="$4" width="70%" borderRadius="$4" />
-          <XStack ai={"center"} justifyContent={"space-between"} pb={"$2"}>
-            <Circle size="$14" />
-            <Square size="$10" height="$12" borderRadius="$2" />
-          </XStack>
-
-          {/* Add more placeholders for other content areas */}
+        <YStack
+          f={1}
+          // ai={"center"}
+          jc={"flex-start"}
+          px={"$2"}
+          pt={"$12"}
+        >
+          <Square
+            h={"$4"}
+            w={"$8"}
+            backgroundColor={"$gray5"}
+            alignSelf="flex-start"
+          />
         </YStack>
       ) : error ? (
         <YStack f={1} jc="center" ai="center">
@@ -175,7 +181,7 @@ export default function FoodItemDetailsView({
       ) : (
         foodItem &&
         parsedFoodItem &&
-        serving && (
+        selectedServing && (
           <YStack f={1} jc={"space-between"}>
             {/* Content */}
             <View>
@@ -196,10 +202,10 @@ export default function FoodItemDetailsView({
               </H4>
               {/* Kcal circle and macros inputs */}
               <XStack ai={"center"} justifyContent={"space-between"} pb={"$2"}>
-                {serving && (
+                {selectedServing && (
                   <CircularProgress
                     radius={65}
-                    value={serving.calories} // Calories from serving
+                    value={selectedServing.calories}
                     maxValue={2000}
                     progressValueColor="#FF0000"
                     title="KCAL"
@@ -213,25 +219,31 @@ export default function FoodItemDetailsView({
                   <MacroInputField
                     icon={<Beef />}
                     name={"Proteína"}
-                    amount={serving.protein}
+                    amount={selectedServing.protein}
                     macrosSum={
-                      serving.protein + serving.carbohydrate + serving.fat
+                      selectedServing.protein +
+                      selectedServing.carbohydrate +
+                      selectedServing.fat
                     }
                   />
                   <MacroInputField
                     icon={<CakeSlice />}
                     name={"Carbohidratos"}
-                    amount={serving.carbohydrate}
+                    amount={selectedServing.carbohydrate}
                     macrosSum={
-                      serving.protein + serving.carbohydrate + serving.fat
+                      selectedServing.protein +
+                      selectedServing.carbohydrate +
+                      selectedServing.fat
                     }
                   />
                   <MacroInputField
                     icon={<Avocado />}
                     name={"Grasas"}
-                    amount={serving.fat}
+                    amount={selectedServing.fat}
                     macrosSum={
-                      serving.protein + serving.carbohydrate + serving.fat
+                      selectedServing.protein +
+                      selectedServing.carbohydrate +
+                      selectedServing.fat
                     }
                   />
                 </YStack>
@@ -274,7 +286,7 @@ export default function FoodItemDetailsView({
                       <Input
                         unstyled={true}
                         keyboardType="numeric"
-                        placeholder={serving.number_of_units.toString()}
+                        placeholder={selectedServing.number_of_units.toString()}
                         textAlign="center"
                         px={"$2"}
                         flex={1}
@@ -290,6 +302,7 @@ export default function FoodItemDetailsView({
                       borderColor={"$color11"}
                     >
                       <SelectDropdown
+                        onServingChange={handleServingChange}
                         serving={parsedFoodItem?.servings.serving}
                       />
                     </XStack>
@@ -335,21 +348,21 @@ export default function FoodItemDetailsView({
                 <MicronutrientBar
                   name={"Sodio"}
                   currentIntakeAmount={0}
-                  amount={serving?.sodium || 0}
+                  amount={selectedServing?.sodium || 0}
                   unit={"mg"}
                   totalAmount={1000}
                 />
                 <MicronutrientBar
                   name={"Azúcar"}
                   currentIntakeAmount={0}
-                  amount={serving?.sugar || 0}
+                  amount={selectedServing?.sugar || 0}
                   unit={"g"}
                   totalAmount={25}
                 />
                 <MicronutrientBar
                   name={"Fibra"}
                   currentIntakeAmount={2}
-                  amount={serving?.fiber || 0}
+                  amount={selectedServing?.fiber || 0}
                   unit={"g"}
                   totalAmount={50}
                 />
@@ -359,7 +372,7 @@ export default function FoodItemDetailsView({
               <View
                 borderRadius={"$4"}
                 bw={1}
-                borderColor={"$gray10"}
+                borderColor={"$gray5"}
                 px={"$3"}
                 py={"$4"}
               >
