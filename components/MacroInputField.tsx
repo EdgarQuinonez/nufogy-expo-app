@@ -68,9 +68,10 @@ export default function MacroInputField({
             <Input
               unstyled={true}
               keyboardType="numeric"
-              placeholder={amount.toString()}
+              placeholder={amount.toFixed(1)}
               flex={1}
-              textAlign="center"
+              px={"$2"}
+              textAlign="right"
             />
             <Text color={"$gray10"}>g</Text>
           </XStack>

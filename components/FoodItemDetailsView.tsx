@@ -123,9 +123,29 @@ export default function FoodItemDetailsView({
 
   const [selectedServing, setSelectedServing] = useState(serving);
 
+  const [unitAmount, setUnitAmount] = useState(
+    selectedServing?.number_of_units || 1
+  );
+
+  const calculatedNutritionValues = useMemo(() => {
+    if (selectedServing) {
+      const multiplier = unitAmount / selectedServing.number_of_units;
+      return {
+        calories: Math.round(selectedServing.calories * multiplier),
+        protein: selectedServing.protein * multiplier,
+        carbohydrate: selectedServing.carbohydrate * multiplier,
+        fat: selectedServing.fat * multiplier,
+        sodium: Math.round(selectedServing.sodium * multiplier),
+        sugar: Math.round(selectedServing.sugar * multiplier),
+        fiber: Math.round(selectedServing.fiber * multiplier),
+      };
+    }
+  }, [unitAmount, selectedServing]);
+
   useEffect(() => {
     if (serving) {
       setSelectedServing(serving);
+      setUnitAmount(serving.number_of_units);
     }
   }, [serving]);
 
@@ -146,6 +166,7 @@ export default function FoodItemDetailsView({
 
   const handleServingChange = (newServing: FoodItemServing) => {
     setSelectedServing(newServing);
+    setUnitAmount(newServing.number_of_units);
   };
 
   const caloriePercentage = useMemo(() => {
@@ -181,7 +202,8 @@ export default function FoodItemDetailsView({
       ) : (
         foodItem &&
         parsedFoodItem &&
-        selectedServing && (
+        selectedServing &&
+        calculatedNutritionValues && (
           <YStack f={1} jc={"space-between"}>
             {/* Content */}
             <View>
@@ -202,48 +224,46 @@ export default function FoodItemDetailsView({
               </H4>
               {/* Kcal circle and macros inputs */}
               <XStack ai={"center"} justifyContent={"space-between"} pb={"$2"}>
-                {selectedServing && (
-                  <CircularProgress
-                    radius={65}
-                    value={selectedServing.calories}
-                    maxValue={2000}
-                    progressValueColor="#FF0000"
-                    title="KCAL"
-                    titleColor="#000"
-                    titleStyle={{ fontSize: 12, fontWeight: "bold" }}
-                  />
-                )}
+                <CircularProgress
+                  radius={65}
+                  value={calculatedNutritionValues.calories}
+                  maxValue={2000}
+                  progressValueColor="#FF0000"
+                  title="KCAL"
+                  titleColor="#000"
+                  titleStyle={{ fontSize: 12, fontWeight: "bold" }}
+                />
 
                 {/* Macro Slide */}
                 <YStack gap="$2" flex={1} pl={"$4"}>
                   <MacroInputField
                     icon={<Beef />}
                     name={"Proteína"}
-                    amount={selectedServing.protein}
+                    amount={calculatedNutritionValues.protein}
                     macrosSum={
-                      selectedServing.protein +
-                      selectedServing.carbohydrate +
-                      selectedServing.fat
+                      calculatedNutritionValues.protein +
+                      calculatedNutritionValues.carbohydrate +
+                      calculatedNutritionValues.fat
                     }
                   />
                   <MacroInputField
                     icon={<CakeSlice />}
                     name={"Carbohidratos"}
-                    amount={selectedServing.carbohydrate}
+                    amount={calculatedNutritionValues.carbohydrate}
                     macrosSum={
-                      selectedServing.protein +
-                      selectedServing.carbohydrate +
-                      selectedServing.fat
+                      calculatedNutritionValues.protein +
+                      calculatedNutritionValues.carbohydrate +
+                      calculatedNutritionValues.fat
                     }
                   />
                   <MacroInputField
                     icon={<Avocado />}
                     name={"Grasas"}
-                    amount={selectedServing.fat}
+                    amount={calculatedNutritionValues.fat}
                     macrosSum={
-                      selectedServing.protein +
-                      selectedServing.carbohydrate +
-                      selectedServing.fat
+                      calculatedNutritionValues.protein +
+                      calculatedNutritionValues.carbohydrate +
+                      calculatedNutritionValues.fat
                     }
                   />
                 </YStack>
@@ -279,7 +299,7 @@ export default function FoodItemDetailsView({
                     jc={"space-between"}
                     w={"$14"}
                   >
-                    {/* Input field with Icon */}
+                    {/* Units Input field with Icon */}
                     <XStack flex={1} gap={"$2"}>
                       <Weight />
 
@@ -287,8 +307,14 @@ export default function FoodItemDetailsView({
                         unstyled={true}
                         keyboardType="numeric"
                         placeholder={selectedServing.number_of_units.toString()}
-                        textAlign="center"
-                        px={"$2"}
+                        onChangeText={(text) =>
+                          setUnitAmount(
+                            parseFloat(text) || selectedServing.number_of_units
+                          )
+                        }
+                        textAlign="left"
+                        pl={"$4"}
+                        pr={"$2"}
                         flex={1}
                       />
                     </XStack>
@@ -344,25 +370,25 @@ export default function FoodItemDetailsView({
                 gap={"$1"}
                 pb={"$4"}
               >
-                {/* TODO: Replace with actual values */}
+                {/* TODO: Replace totalAmount and currentIntakeAmount with actual user values */}
                 <MicronutrientBar
                   name={"Sodio"}
                   currentIntakeAmount={0}
-                  amount={selectedServing?.sodium || 0}
+                  amount={calculatedNutritionValues?.sodium || 0}
                   unit={"mg"}
                   totalAmount={1000}
                 />
                 <MicronutrientBar
                   name={"Azúcar"}
                   currentIntakeAmount={0}
-                  amount={selectedServing?.sugar || 0}
+                  amount={calculatedNutritionValues?.sugar || 0}
                   unit={"g"}
                   totalAmount={25}
                 />
                 <MicronutrientBar
                   name={"Fibra"}
                   currentIntakeAmount={2}
-                  amount={selectedServing?.fiber || 0}
+                  amount={calculatedNutritionValues?.fiber || 0}
                   unit={"g"}
                   totalAmount={50}
                 />
