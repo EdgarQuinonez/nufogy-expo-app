@@ -1,6 +1,6 @@
 import { View, Text, XStack, Paragraph, Input } from "tamagui";
 import type { IconProps } from "@tamagui/helpers-icon";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { globalStyles } from "globalStyles";
 
 export type Props = {
@@ -8,6 +8,7 @@ export type Props = {
   name: "Proteína" | "Carbohidratos" | "Grasas";
   amount: number;
   macrosSum: number;
+  onAmountChange: (value: number) => void;
 };
 
 export default function MacroInputField({
@@ -15,7 +16,16 @@ export default function MacroInputField({
   name,
   amount,
   macrosSum,
+  onAmountChange,
 }: Props) {
+  const [displayedPlaceholder, setDisplayedPlaceholder] = useState(
+    Math.round(amount).toString()
+  );
+
+  useEffect(() => {
+    setDisplayedPlaceholder(Math.round(amount).toString());
+  }, [amount]);
+
   return (
     <View
       style={
@@ -68,10 +78,17 @@ export default function MacroInputField({
             <Input
               unstyled={true}
               keyboardType="numeric"
-              placeholder={amount.toFixed(1)}
+              placeholder={displayedPlaceholder}
+              // value={amount.toFixed(1)}
               flex={1}
               px={"$2"}
               textAlign="right"
+              onChangeText={(text) => {
+                const parsedValue = parseFloat(text);
+                if (!isNaN(parsedValue)) {
+                  onAmountChange(parsedValue);
+                }
+              }}
             />
             <Text color={"$gray10"}>g</Text>
           </XStack>

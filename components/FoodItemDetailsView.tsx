@@ -126,10 +126,27 @@ export default function FoodItemDetailsView({
   const [unitAmount, setUnitAmount] = useState(
     selectedServing?.number_of_units || 1
   );
+  const [placeholderUnit, setPlaceholderUnit] = useState(
+    selectedServing?.number_of_units.toString() || "1"
+  ); // State to store the placeholder value
+
+  const [modifiedMacros, setModifiedMacros] = useState<{
+    protein?: number;
+    carbohydrate?: number;
+    fat?: number;
+  }>({});
 
   const calculatedNutritionValues = useMemo(() => {
     if (selectedServing) {
-      const multiplier = unitAmount / selectedServing.number_of_units;
+      let multiplier = unitAmount / selectedServing.number_of_units;
+      if (modifiedMacros.protein) {
+        multiplier = modifiedMacros.protein / selectedServing.protein;
+      } else if (modifiedMacros.carbohydrate) {
+        multiplier = modifiedMacros.carbohydrate / selectedServing.carbohydrate;
+      } else if (modifiedMacros.fat) {
+        multiplier = modifiedMacros.fat / selectedServing.fat;
+      }
+
       return {
         calories: Math.round(selectedServing.calories * multiplier),
         protein: selectedServing.protein * multiplier,
@@ -140,7 +157,26 @@ export default function FoodItemDetailsView({
         fiber: Math.round(selectedServing.fiber * multiplier),
       };
     }
-  }, [unitAmount, selectedServing]);
+  }, [unitAmount, selectedServing, modifiedMacros]);
+
+  const handleMacroInputChange = (
+    macro: "protein" | "carbohydrate" | "fat",
+    value: number
+  ) => {
+    setModifiedMacros((prev) => ({
+      ...prev,
+      [macro]: value,
+    }));
+
+    if (selectedServing) {
+      const newUnitAmount =
+        (value / selectedServing[macro]) * selectedServing.number_of_units;
+      setUnitAmount(newUnitAmount);
+
+      // Update the placeholder for the unit input
+      setPlaceholderUnit(newUnitAmount.toFixed(1));
+    }
+  };
 
   useEffect(() => {
     if (serving) {
@@ -148,6 +184,12 @@ export default function FoodItemDetailsView({
       setUnitAmount(serving.number_of_units);
     }
   }, [serving]);
+
+  useEffect(() => {
+    if (selectedServing) {
+      setPlaceholderUnit(selectedServing.number_of_units.toString());
+    }
+  }, [selectedServing]); // Update placeholder when selectedServing changes
 
   const router = useRouter();
 
@@ -169,12 +211,15 @@ export default function FoodItemDetailsView({
     setUnitAmount(newServing.number_of_units);
   };
 
+  // Updated caloriePercentage to depend on calculatedNutritionValues
   const caloriePercentage = useMemo(() => {
-    if (selectedServing) {
+    if (calculatedNutritionValues) {
       const calorieTarget = 2000; // TODO: Replace with actual target
-      return Math.round((selectedServing?.calories / calorieTarget) * 100);
+      return Math.round(
+        (calculatedNutritionValues.calories / calorieTarget) * 100
+      );
     }
-  }, [selectedServing]);
+  }, [calculatedNutritionValues]);
 
   return (
     <Form onSubmit={saveFood} px={"$2"} flex={1}>
@@ -245,6 +290,9 @@ export default function FoodItemDetailsView({
                       calculatedNutritionValues.carbohydrate +
                       calculatedNutritionValues.fat
                     }
+                    onAmountChange={(value) =>
+                      handleMacroInputChange("protein", value)
+                    }
                   />
                   <MacroInputField
                     icon={<CakeSlice />}
@@ -255,6 +303,9 @@ export default function FoodItemDetailsView({
                       calculatedNutritionValues.carbohydrate +
                       calculatedNutritionValues.fat
                     }
+                    onAmountChange={(value) =>
+                      handleMacroInputChange("carbohydrate", value)
+                    }
                   />
                   <MacroInputField
                     icon={<Avocado />}
@@ -264,6 +315,9 @@ export default function FoodItemDetailsView({
                       calculatedNutritionValues.protein +
                       calculatedNutritionValues.carbohydrate +
                       calculatedNutritionValues.fat
+                    }
+                    onAmountChange={(value) =>
+                      handleMacroInputChange("fat", value)
                     }
                   />
                 </YStack>
@@ -278,7 +332,7 @@ export default function FoodItemDetailsView({
               >
                 <Info size={12} color={"$gray11"} />
                 <Paragraph fontSize={13} color={"$gray11"}>
-                  Esta porción representa un {caloriePercentage}% de tus
+                  Esta porción representa un {caloriePercentage || 0}% de tus
                   calorías objetivo.
                 </Paragraph>
               </XStack>
@@ -302,16 +356,17 @@ export default function FoodItemDetailsView({
                     {/* Units Input field with Icon */}
                     <XStack flex={1} gap={"$2"}>
                       <Weight />
-
+                      {/* TODO: Placeholder unit values should change if macros are manually modified */}
                       <Input
                         unstyled={true}
                         keyboardType="numeric"
-                        placeholder={selectedServing.number_of_units.toString()}
-                        onChangeText={(text) =>
+                        placeholder={placeholderUnit}
+                        onChangeText={(text) => {
+                          setModifiedMacros({});
                           setUnitAmount(
                             parseFloat(text) || selectedServing.number_of_units
-                          )
-                        }
+                          );
+                        }}
                         textAlign="left"
                         pl={"$4"}
                         pr={"$2"}
