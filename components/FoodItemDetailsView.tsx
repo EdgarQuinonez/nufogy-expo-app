@@ -45,7 +45,8 @@ import useFetch from "@utils/useFetch";
 import MicronutrientBar from "@components/MicronutrientBar";
 import MacroInputField from "@components/MacroInputField";
 import DonutGraph from "./DonutGraph";
-import MacroCalorieSlide from "./MacroCalorieSlide";
+import MacroCalorieSlide from "@components/MacroCalorieSlide";
+import MicrosSlide from "@components/MicrosSlide";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -369,37 +370,15 @@ export default function FoodItemDetailsView({
               </YStack>
 
               {/* Micros Highlights */}
-
-              <YStack
-                ai={"center"}
-                jc={"flex-start"}
-                w={"100%"}
-                gap={"$1"}
-                pb={"$4"}
-              >
-                {/* TODO: Replace totalAmount and currentIntakeAmount with actual user values */}
-                <MicronutrientBar
-                  name={"Sodio"}
-                  currentIntakeAmount={0}
-                  amount={calculatedNutritionValues?.sodium || 0}
-                  unit={"mg"}
-                  totalAmount={1000}
-                />
-                <MicronutrientBar
-                  name={"Azúcar"}
-                  currentIntakeAmount={0}
-                  amount={calculatedNutritionValues?.sugar || 0}
-                  unit={"g"}
-                  totalAmount={25}
-                />
-                <MicronutrientBar
-                  name={"Fibra"}
-                  currentIntakeAmount={2}
-                  amount={calculatedNutritionValues?.fiber || 0}
-                  unit={"g"}
-                  totalAmount={50}
-                />
-              </YStack>
+              <MicrosSlide
+                calculatedNutritionValues={{
+                  sodium: calculatedNutritionValues?.sodium || 0,
+                  sugar: calculatedNutritionValues?.sugar || 0,
+                  fiber: calculatedNutritionValues?.fiber || 0,
+                }}
+                currentIntakeAmounts={{ sodium: 0, sugar: 0, fiber: 2 }} // TODO: Replace with real values
+                totalAmounts={{ sodium: 1000, sugar: 25, fiber: 50 }} // TODO: Replace with real values
+              />
 
               {/* Jack Dice */}
               <View
