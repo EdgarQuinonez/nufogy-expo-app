@@ -62,7 +62,10 @@ export default function MacroInputField({
           {/* Macros ratio */}
 
           <Paragraph textAlign={"center"} fontWeight={"bold"}>
-            {Math.round((amount / macrosSum) * 100)}%
+            {!isNaN(Math.round((amount / macrosSum) * 100))
+              ? Math.round((amount / macrosSum) * 100)
+              : 0}
+            %
           </Paragraph>
           {/* Input with Icon */}
           <XStack

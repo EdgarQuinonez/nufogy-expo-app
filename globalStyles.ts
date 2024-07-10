@@ -20,4 +20,18 @@ export const globalStyles = StyleSheet.create({
   fat: {
     backgroundColor: "#77ABD9",
   },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#BDBDBD",
+    marginHorizontal: 4,
+  },
+
+  activeDot: {
+    width: 9,
+    height: 9,
+    borderRadius: 6,
+    backgroundColor: "#000",
+  },
 });

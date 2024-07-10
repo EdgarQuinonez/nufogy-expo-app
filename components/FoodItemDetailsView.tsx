@@ -47,6 +47,7 @@ import MacroInputField from "@components/MacroInputField";
 import DonutGraph from "./DonutGraph";
 import MacroCalorieSlide from "@components/MacroCalorieSlide";
 import MicrosSlide from "@components/MicrosSlide";
+import FoodInfoSlides from "./FoodInfoSlides";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -213,7 +214,6 @@ export default function FoodItemDetailsView({
     setUnitAmount(newServing.number_of_units);
   };
 
-  // Updated caloriePercentage to depend on calculatedNutritionValues
   const caloriePercentage = useMemo(() => {
     if (calculatedNutritionValues) {
       const calorieTarget = 2000; // TODO: Replace with actual target
@@ -224,7 +224,7 @@ export default function FoodItemDetailsView({
   }, [calculatedNutritionValues]);
 
   return (
-    <Form onSubmit={saveFood} px={"$2"} flex={1}>
+    <Form onSubmit={saveFood} flex={1}>
       {loading ? (
         <YStack
           f={1}
@@ -266,13 +266,26 @@ export default function FoodItemDetailsView({
                 </Button>
               </XStack>
               {/* Food Name */}
-              <H4 alignSelf="flex-start" py={"$4"} color={"$color12"}>
+              <H4 alignSelf="flex-start" py={"$4"} color={"$color12"} px={"$2"}>
                 {parsedFoodItem?.food_name}
               </H4>
               {/* Food Nutri Info Details Slides */}
-              <MacroCalorieSlide
-                calculatedNutritionValues={calculatedNutritionValues}
-                onMacroInputChange={handleMacroInputChange}
+              <FoodInfoSlides
+                slides={[
+                  <MacroCalorieSlide
+                    calculatedNutritionValues={calculatedNutritionValues}
+                    onMacroInputChange={handleMacroInputChange}
+                  />,
+                  <MicrosSlide
+                    calculatedNutritionValues={{
+                      sodium: calculatedNutritionValues?.sodium || 0,
+                      sugar: calculatedNutritionValues?.sugar || 0,
+                      fiber: calculatedNutritionValues?.fiber || 0,
+                    }}
+                    currentIntakeAmounts={{ sodium: 0, sugar: 0, fiber: 2 }}
+                    totalAmounts={{ sodium: 1000, sugar: 25, fiber: 50 }}
+                  />,
+                ]}
               />
 
               {/* Kcal ratio label */}
@@ -282,6 +295,7 @@ export default function FoodItemDetailsView({
                 jc={"center"}
                 gap={"$1"}
                 pb={"$4"}
+                px={"$2"}
               >
                 <Info size={12} color={"$gray11"} />
                 <Paragraph fontSize={13} color={"$gray11"}>
@@ -290,7 +304,7 @@ export default function FoodItemDetailsView({
                 </Paragraph>
               </XStack>
               {/* Amount and unit inputs */}
-              <YStack gap="$2" pb={"$4"}>
+              <YStack gap="$2" px={"$2"} pb={"$4"}>
                 {/* Amount Input with Logo */}
                 <XStack ai={"center"} jc={"flex-end"} gap={"$2"} w={"100%"}>
                   <Label fontWeight={"bold"}>Cantidad</Label>
@@ -369,22 +383,12 @@ export default function FoodItemDetailsView({
                 </XStack>
               </YStack>
 
-              {/* Micros Highlights */}
-              <MicrosSlide
-                calculatedNutritionValues={{
-                  sodium: calculatedNutritionValues?.sodium || 0,
-                  sugar: calculatedNutritionValues?.sugar || 0,
-                  fiber: calculatedNutritionValues?.fiber || 0,
-                }}
-                currentIntakeAmounts={{ sodium: 0, sugar: 0, fiber: 2 }} // TODO: Replace with real values
-                totalAmounts={{ sodium: 1000, sugar: 25, fiber: 50 }} // TODO: Replace with real values
-              />
-
               {/* Jack Dice */}
               <View
                 borderRadius={"$4"}
                 bw={1}
                 borderColor={"$gray5"}
+                mx={"$2"}
                 px={"$3"}
                 py={"$4"}
               >
@@ -414,6 +418,7 @@ export default function FoodItemDetailsView({
               ai={"center"}
               jc={"flex-end"}
               py={"$2"}
+              px={"$2"}
               gap={"$1"}
               alignSelf={"flex-end"}
             >
