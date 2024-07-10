@@ -45,9 +45,10 @@ import useFetch from "@utils/useFetch";
 import MicronutrientBar from "@components/MicronutrientBar";
 import MacroInputField from "@components/MacroInputField";
 import DonutGraph from "./DonutGraph";
+import MacroCalorieSlide from "./MacroCalorieSlide";
 
 export type Props = {
-  mealTypeId: string | string[] | undefined;
+  mealTypeId?: string | string[];
   foodItemId: string | string[] | undefined;
   authToken: StoredValue;
 };
@@ -254,12 +255,12 @@ export default function FoodItemDetailsView({
             <View>
               {/* Header */}
               <XStack ai={"center"} jc={"space-between"} w={"100%"} py={"$2"}>
-                <Button onPress={() => router.back()} chromeless>
+                <Button onPress={() => router.back()} px={"$2"} chromeless>
                   <ArrowLeft />
                 </Button>
 
                 <H3>Guardar Alimento</H3>
-                <Button chromeless>
+                <Button px={"$2"} chromeless>
                   <Check />
                 </Button>
               </XStack>
@@ -267,60 +268,12 @@ export default function FoodItemDetailsView({
               <H4 alignSelf="flex-start" py={"$4"} color={"$color12"}>
                 {parsedFoodItem?.food_name}
               </H4>
-              {/* Kcal circle and macros inputs */}
-              <XStack ai={"center"} justifyContent={"space-between"} pb={"$2"}>
-                <DonutGraph
-                  data={{
-                    protein: calculatedNutritionValues.protein,
-                    carbs: calculatedNutritionValues.carbohydrate,
-                    fat: calculatedNutritionValues.fat,
-                    calories: calculatedNutritionValues.calories,
-                  }}
-                />
+              {/* Food Nutri Info Details Slides */}
+              <MacroCalorieSlide
+                calculatedNutritionValues={calculatedNutritionValues}
+                onMacroInputChange={handleMacroInputChange}
+              />
 
-                {/* Macro Slide */}
-                <YStack gap="$2" pl={"$4"}>
-                  <MacroInputField
-                    icon={<Beef />}
-                    name={"Proteína"}
-                    amount={calculatedNutritionValues.protein}
-                    macrosSum={
-                      calculatedNutritionValues.protein +
-                      calculatedNutritionValues.carbohydrate +
-                      calculatedNutritionValues.fat
-                    }
-                    onAmountChange={(value) =>
-                      handleMacroInputChange("protein", value)
-                    }
-                  />
-                  <MacroInputField
-                    icon={<CakeSlice />}
-                    name={"Carbohidratos"}
-                    amount={calculatedNutritionValues.carbohydrate}
-                    macrosSum={
-                      calculatedNutritionValues.protein +
-                      calculatedNutritionValues.carbohydrate +
-                      calculatedNutritionValues.fat
-                    }
-                    onAmountChange={(value) =>
-                      handleMacroInputChange("carbohydrate", value)
-                    }
-                  />
-                  <MacroInputField
-                    icon={<Avocado />}
-                    name={"Grasas"}
-                    amount={calculatedNutritionValues.fat}
-                    macrosSum={
-                      calculatedNutritionValues.protein +
-                      calculatedNutritionValues.carbohydrate +
-                      calculatedNutritionValues.fat
-                    }
-                    onAmountChange={(value) =>
-                      handleMacroInputChange("fat", value)
-                    }
-                  />
-                </YStack>
-              </XStack>
               {/* Kcal ratio label */}
               <XStack
                 overflow="hidden"

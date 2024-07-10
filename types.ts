@@ -109,6 +109,16 @@ export interface FoodItemServingString {
   vitamin_d: string;
 }
 
+export interface CalculatedNutritionValues {
+  protein: number;
+  carbohydrate: number;
+  fat: number;
+  calories: number;
+  sodium: number;
+  sugar: number;
+  fiber: number;
+}
+
 export interface GetFoodItemResponseData {
   message: string;
   data: FoodItemString;

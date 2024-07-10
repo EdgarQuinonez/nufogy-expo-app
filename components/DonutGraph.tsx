@@ -5,7 +5,7 @@ import Svg, { G, Circle } from "react-native-svg";
 export type Props = {
   data: {
     protein: number;
-    carbs: number;
+    carbohydrate: number;
     fat: number;
     calories: number;
   };
@@ -16,10 +16,10 @@ export default function DonutGraph({ data }: Props) {
   const circleCircumference = 2 * Math.PI * radius;
   const strokeWidth = 20;
 
-  const totalMacros = data.protein + data.carbs + data.fat;
+  const totalMacros = data.protein + data.carbohydrate + data.fat;
 
   const proteinPercentage = data.protein / totalMacros;
-  const carbsPercentage = data.carbs / totalMacros;
+  const carbsPercentage = data.carbohydrate / totalMacros;
   const fatPercentage = data.fat / totalMacros;
 
   const sliceData = [
