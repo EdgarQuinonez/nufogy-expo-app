@@ -44,6 +44,7 @@ import {
 import useFetch from "@utils/useFetch";
 import MicronutrientBar from "@components/MicronutrientBar";
 import MacroInputField from "@components/MacroInputField";
+import DonutGraph from "./DonutGraph";
 
 export type Props = {
   mealTypeId: string | string[] | undefined;
@@ -128,7 +129,7 @@ export default function FoodItemDetailsView({
   );
   const [placeholderUnit, setPlaceholderUnit] = useState(
     selectedServing?.number_of_units.toString() || "1"
-  ); // State to store the placeholder value
+  );
 
   const [modifiedMacros, setModifiedMacros] = useState<{
     protein?: number;
@@ -172,8 +173,6 @@ export default function FoodItemDetailsView({
       const newUnitAmount =
         (value / selectedServing[macro]) * selectedServing.number_of_units;
       setUnitAmount(newUnitAmount);
-
-      // Update the placeholder for the unit input
       setPlaceholderUnit(newUnitAmount.toFixed(1));
     }
   };
@@ -189,7 +188,7 @@ export default function FoodItemDetailsView({
     if (selectedServing) {
       setPlaceholderUnit(selectedServing.number_of_units.toString());
     }
-  }, [selectedServing]); // Update placeholder when selectedServing changes
+  }, [selectedServing]);
 
   const router = useRouter();
 
@@ -208,6 +207,7 @@ export default function FoodItemDetailsView({
 
   const handleServingChange = (newServing: FoodItemServing) => {
     setSelectedServing(newServing);
+    setModifiedMacros({});
     setUnitAmount(newServing.number_of_units);
   };
 
@@ -269,18 +269,17 @@ export default function FoodItemDetailsView({
               </H4>
               {/* Kcal circle and macros inputs */}
               <XStack ai={"center"} justifyContent={"space-between"} pb={"$2"}>
-                <CircularProgress
-                  radius={65}
-                  value={calculatedNutritionValues.calories}
-                  maxValue={2000}
-                  progressValueColor="#FF0000"
-                  title="KCAL"
-                  titleColor="#000"
-                  titleStyle={{ fontSize: 12, fontWeight: "bold" }}
+                <DonutGraph
+                  data={{
+                    protein: calculatedNutritionValues.protein,
+                    carbs: calculatedNutritionValues.carbohydrate,
+                    fat: calculatedNutritionValues.fat,
+                    calories: calculatedNutritionValues.calories,
+                  }}
                 />
 
                 {/* Macro Slide */}
-                <YStack gap="$2" flex={1} pl={"$4"}>
+                <YStack gap="$2" pl={"$4"}>
                   <MacroInputField
                     icon={<Beef />}
                     name={"Proteína"}

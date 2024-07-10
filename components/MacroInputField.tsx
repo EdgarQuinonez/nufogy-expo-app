@@ -43,7 +43,7 @@ export default function MacroInputField({
       jc={"center"}
       px={"$2"}
       py={"$4"}
-      w={228}
+      w={216}
       h={40}
     >
       <XStack
@@ -69,7 +69,7 @@ export default function MacroInputField({
             borderRadius={"$2"}
             py={4}
             px={2}
-            w={80}
+            w={76}
             bg={"$background"}
             ai={"center"}
             jc={"center"}
@@ -83,6 +83,7 @@ export default function MacroInputField({
               flex={1}
               px={"$2"}
               textAlign="right"
+              disabled={amount === 0}
               onChangeText={(text) => {
                 const parsedValue = parseFloat(text);
                 if (!isNaN(parsedValue)) {
