@@ -66,7 +66,7 @@ const LoginScreen = () => {
         });
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error during login:", (error as any).response.data);
     } finally {
       setStatus("off");
     }
