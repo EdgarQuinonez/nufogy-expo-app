@@ -22,14 +22,14 @@ import { debounce } from "tamagui";
 import { KeyboardAvoidingView } from "react-native";
 import { globalStyles } from "globalStyles";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useAuth } from "@utils/useAuth";
 
-export type Props = {
-  authToken: StoredValue;
-};
+export type Props = {};
 
-export default function FoodSearchView({ authToken }: Props) {
+export default function FoodSearchView({}: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const { mealTypeId } = useLocalSearchParams();
+  const authToken = useAuth();
 
   const router = useRouter();
 

@@ -23,6 +23,9 @@ import { globalStyles } from "globalStyles";
 import FoodItem from "./FoodItem";
 import { FoodContext } from "@providers/FoodContext";
 import { Link } from "expo-router";
+import useFetch from "@utils/useFetch";
+import { LoggedFood } from "@types";
+import { useAuth } from "@utils/useAuth";
 
 export type Props = {
   mealTypeId: number;
@@ -32,8 +35,21 @@ export type Props = {
 export default function MealType({ mealTypeId, name }: Props) {
   const { handleAddFoodPress } = useContext(FoodContext);
 
+  const authToken = useAuth();
+
   let icon: React.ReactElement<IconProps>;
   let mealTypeColor: string;
+
+  const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs `;
+  const {
+    loading,
+    error,
+    value: foodItems,
+  } = useFetch<LoggedFood[]>(
+    apiEndpoint,
+    { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
+    [authToken]
+  );
 
   switch (name.toLowerCase()) {
     case "desayuno":

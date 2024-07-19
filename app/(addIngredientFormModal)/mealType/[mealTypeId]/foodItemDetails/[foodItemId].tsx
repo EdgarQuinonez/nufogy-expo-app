@@ -10,27 +10,10 @@ import { StoredValue } from "@types";
 export default function FoodItemDetailsWrapper() {
   const { mealTypeId, foodItemId } = useLocalSearchParams();
 
-  const [authToken, setAuthToken] = useState<StoredValue>("");
-
-  const fetchAuthToken = async () => {
-    const token = await getItem("authToken");
-    setAuthToken(token);
-  };
-
-  useEffect(() => {
-    fetchAuthToken();
-  }, []);
-
   return (
     // <ScrollView>
     <SafeAreaView style={globalStyles.container}>
-      {authToken && (
-        <FoodItemDetailsView
-          mealTypeId={mealTypeId}
-          foodItemId={foodItemId}
-          authToken={authToken}
-        />
-      )}
+      <FoodItemDetailsView mealTypeId={mealTypeId} foodItemId={foodItemId} />
     </SafeAreaView>
     // </ScrollView>
   );

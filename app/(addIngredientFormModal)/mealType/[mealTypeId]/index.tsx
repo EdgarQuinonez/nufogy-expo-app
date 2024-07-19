@@ -8,24 +8,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "globalStyles";
 
 export default function FoodSearchViewWrapper() {
-  const [authToken, setAuthToken] = useState<StoredValue>("");
-
-  const fetchAuthToken = async () => {
-    const token = await getItem("authToken");
-    setAuthToken(token);
-  };
-
-  useEffect(() => {
-    fetchAuthToken();
-  }, []);
-
   return (
     <SafeAreaView style={globalStyles.container}>
-      {typeof authToken === "string" && authToken.length > 0 ? (
-        <FoodSearchView authToken={authToken} />
-      ) : (
-        <View></View>
-      )}
+      <FoodSearchView />
     </SafeAreaView>
   );
 }

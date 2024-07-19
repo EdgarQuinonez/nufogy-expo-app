@@ -51,20 +51,17 @@ import MicrosSlide from "@components/MicrosSlide";
 import FoodInfoSlides from "./FoodInfoSlides";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useAuth } from "@utils/useAuth";
 
 export type Props = {
   mealTypeId?: string | string[];
   foodItemId: string | string[] | undefined;
-  authToken: StoredValue;
 };
 
-export default function FoodItemDetailsView({
-  mealTypeId,
-  foodItemId,
-  authToken,
-}: Props) {
+export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
   const [dateTime, setDateTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const authToken = useAuth();
 
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/fs/getingridient/${foodItemId}`;
   const {

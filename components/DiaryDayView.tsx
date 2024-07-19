@@ -13,13 +13,13 @@ import { StyleSheet } from "react-native";
 import MealType from "@components/MealType";
 import { MealType as MealTypeTypes, StoredValue } from "@types";
 import useFetch from "@utils/useFetch";
+import { useAuth } from "@utils/useAuth";
 
-export type Props = {
-  authToken: StoredValue;
-};
+export type Props = {};
 
-export default function DiaryDayView({ authToken }: Props) {
+export default function DiaryDayView({}: Props) {
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/mealtype/`;
+  const authToken = useAuth();
   const {
     loading,
     error,

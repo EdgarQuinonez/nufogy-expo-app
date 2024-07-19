@@ -17,18 +17,6 @@ export default function DiaryScreen() {
     setSelectedDate(date);
   };
 
-  const [authToken, setAuthToken] = useState<StoredValue>("");
-
-  const fetchAuthToken = async () => {
-    const token = await getItem("authToken");
-    setAuthToken(token);
-  };
-
-  useEffect(() => {
-    fetchAuthToken();
-    console.log("authToken", authToken);
-  }, []);
-
   return (
     <ScrollView>
       <SafeAreaView
@@ -184,7 +172,7 @@ export default function DiaryScreen() {
               selectedDate={selectedDate}
               onSelectDateChange={onSelectedDateChange}
             />
-            {authToken && <DiaryDayView authToken={authToken} />}
+            <DiaryDayView />
           </YStack>
         </View>
       </SafeAreaView>
