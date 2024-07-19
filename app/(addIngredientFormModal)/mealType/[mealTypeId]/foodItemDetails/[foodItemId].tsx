@@ -1,10 +1,9 @@
-import { View, Text, Paragraph, ScrollView } from "tamagui";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import FoodItemDetailsView from "@components/FoodItemDetailsView";
 import { globalStyles } from "globalStyles";
-import useFetch from "@utils/useFetch";
+
 import { getItem } from "@utils/AsyncStorage";
 import { StoredValue } from "@types";
 

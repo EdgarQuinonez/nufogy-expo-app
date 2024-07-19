@@ -9,15 +9,49 @@ import {
   H5,
   H4,
 } from "tamagui";
-import { EggFried, PlusCircle } from "@tamagui/lucide-icons";
+import {
+  Coffee,
+  EggFried,
+  UtensilsCrossed,
+  CookingPot,
+  PlusCircle,
+  Fish,
+} from "@tamagui/lucide-icons";
+import type { IconProps } from "@tamagui/helpers-icon";
 import React, { useContext } from "react";
 import { globalStyles } from "globalStyles";
 import FoodItem from "./FoodItem";
 import { FoodContext } from "@providers/FoodContext";
 import { Link } from "expo-router";
 
-export default function MealType() {
+export type Props = {
+  mealTypeId: number;
+  name: string;
+};
+
+export default function MealType({ mealTypeId, name }: Props) {
   const { handleAddFoodPress } = useContext(FoodContext);
+
+  let icon: React.ReactElement<IconProps>;
+  let mealTypeColor: string;
+
+  switch (name.toLowerCase()) {
+    case "desayuno":
+      icon = <EggFried />;
+      mealTypeColor = "$yellow9";
+      break;
+    case "comida":
+      icon = <CookingPot />;
+      mealTypeColor = "$orange7";
+      break;
+    case "cena":
+      icon = <Fish />;
+      mealTypeColor = "$purple7";
+      break;
+    default:
+      icon = <UtensilsCrossed />;
+      mealTypeColor = "$gray6";
+  }
 
   return (
     <YStack
@@ -25,7 +59,7 @@ export default function MealType() {
       ai={"flex-start"}
       jc={"center"}
       w={"100%"}
-      backgroundColor={"$yellow5"}
+      backgroundColor={mealTypeColor}
       px={"$2"}
       borderRadius={"$4"}
       py={"$2"}
@@ -33,12 +67,11 @@ export default function MealType() {
     >
       {/* Header */}
       <XStack w={"100%"} ai={"center"} jc={"space-between"}>
-        {/* Icon */}
         <XStack ai={"center"} jc={"flex-start"} gap={"$2"} flex={1}>
-          <EggFried />
+          {icon}
           {/* Title */}
           <H4 textOverflow={"ellipsis"} overflow={"hidden"}>
-            Desayuno
+            {name}
           </H4>
         </XStack>
 
@@ -59,6 +92,7 @@ export default function MealType() {
               backgroundColor={"$background"}
               ai={"center"}
               jc={"center"}
+              borderRadius={"$4"}
               borderBottomEndRadius={"$6"}
               borderBottomStartRadius={"$6"}
             >
@@ -91,6 +125,7 @@ export default function MealType() {
               h={"fit"}
               backgroundColor={"$background"}
               ai={"center"}
+              borderRadius={"$4"}
               jc={"center"}
               borderBottomEndRadius={"$6"}
               borderBottomStartRadius={"$6"}
@@ -124,6 +159,7 @@ export default function MealType() {
               h={"fit"}
               backgroundColor={"$background"}
               ai={"center"}
+              borderRadius={"$4"}
               jc={"center"}
               borderBottomEndRadius={"$6"}
               borderBottomStartRadius={"$6"}
@@ -153,7 +189,7 @@ export default function MealType() {
       <Link
         href={{
           pathname: "/(addIngredientFormModal)/mealType/[mealTypeId]",
-          params: { mealTypeId: 1 }, // TODO: Replace with actual id from server fetch
+          params: { mealTypeId: mealTypeId },
         }}
         asChild
       >

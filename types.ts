@@ -124,4 +124,20 @@ export interface GetFoodItemResponseData {
   data: FoodItemString;
 }
 
+export interface MealType {
+  id: number;
+  name: string;
+  active: boolean;
+  user: number;
+}
+
+export interface LoggedFood {
+  // TODO: serving_id will be added later in the backend
+  fs_id: number;
+  metric_serving_amount: number;
+  metric_serving_unit: string;
+  meal_type: number;
+  date: string;
+}
+
 export type StoredValue = string | number | boolean | object | null;

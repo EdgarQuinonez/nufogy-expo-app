@@ -39,6 +39,7 @@ import {
   FoodItemServing,
   FoodItemServingString,
   GetFoodItemResponseData,
+  LoggedFood,
   StoredValue,
 } from "@types";
 import useFetch from "@utils/useFetch";
@@ -48,6 +49,8 @@ import DonutGraph from "./DonutGraph";
 import MacroCalorieSlide from "@components/MacroCalorieSlide";
 import MicrosSlide from "@components/MicrosSlide";
 import FoodInfoSlides from "./FoodInfoSlides";
+import axios from "axios";
+import { useForm } from "react-hook-form";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -194,9 +197,38 @@ export default function FoodItemDetailsView({
   }, [selectedServing]);
 
   const router = useRouter();
+  const { handleSubmit } = useForm();
 
-  const saveFood = () => {
-    // ... your food logging logic
+  const saveFood = async () => {
+    try {
+      const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs/`;
+      if (parsedFoodItem && selectedServing && typeof mealTypeId === "string") {
+        const bodyData: LoggedFood = {
+          fs_id: parsedFoodItem.food_id,
+          meal_type: parseInt(mealTypeId),
+          metric_serving_amount: selectedServing.metric_serving_amount,
+          metric_serving_unit: selectedServing.metric_serving_unit,
+          date: dateTime.toISOString(),
+        };
+
+        console.log("Request payload:", bodyData);
+
+        const response = await axios.post(apiEndpoint, bodyData, {
+          headers: {
+            Authorization: `Token ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status === 201) {
+          router.back();
+        } else {
+          console.error("Failed to save food:", response.status);
+        }
+      }
+    } catch (error) {
+      console.error("Error saving food:", (error as any).message);
+    }
   };
 
   const onChangeDateTime = (event: any, selectedDate: Date | undefined) => {
@@ -224,7 +256,7 @@ export default function FoodItemDetailsView({
   }, [calculatedNutritionValues]);
 
   return (
-    <Form onSubmit={saveFood} flex={1}>
+    <Form onSubmit={handleSubmit(saveFood)} flex={1}>
       {loading ? (
         <YStack
           f={1}

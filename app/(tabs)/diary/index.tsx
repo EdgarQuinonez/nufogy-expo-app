@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Paragraph, ScrollView, View, XStack, YStack } from "tamagui";
 import { globalStyles } from "globalStyles";
@@ -7,6 +7,8 @@ import Avocado from "@assets/icons/Avocado";
 import MonthWeekdayStrip from "@components/MonthWeekdayStrip";
 import DiaryDayView from "@components/DiaryDayView";
 import CircularProgress from "react-native-circular-progress-indicator";
+import { StoredValue } from "@types";
+import { getItem } from "@utils/AsyncStorage";
 
 export default function DiaryScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -14,6 +16,18 @@ export default function DiaryScreen() {
   const onSelectedDateChange = (date: Date) => {
     setSelectedDate(date);
   };
+
+  const [authToken, setAuthToken] = useState<StoredValue>("");
+
+  const fetchAuthToken = async () => {
+    const token = await getItem("authToken");
+    setAuthToken(token);
+  };
+
+  useEffect(() => {
+    fetchAuthToken();
+    console.log("authToken", authToken);
+  }, []);
 
   return (
     <ScrollView>
@@ -170,7 +184,7 @@ export default function DiaryScreen() {
               selectedDate={selectedDate}
               onSelectDateChange={onSelectedDateChange}
             />
-            <DiaryDayView />
+            {authToken && <DiaryDayView authToken={authToken} />}
           </YStack>
         </View>
       </SafeAreaView>
