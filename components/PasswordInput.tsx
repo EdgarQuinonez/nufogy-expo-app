@@ -1,6 +1,11 @@
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
+import { UserLoginInputs } from "@types";
 import React, { useState } from "react";
-import { RefCallBack } from "react-hook-form";
+import {
+  RefCallBack,
+  SubmitErrorHandler,
+  SubmitHandler,
+} from "react-hook-form";
 import { Button, Input, SizeTokens, XStack, useTheme } from "tamagui";
 
 export type Props = {
@@ -9,6 +14,10 @@ export type Props = {
   value: string;
   inputRef: RefCallBack;
   size: SizeTokens;
+  handleSubmit: (
+    onValid: SubmitHandler<UserLoginInputs>,
+    onInvalid?: SubmitErrorHandler<UserLoginInputs> | undefined
+  ) => (e?: React.BaseSyntheticEvent) => Promise<void>;
 };
 export default function PasswordInput({
   onChange,
@@ -16,6 +25,7 @@ export default function PasswordInput({
   value,
   inputRef,
   size,
+  handleSubmit,
 }: Props): JSX.Element {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -32,6 +42,9 @@ export default function PasswordInput({
     >
       <Input
         unstyled={true}
+        returnKeyType="send"
+        autoCapitalize="none"
+        autoCorrect={false}
         flex={1}
         onChangeText={onChange}
         onBlur={onBlur}
@@ -39,6 +52,7 @@ export default function PasswordInput({
         ref={inputRef}
         size={size}
         secureTextEntry={!showPassword}
+        onSubmitEditing={() => handleSubmit}
       />
       <Button
         size={size}

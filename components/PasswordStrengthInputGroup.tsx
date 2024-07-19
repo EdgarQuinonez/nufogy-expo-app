@@ -129,6 +129,9 @@ function PasswordInput({
                 setPassword(text);
               }}
               onBlur={onBlur}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoComplete="off"
               value={value}
               ref={ref}
               unstyled={true}

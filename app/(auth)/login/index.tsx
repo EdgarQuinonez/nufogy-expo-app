@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import {
   Input,
@@ -37,6 +37,8 @@ const LoginScreen = () => {
     control,
     formState: { errors },
   } = useForm<UserLoginInputs>();
+  const usernameRef = useRef<any>(null);
+  const passwordRef = useRef<any>(null);
 
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
@@ -104,10 +106,19 @@ const LoginScreen = () => {
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <Input
                   size={"$4"}
-                  placeholder="ej. pedroelfire@gmail.com o pedroelfire"
+                  placeholder="ej. pedroelfire"
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  autoCorrect={false}
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
+                  onSubmitEditing={() => {
+                    if (passwordRef.current) {
+                      passwordRef.current.focus();
+                    }
+                  }}
+                  blurOnSubmit={false}
                   ref={ref}
                 />
               )}
@@ -129,6 +140,7 @@ const LoginScreen = () => {
                   onBlur={onBlur}
                   value={value}
                   inputRef={ref}
+                  handleSubmit={() => handleSubmit(handleLogin)}
                 />
               )}
             />

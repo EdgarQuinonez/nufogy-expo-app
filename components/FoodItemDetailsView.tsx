@@ -355,10 +355,10 @@ export default function FoodItemDetailsView({
                     {/* Units Input field with Icon */}
                     <XStack flex={1} gap={"$2"}>
                       <Weight />
-                      {/* TODO: Placeholder unit values should change if macros are manually modified */}
                       <Input
                         unstyled={true}
                         keyboardType="numeric"
+                        returnKeyType="done"
                         placeholder={placeholderUnit}
                         onChangeText={(text) => {
                           setModifiedMacros({});
