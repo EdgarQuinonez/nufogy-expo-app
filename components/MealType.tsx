@@ -51,6 +51,8 @@ export default function MealType({ mealTypeId, name }: Props) {
     [authToken]
   );
 
+  console.log(foodItems);
+
   switch (name.toLowerCase()) {
     case "desayuno":
       icon = <EggFried />;

@@ -13,8 +13,7 @@ import { Provider } from "./Provider";
 import { getItem } from "@utils/AsyncStorage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StoredValue } from "@types";
-
-export const AuthTokenContext = createContext<StoredValue>(null);
+import { AuthTokenProvider } from "@providers/AuthContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -51,7 +50,6 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authToken, setAuthToken] = useState<StoredValue>(null);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -59,9 +57,6 @@ function RootLayoutNav() {
       try {
         const authToken = await getItem("authToken");
         setIsAuthenticated(!!authToken);
-        if (!!authToken) {
-          setAuthToken(authToken);
-        }
       } catch (error) {
         console.error("Error checking auth status:", error);
         setIsAuthenticated(false);
@@ -74,7 +69,7 @@ function RootLayoutNav() {
     <Provider>
       <ThemeProvider value={DefaultTheme}>
         {isAuthenticated ? (
-          <AuthTokenContext.Provider value={authToken}>
+          <AuthTokenProvider>
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen
                 name="(tabs)"
@@ -83,7 +78,7 @@ function RootLayoutNav() {
                 }}
               />
             </Stack>
-          </AuthTokenContext.Provider>
+          </AuthTokenProvider>
         ) : (
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen
