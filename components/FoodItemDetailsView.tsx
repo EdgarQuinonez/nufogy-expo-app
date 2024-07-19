@@ -205,10 +205,12 @@ export default function FoodItemDetailsView({
       if (parsedFoodItem && selectedServing && typeof mealTypeId === "string") {
         const bodyData: LoggedFood = {
           fs_id: parsedFoodItem.food_id,
+          fs_serving: selectedServing.serving_id,
           meal_type: parseInt(mealTypeId),
           metric_serving_amount: selectedServing.metric_serving_amount,
           metric_serving_unit: selectedServing.metric_serving_unit,
-          date: dateTime.toISOString(),
+          dateTime: dateTime.toISOString(),
+          // date: format(dateTime, "yyyy-MM-dd"),
         };
 
         console.log("Request payload:", bodyData);
