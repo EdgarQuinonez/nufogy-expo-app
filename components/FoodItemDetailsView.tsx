@@ -53,6 +53,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@utils/useAuth";
 import useParseFoodItem from "@utils/useParseFoodItem";
+import useNutritionCalculator from "@utils/useNutritionCalculator";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -81,60 +82,18 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
     ? parsedFoodItem?.servings.serving[0]
     : parsedFoodItem?.servings.serving;
 
-  const [selectedServing, setSelectedServing] = useState(serving);
+  const {
+    selectedServing,
+    setSelectedServing,
+    unitAmount,
+    setUnitAmount,
+    calculatedNutritionValues,
+    handleMacroInputChange,
+  } = useNutritionCalculator(serving);
 
-  const [unitAmount, setUnitAmount] = useState(
-    selectedServing?.number_of_units || 1
-  );
   const [placeholderUnit, setPlaceholderUnit] = useState(
     selectedServing?.number_of_units.toString() || "1"
   );
-
-  const [modifiedMacros, setModifiedMacros] = useState<{
-    protein?: number;
-    carbohydrate?: number;
-    fat?: number;
-  }>({});
-
-  const calculatedNutritionValues = useMemo(() => {
-    if (selectedServing) {
-      let multiplier = unitAmount / selectedServing.number_of_units;
-      if (modifiedMacros.protein) {
-        multiplier = modifiedMacros.protein / selectedServing.protein;
-      } else if (modifiedMacros.carbohydrate) {
-        multiplier = modifiedMacros.carbohydrate / selectedServing.carbohydrate;
-      } else if (modifiedMacros.fat) {
-        multiplier = modifiedMacros.fat / selectedServing.fat;
-      }
-
-      return {
-        calories: Math.round(selectedServing.calories * multiplier),
-        protein: selectedServing.protein * multiplier,
-        carbohydrate: selectedServing.carbohydrate * multiplier,
-        fat: selectedServing.fat * multiplier,
-        sodium: Math.round(selectedServing.sodium * multiplier),
-        sugar: Math.round(selectedServing.sugar * multiplier),
-        fiber: Math.round(selectedServing.fiber * multiplier),
-      };
-    }
-  }, [unitAmount, selectedServing, modifiedMacros]);
-
-  const handleMacroInputChange = (
-    macro: "protein" | "carbohydrate" | "fat",
-    value: number
-  ) => {
-    setModifiedMacros((prev) => ({
-      ...prev,
-      [macro]: value,
-    }));
-
-    if (selectedServing) {
-      const newUnitAmount =
-        (value / selectedServing[macro]) * selectedServing.number_of_units;
-      setUnitAmount(newUnitAmount);
-      setPlaceholderUnit(newUnitAmount.toFixed(1));
-    }
-  };
 
   useEffect(() => {
     if (serving) {
@@ -163,7 +122,6 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
           metric_serving_amount: selectedServing.metric_serving_amount,
           metric_serving_unit: selectedServing.metric_serving_unit,
           dateTime: dateTime.toISOString(),
-          // date: format(dateTime, "yyyy-MM-dd"),
         };
 
         const response = await axios.post(apiEndpoint, bodyData, {
@@ -195,7 +153,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
 
   const handleServingChange = (newServing: FoodItemServing) => {
     setSelectedServing(newServing);
-    setModifiedMacros({});
+
     setUnitAmount(newServing.number_of_units);
   };
 
@@ -255,6 +213,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                 {parsedFoodItem?.food_name}
               </H4>
               {/* Food Nutri Info Details Slides */}
+              {/* TODO: Replace with actual micros data */}
               <FoodInfoSlides
                 slides={[
                   <MacroCalorieSlide
@@ -314,7 +273,6 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                         returnKeyType="done"
                         placeholder={placeholderUnit}
                         onChangeText={(text) => {
-                          setModifiedMacros({});
                           setUnitAmount(
                             parseFloat(text) || selectedServing.number_of_units
                           );
