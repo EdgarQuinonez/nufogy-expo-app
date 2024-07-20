@@ -199,12 +199,12 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
             <View>
               {/* Header */}
               <XStack ai={"center"} jc={"space-between"} w={"100%"} py={"$2"}>
-                <Button onPress={() => router.back()} px={"$2"} chromeless>
+                <Button onPress={() => router.back()} px={"$4"} chromeless>
                   <ArrowLeft />
                 </Button>
 
                 <H3>Guardar Alimento</H3>
-                <Button px={"$2"} chromeless>
+                <Button px={"$4"} onPress={saveFood} chromeless>
                   <Check />
                 </Button>
               </XStack>

@@ -31,26 +31,14 @@ import { useAuth } from "@utils/useAuth";
 export type Props = {
   mealTypeId: number;
   name: string;
+  foodItems: DiaryFoodLog[];
 };
 
-export default function MealType({ mealTypeId, name }: Props) {
+export default function MealType({ mealTypeId, name, foodItems }: Props) {
   const { handleAddFoodPress } = useContext(FoodContext);
-
-  const authToken = useAuth();
 
   let icon: React.ReactElement<IconProps>;
   let mealTypeColor: string;
-
-  const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs `;
-  const {
-    loading,
-    error,
-    value: foodItems,
-  } = useFetch<DiaryFoodLog[]>(
-    apiEndpoint,
-    { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
-    [authToken]
-  );
 
   const filteredFoodItems =
     foodItems?.filter((item) => item.meal_type === mealTypeId) || [];
@@ -74,7 +62,7 @@ export default function MealType({ mealTypeId, name }: Props) {
   }
 
   return (
-    <YStack>
+    <View w={"100%"}>
       <YStack
         ai={"flex-start"}
         jc={"center"}
@@ -202,43 +190,54 @@ export default function MealType({ mealTypeId, name }: Props) {
           </XStack>
         </XStack>
         {/* Food Items */}
-        {!loading ? (
+
+        {filteredFoodItems.length > 0 ? (
           <YStack w={"100%"} gap={"$1"}>
             {filteredFoodItems.map((foodItem, i) => (
               <FoodItem key={i} foodItem={foodItem} />
             ))}
           </YStack>
         ) : (
-          <View w={"100%"} ai={"center"} jc={"center"} h={"$8"}>
-            <Loader />
+          <View
+            w={"100%"}
+            ai={"center"}
+            jc={"center"}
+            h={"$8"}
+            bg={"$yellow1Light"}
+            // borderRadius={"$4"}
+            borderStyle={"dashed"}
+            borderWidth={"$0.5"}
+          >
+            <Paragraph>No has agregado ningún alimento.</Paragraph>
           </View>
         )}
-        {/* Add food item btn */}
 
-        <Button
-          icon={PlusCircle}
-          scaleIcon={1.5}
-          w={"100%"}
-          variant={"outlined"}
-          backgroundColor={"$background"}
-          onPress={() => {
-            handleAddFoodPress();
+        {/* Add food item btn */}
+        <Link
+          href={{
+            pathname: "/(addIngredientFormModal)/mealType/[mealTypeId]",
+            params: { mealTypeId: mealTypeId },
           }}
+          asChild
         >
-          <Link
-            href={{
-              pathname: "/(addIngredientFormModal)/mealType/[mealTypeId]",
-              params: { mealTypeId: mealTypeId },
+          <Button
+            icon={PlusCircle}
+            scaleIcon={1.5}
+            w={"100%"}
+            variant={"outlined"}
+            backgroundColor={"$background"}
+            onPress={() => {
+              handleAddFoodPress();
             }}
           >
             Agregar Comida
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </YStack>
       {/* TODO: Replace with Meal Summary calculations */}
       <Paragraph mt={"$0.25"} color={"$gray10"} fontSize={"$2"}>
         Total de calorías: 9999
       </Paragraph>
-    </YStack>
+    </View>
   );
 }

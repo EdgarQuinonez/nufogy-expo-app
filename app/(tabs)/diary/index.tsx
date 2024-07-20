@@ -7,11 +7,35 @@ import Avocado from "@assets/icons/Avocado";
 import MonthWeekdayStrip from "@components/MonthWeekdayStrip";
 import DiaryDayView from "@components/DiaryDayView";
 import CircularProgress from "react-native-circular-progress-indicator";
-import { StoredValue } from "@types";
+import { DiaryFoodLog, StoredValue } from "@types";
 import { getItem } from "@utils/AsyncStorage";
+import { useAuth } from "@utils/useAuth";
+import useFetch from "@utils/useFetch";
 
 export default function DiaryScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const authToken = useAuth();
+  // TODO: I don't know if it will be different url, but somehow you need to let the backend know which date you want to get the logs from and then filter for the day
+  const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs `;
+  const {
+    loading,
+    error,
+    value: foodItems,
+  } = useFetch<DiaryFoodLog[]>(
+    apiEndpoint,
+    { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
+    [authToken]
+  );
+
+  const dayFilteredFoodItems =
+    foodItems?.filter((foodItem) => {
+      const foodItemDate = new Date(foodItem.dateTime);
+      return (
+        foodItemDate.getDate() === selectedDate.getDate() &&
+        foodItemDate.getMonth() === selectedDate.getMonth() &&
+        foodItemDate.getFullYear() === selectedDate.getFullYear()
+      );
+    }) || [];
 
   const onSelectedDateChange = (date: Date) => {
     setSelectedDate(date);
@@ -172,7 +196,9 @@ export default function DiaryScreen() {
               selectedDate={selectedDate}
               onSelectDateChange={onSelectedDateChange}
             />
-            <DiaryDayView />
+            {dayFilteredFoodItems && (
+              <DiaryDayView foodItems={dayFilteredFoodItems} />
+            )}
           </YStack>
         </View>
       </SafeAreaView>

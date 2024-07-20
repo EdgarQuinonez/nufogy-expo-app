@@ -11,13 +11,15 @@ import {
 } from "tamagui";
 import { StyleSheet } from "react-native";
 import MealType from "@components/MealType";
-import { MealType as MealTypeTypes, StoredValue } from "@types";
+import { DiaryFoodLog, MealType as MealTypeTypes, StoredValue } from "@types";
 import useFetch from "@utils/useFetch";
 import { useAuth } from "@utils/useAuth";
 
-export type Props = {};
+export type Props = {
+  foodItems: DiaryFoodLog[];
+};
 
-export default function DiaryDayView({}: Props) {
+export default function DiaryDayView({ foodItems }: Props) {
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/mealtype/`;
   const authToken = useAuth();
   const {
@@ -62,6 +64,7 @@ export default function DiaryDayView({}: Props) {
                     key={mealType.id}
                     mealTypeId={mealType.id}
                     name={mealType.name}
+                    foodItems={foodItems}
                   />
                 );
               }

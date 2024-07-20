@@ -81,6 +81,7 @@ export default function MacroInputField({
             <Input
               unstyled={true}
               keyboardType="numeric"
+              returnKeyType="done"
               placeholder={displayedPlaceholder}
               // value={amount.toFixed(1)}
               flex={1}

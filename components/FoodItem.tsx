@@ -48,7 +48,7 @@ export default function FoodItem({ foodItem }: Props) {
               <Dot color={"$gray7"} />
               <Paragraph>{metric_serving_amount}</Paragraph>
               <Paragraph ml={"$1"} color={"$gray10"}>
-                {servingData.measurement_description}
+                {servingData.metric_serving_unit}
               </Paragraph>
             </XStack>
             {/* Calories */}

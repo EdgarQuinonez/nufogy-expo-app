@@ -1,26 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Check, XCircle } from "@tamagui/lucide-icons";
-import { Platform, StatusBar } from "react-native";
-import { Modal } from "react-native";
-import {
-  Button,
-  H1,
-  H3,
-  H4,
-  Paragraph,
-  ScrollView,
-  View,
-  XStack,
-  YStack,
-} from "tamagui";
+import React, { useRef, useState } from "react";
+import { ArrowLeft, Check } from "@tamagui/lucide-icons";
+
+import { Button, H3, Paragraph, ScrollView, View, XStack } from "tamagui";
 import SearchBar from "@components/SearchBar";
 import FoodSearchItem from "@components/FoodSearchItem";
-import { FoodSearchResponseData, StoredValue } from "@types";
+import { FoodSearchResponseData } from "@types";
 import useFetch from "@utils/useFetch";
-import { getItem } from "@utils/AsyncStorage";
+
 import { debounce } from "tamagui";
-import { KeyboardAvoidingView } from "react-native";
-import { globalStyles } from "globalStyles";
+
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useAuth } from "@utils/useAuth";
 
@@ -55,11 +43,16 @@ export default function FoodSearchView({}: Props) {
     <View flex={1} px={"$4"}>
       {/* TopBar */}
       <XStack w={"100%"} ai={"center"} jc={"space-between"} py={"$4"}>
-        <Button w={"$4"} onPress={() => router.back()} asChild>
-          <ArrowLeft />
-        </Button>
+        <Button
+          icon={<ArrowLeft size={24} />}
+          w={"$4"}
+          px={"$2"}
+          onPress={() => router.back()}
+          chromeless
+        />
+
         <H3>Añadir comida</H3>
-        <View w={"$4"} backgroundColor={"$colorTransparent"} />
+        <View w={"$4"} px={"$2"} backgroundColor={"$colorTransparent"} />
       </XStack>
 
       <SearchBar setSearchQuery={debouncedSetSearchQuery} size={"$4"} />
@@ -103,7 +96,6 @@ export default function FoodSearchView({}: Props) {
           </ScrollView>
         ) : (
           <View flex={1} justifyContent="center" alignItems="center" w={"100%"}>
-            {/* Center the "No results" message */}
             <Paragraph>No se encontraron alimentos.</Paragraph>
           </View>
         )}
