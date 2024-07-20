@@ -2,12 +2,13 @@ import { useState, useEffect, useMemo } from "react";
 import { FoodItemServing } from "@types";
 
 export default function useNutritionCalculator(
-  initialServing?: FoodItemServing
+  initialServing?: FoodItemServing,
+  initialUnitAmount?: number
 ) {
   const [selectedServing, setSelectedServing] =
     useState<FoodItemServing | null>(initialServing || null);
   const [unitAmount, setUnitAmount] = useState(
-    initialServing?.number_of_units || 0
+    initialUnitAmount ?? initialServing?.number_of_units ?? 0
   );
 
   const [modifiedMacros, setModifiedMacros] = useState<{
