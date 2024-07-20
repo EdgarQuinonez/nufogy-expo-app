@@ -39,7 +39,7 @@ import {
   FoodItemServing,
   FoodItemServingString,
   GetFoodItemResponseData,
-  LoggedFood,
+  FoodLogRequestBody,
   StoredValue,
 } from "@types";
 import useFetch from "@utils/useFetch";
@@ -200,7 +200,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
     try {
       const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs/`;
       if (parsedFoodItem && selectedServing && typeof mealTypeId === "string") {
-        const bodyData: LoggedFood = {
+        const bodyData: FoodLogRequestBody = {
           fs_id: parsedFoodItem.food_id,
           fs_serving: selectedServing.serving_id,
           meal_type: parseInt(mealTypeId),
@@ -209,8 +209,6 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
           dateTime: dateTime.toISOString(),
           // date: format(dateTime, "yyyy-MM-dd"),
         };
-
-        console.log("Request payload:", bodyData);
 
         const response = await axios.post(apiEndpoint, bodyData, {
           headers: {

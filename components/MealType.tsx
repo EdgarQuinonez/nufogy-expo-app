@@ -16,6 +16,7 @@ import {
   CookingPot,
   PlusCircle,
   Fish,
+  Loader,
 } from "@tamagui/lucide-icons";
 import type { IconProps } from "@tamagui/helpers-icon";
 import React, { useContext } from "react";
@@ -24,7 +25,7 @@ import FoodItem from "./FoodItem";
 import { FoodContext } from "@providers/FoodContext";
 import { Link } from "expo-router";
 import useFetch from "@utils/useFetch";
-import { LoggedFood } from "@types";
+import { DiaryFoodLog, FoodLogRequestBody } from "@types";
 import { useAuth } from "@utils/useAuth";
 
 export type Props = {
@@ -45,13 +46,14 @@ export default function MealType({ mealTypeId, name }: Props) {
     loading,
     error,
     value: foodItems,
-  } = useFetch<LoggedFood[]>(
+  } = useFetch<DiaryFoodLog[]>(
     apiEndpoint,
     { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
     [authToken]
   );
 
-  console.log(foodItems);
+  const filteredFoodItems =
+    foodItems?.filter((item) => item.meal_type === mealTypeId) || [];
 
   switch (name.toLowerCase()) {
     case "desayuno":
@@ -73,7 +75,6 @@ export default function MealType({ mealTypeId, name }: Props) {
 
   return (
     <YStack
-      flex={1}
       ai={"flex-start"}
       jc={"center"}
       w={"100%"}
@@ -85,7 +86,7 @@ export default function MealType({ mealTypeId, name }: Props) {
     >
       {/* Header */}
       <XStack w={"100%"} ai={"center"} jc={"space-between"}>
-        <XStack ai={"center"} jc={"flex-start"} gap={"$2"} flex={1}>
+        <XStack ai={"center"} jc={"flex-start"} gap={"$2"}>
           {icon}
           {/* Title */}
           <H4 textOverflow={"ellipsis"} overflow={"hidden"}>
@@ -200,9 +201,17 @@ export default function MealType({ mealTypeId, name }: Props) {
         </XStack>
       </XStack>
       {/* Food Items */}
-      <YStack flex={1} w={"100%"}>
-        <FoodItem />
-      </YStack>
+      {!loading ? (
+        <YStack w={"100%"} gap={"$1"}>
+          {filteredFoodItems.map((foodItem, i) => (
+            <FoodItem key={i} foodItem={foodItem} />
+          ))}
+        </YStack>
+      ) : (
+        <View w={"100%"} ai={"center"} jc={"center"} h={"$8"}>
+          <Loader />
+        </View>
+      )}
       {/* Add food item btn */}
       <Link
         href={{

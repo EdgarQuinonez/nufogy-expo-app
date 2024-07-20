@@ -1,101 +1,105 @@
 import { View, Text, XStack, YStack, Input, Select, Paragraph } from "tamagui";
 import React from "react";
-import { Utensils, X } from "@tamagui/lucide-icons";
+import { Dot, Utensils, X } from "@tamagui/lucide-icons";
 import { globalStyles } from "globalStyles";
+import { DiaryFoodLog, FoodItemServing } from "@types";
+import SelectDropdown from "@components/SelectDropdown";
 
-export default function FoodItem() {
+export type Props = {
+  foodItem: DiaryFoodLog;
+};
+
+export default function FoodItem({ foodItem }: Props) {
+  const { fs_object, fs_serving, metric_serving_amount } = foodItem;
+  const foodName = fs_object.food_name;
+
+  const servingData = Array.isArray(fs_object.servings.serving)
+    ? fs_object.servings.serving.find(
+        (ser) => parseInt(ser.serving_id) === fs_serving
+      )
+    : fs_object.servings.serving;
+
   return (
-    <XStack
-      ai={"center"}
-      jc={"flex-start"}
-      w={"100%"}
-      backgroundColor={"$background"}
-      borderRadius={"$4"}
-      py={"$1"}
-      px={"$2"}
-    >
-      <View pr={"$2"}>
-        <Utensils />
-      </View>
-      {/* Amount and Unit Input */}
-      <YStack ai={"center"} jc={"center"} pr={"$2"}>
-        <Input
-          keyboardType={"numeric"}
-          size={"$2"}
-          placeholder="100"
-          minWidth={"$3"}
-          maxWidth={"$3"}
-        />
-        <Select size={"$2"}>
-          <Select.Item index={0} value="g">
-            g
-          </Select.Item>
-        </Select>
-      </YStack>
-      {/* Food Details */}
-      <YStack flex={1} ai={"flex-start"} jc={"space-between"}>
-        {/* Upper */}
-        <XStack flex={1} w={"100%"} ai={"center"} jc={"space-between"}>
-          {/* Food Name */}
-          <Paragraph>Huevo Frito</Paragraph>
-          {/* Calories */}
-          <XStack gap={"$1"}>
-            <Paragraph fontWeight={"bold"} fontSize={"$6"}>
-              9999
-            </Paragraph>
-            <Paragraph color={"$gray10"}>kcal</Paragraph>
-          </XStack>
-        </XStack>
-        {/* Lower */}
-        <XStack flex={1} gap={"$2"}>
-          {/* Macros */}
-          {/* Protein */}
-          <XStack ai={"center"} jc={"center"} gap={"$1"}>
-            {/* Colored Dot */}
-            <View
-              style={globalStyles.protein}
-              h={"$0.75"}
-              w={"$0.75"}
-              borderRadius={"$true"}
-            />
+    servingData && (
+      <XStack
+        ai={"center"}
+        jc={"flex-start"}
+        w={"100%"}
+        backgroundColor={"$background"}
+        borderRadius={"$4"}
+        py={"$1"}
+        px={"$2"}
+      >
+        <View pr={"$2"}>
+          <Utensils />
+        </View>
 
-            {/* Amount */}
-            <Paragraph>999</Paragraph>
-            {/* Unit */}
-            <Paragraph color={"$gray10"}>g</Paragraph>
+        <YStack flex={1} ai={"flex-start"} jc={"space-between"}>
+          {/* Upper */}
+          <XStack flex={1} w={"100%"} ai={"center"} jc={"space-between"}>
+            {/* Food Name */}
+            <XStack ai={"flex-start"} jc={"center"}>
+              <View ai={"center"} jc={"center"}>
+                {/* TODO: Figure out text wrap and text overflow */}
+                <Paragraph numberOfLines={2} maxWidth={"$12"}>
+                  {foodName}
+                </Paragraph>
+              </View>
+              <Dot color={"$gray7"} />
+              <Paragraph>{metric_serving_amount}</Paragraph>
+              <Paragraph ml={"$1"} color={"$gray10"}>
+                {servingData.measurement_description}
+              </Paragraph>
+            </XStack>
+            {/* Calories */}
+            <XStack gap={"$1"}>
+              <Paragraph fontWeight={"bold"} fontSize={"$6"}>
+                {servingData.calories}
+              </Paragraph>
+              <Paragraph color={"$gray10"}>kcal</Paragraph>
+            </XStack>
           </XStack>
-          {/* Carbs */}
-          <XStack ai={"center"} jc={"center"} gap={"$1"}>
-            {/* Colored Dot */}
-            <View
-              style={globalStyles.carbs}
-              h={"$0.75"}
-              w={"$0.75"}
-              borderRadius={"$true"}
+          {/* Lower */}
+          <XStack flex={1} gap={"$2"}>
+            {/* Protein */}
+            <MacroDisplay
+              color={globalStyles.protein}
+              amount={servingData.protein}
+              unit="g"
             />
-
-            {/* Amount */}
-            <Paragraph>999</Paragraph>
-            {/* Unit */}
-            <Paragraph color={"$gray10"}>g</Paragraph>
-          </XStack>
-          {/* Fat */}
-          <XStack ai={"center"} jc={"center"} gap={"$1"}>
-            {/* Colored Dot */}
-            <View
-              style={globalStyles.fat}
-              h={"$0.75"}
-              w={"$0.75"}
-              borderRadius={"$true"}
+            {/* Carbs */}
+            <MacroDisplay
+              color={globalStyles.carbs}
+              amount={servingData.carbohydrate}
+              unit="g"
             />
-
-            {/* Amount */}
-            <Paragraph>999</Paragraph>
-            {/* Unit */}
-            <Paragraph color={"$gray10"}>g</Paragraph>
+            {/* Fat */}
+            <MacroDisplay
+              color={globalStyles.fat}
+              amount={servingData.fat}
+              unit="g"
+            />
           </XStack>
-        </XStack>
-      </YStack>
+        </YStack>
+      </XStack>
+    )
+  );
+}
+
+function MacroDisplay({
+  color,
+  amount,
+  unit,
+}: {
+  color: any;
+  amount: string;
+  unit: string;
+}) {
+  return (
+    <XStack ai={"center"} jc={"center"} gap={"$1"}>
+      <View style={color} h={"$0.75"} w={"$0.75"} borderRadius={"$true"} />
+      <Paragraph>{amount}</Paragraph>
+      <Paragraph color={"$gray10"}>{unit}</Paragraph>
     </XStack>
   );
 }

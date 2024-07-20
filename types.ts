@@ -131,13 +131,24 @@ export interface MealType {
   user: number;
 }
 
-export interface LoggedFood {
+export interface FoodLogRequestBody {
   fs_id: number;
   metric_serving_amount: number;
   metric_serving_unit: string;
   meal_type: number;
   fs_serving: number;
   dateTime: string;
+}
+
+export interface DiaryFoodLog {
+  dateTime: string;
+  fs_id: number;
+  fs_object: FoodItemString;
+  fs_serving: number;
+  meal_type: number;
+  metric_serving_amount: number;
+  metric_serving_unit: string;
+  user_id: number;
 }
 
 export type StoredValue = string | number | boolean | object | null;
