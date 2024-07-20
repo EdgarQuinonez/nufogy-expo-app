@@ -52,6 +52,7 @@ import FoodInfoSlides from "./FoodInfoSlides";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@utils/useAuth";
+import useParseFoodItem from "@utils/useParseFoodItem";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -73,53 +74,8 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
     { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
     [authToken]
   );
-  const parsedFoodItem: FoodItem | undefined = useMemo(() => {
-    if (foodItem) {
-      const { data } = foodItem;
-      const parseServing = (
-        serving: FoodItemServingString
-      ): FoodItemServing => {
-        return {
-          calcium: parseInt(serving.calcium),
-          calories: parseInt(serving.calories),
-          carbohydrate: parseFloat(serving.carbohydrate),
-          cholesterol: parseInt(serving.cholesterol),
-          fat: parseFloat(serving.fat),
-          fiber: parseFloat(serving.fiber),
-          iron: parseFloat(serving.iron),
-          measurement_description: serving.measurement_description,
-          metric_serving_amount: parseFloat(serving.metric_serving_amount),
-          metric_serving_unit: serving.metric_serving_unit,
-          monounsaturated_fat: parseInt(serving.monounsaturated_fat),
-          number_of_units: parseFloat(serving.number_of_units),
-          polyunsaturated_fat: parseFloat(serving.polyunsaturated_fat),
-          potassium: parseInt(serving.potassium),
-          protein: parseFloat(serving.protein),
-          saturated_fat: parseFloat(serving.saturated_fat),
-          serving_description: serving.serving_description,
-          serving_id: parseInt(serving.serving_id),
-          serving_url: serving.serving_url,
-          sodium: parseInt(serving.sodium),
-          sugar: parseFloat(serving.sugar),
-          vitamin_a: parseInt(serving.vitamin_a),
-          vitamin_c: parseFloat(serving.vitamin_c),
-          vitamin_d: parseInt(serving.vitamin_d),
-        };
-      };
 
-      return {
-        food_id: parseInt(data.food_id),
-        food_name: data.food_name,
-        food_type: data.food_type,
-        food_url: data.food_url,
-        servings: {
-          serving: Array.isArray(data.servings.serving)
-            ? data.servings.serving.map(parseServing)
-            : parseServing(data.servings.serving),
-        },
-      };
-    }
-  }, [foodItem]);
+  const parsedFoodItem = useParseFoodItem(foodItem?.data);
 
   const serving = Array.isArray(parsedFoodItem?.servings.serving)
     ? parsedFoodItem?.servings.serving[0]
@@ -433,7 +389,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                 </XStack>
 
                 <Paragraph>
-                  {/* Replace with actual gpt output */}
+                  {/* TODO: Replace with actual gpt output */}
                   Has consumido Chicken Breast los últimos 5 días de la semana,
                   recuerda variar tus fuentes de proteína para asegurar una
                   ingesta equilibrada de nutrientes.
