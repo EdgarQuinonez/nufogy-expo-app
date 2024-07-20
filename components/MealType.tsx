@@ -74,152 +74,147 @@ export default function MealType({ mealTypeId, name }: Props) {
   }
 
   return (
-    <YStack
-      ai={"flex-start"}
-      jc={"center"}
-      w={"100%"}
-      backgroundColor={mealTypeColor}
-      px={"$2"}
-      borderRadius={"$4"}
-      py={"$2"}
-      gap={"$2"}
-    >
-      {/* Header */}
-      <XStack w={"100%"} ai={"center"} jc={"space-between"}>
-        <XStack ai={"center"} jc={"flex-start"} gap={"$2"}>
-          {icon}
-          {/* Title */}
-          <H4 textOverflow={"ellipsis"} overflow={"hidden"}>
-            {name}
-          </H4>
-        </XStack>
-
-        {/* Meal Summary Buttons */}
-        <XStack gap={"$1"}>
-          {/* Protein Btn */}
-          <Button
-            unstyled={true}
-            disabled={true}
-            h={"$4"}
-            w={"$4"}
-            borderRadius={"$4"}
-            style={globalStyles.protein}
-          >
-            <YStack
-              w={"100%"}
-              h={"fit"}
-              backgroundColor={"$background"}
-              ai={"center"}
-              jc={"center"}
-              borderRadius={"$4"}
-              borderBottomEndRadius={"$6"}
-              borderBottomStartRadius={"$6"}
-            >
-              {/* Amount */}
-              <Paragraph fontWeight={"bold"} fontSize={"$4"}>
-                9999
-                {/* Unit */}
-              </Paragraph>
-              <Paragraph
-                opacity={0.75}
-                fontSize={"$2"}
-                color={"$gray10"}
-                mt={"$-3"}
-              >
-                g
-              </Paragraph>
-            </YStack>
-          </Button>
-          {/* Carbs Btn */}
-          <Button
-            unstyled={true}
-            disabled={true}
-            h={"$4"}
-            w={"$4"}
-            borderRadius={"$4"}
-            style={globalStyles.carbs}
-          >
-            <YStack
-              w={"100%"}
-              h={"fit"}
-              backgroundColor={"$background"}
-              ai={"center"}
-              borderRadius={"$4"}
-              jc={"center"}
-              borderBottomEndRadius={"$6"}
-              borderBottomStartRadius={"$6"}
-            >
-              {/* Amount */}
-              <Paragraph fontWeight={"bold"} fontSize={"$4"}>
-                9999
-                {/* Unit */}
-              </Paragraph>
-              <Paragraph
-                opacity={0.75}
-                fontSize={"$2"}
-                color={"$gray10"}
-                mt={"$-3"}
-              >
-                g
-              </Paragraph>
-            </YStack>
-          </Button>
-          {/* Fat Btn */}
-          <Button
-            unstyled={true}
-            disabled={true}
-            h={"$4"}
-            w={"$4"}
-            borderRadius={"$4"}
-            style={globalStyles.fat}
-          >
-            <YStack
-              w={"100%"}
-              h={"fit"}
-              backgroundColor={"$background"}
-              ai={"center"}
-              borderRadius={"$4"}
-              jc={"center"}
-              borderBottomEndRadius={"$6"}
-              borderBottomStartRadius={"$6"}
-            >
-              {/* Amount */}
-              <Paragraph fontWeight={"bold"} fontSize={"$4"}>
-                9999
-                {/* Unit */}
-              </Paragraph>
-              <Paragraph
-                opacity={0.75}
-                fontSize={"$2"}
-                color={"$gray10"}
-                mt={"$-3"}
-              >
-                g
-              </Paragraph>
-            </YStack>
-          </Button>
-        </XStack>
-      </XStack>
-      {/* Food Items */}
-      {!loading ? (
-        <YStack w={"100%"} gap={"$1"}>
-          {filteredFoodItems.map((foodItem, i) => (
-            <FoodItem key={i} foodItem={foodItem} />
-          ))}
-        </YStack>
-      ) : (
-        <View w={"100%"} ai={"center"} jc={"center"} h={"$8"}>
-          <Loader />
-        </View>
-      )}
-      {/* Add food item btn */}
-      <Link
-        href={{
-          pathname: "/(addIngredientFormModal)/mealType/[mealTypeId]",
-          params: { mealTypeId: mealTypeId },
-        }}
-        asChild
+    <YStack>
+      <YStack
+        ai={"flex-start"}
+        jc={"center"}
+        w={"100%"}
+        backgroundColor={mealTypeColor}
+        px={"$2"}
+        borderRadius={"$4"}
+        py={"$2"}
+        gap={"$2"}
       >
+        {/* Header */}
+        <XStack w={"100%"} ai={"center"} jc={"space-between"}>
+          <XStack ai={"center"} jc={"flex-start"} gap={"$2"}>
+            {icon}
+            {/* Title */}
+            <H4 textOverflow={"ellipsis"} overflow={"hidden"}>
+              {name}
+            </H4>
+          </XStack>
+
+          {/* Meal Summary Buttons */}
+          <XStack gap={"$1"}>
+            {/* Protein Btn */}
+            <Button
+              unstyled={true}
+              disabled={true}
+              h={"$4"}
+              w={"$4"}
+              borderRadius={"$4"}
+              style={globalStyles.protein}
+            >
+              <YStack
+                w={"100%"}
+                h={"fit"}
+                backgroundColor={"$background"}
+                ai={"center"}
+                jc={"center"}
+                borderRadius={"$4"}
+                borderBottomEndRadius={"$6"}
+                borderBottomStartRadius={"$6"}
+              >
+                {/* Amount */}
+                <Paragraph fontWeight={"bold"} fontSize={"$4"}>
+                  9999
+                  {/* Unit */}
+                </Paragraph>
+                <Paragraph
+                  opacity={0.75}
+                  fontSize={"$2"}
+                  color={"$gray10"}
+                  mt={"$-3"}
+                >
+                  g
+                </Paragraph>
+              </YStack>
+            </Button>
+            {/* Carbs Btn */}
+            <Button
+              unstyled={true}
+              disabled={true}
+              h={"$4"}
+              w={"$4"}
+              borderRadius={"$4"}
+              style={globalStyles.carbs}
+            >
+              <YStack
+                w={"100%"}
+                h={"fit"}
+                backgroundColor={"$background"}
+                ai={"center"}
+                borderRadius={"$4"}
+                jc={"center"}
+                borderBottomEndRadius={"$6"}
+                borderBottomStartRadius={"$6"}
+              >
+                {/* Amount */}
+                <Paragraph fontWeight={"bold"} fontSize={"$4"}>
+                  9999
+                  {/* Unit */}
+                </Paragraph>
+                <Paragraph
+                  opacity={0.75}
+                  fontSize={"$2"}
+                  color={"$gray10"}
+                  mt={"$-3"}
+                >
+                  g
+                </Paragraph>
+              </YStack>
+            </Button>
+            {/* Fat Btn */}
+            <Button
+              unstyled={true}
+              disabled={true}
+              h={"$4"}
+              w={"$4"}
+              borderRadius={"$4"}
+              style={globalStyles.fat}
+            >
+              <YStack
+                w={"100%"}
+                h={"fit"}
+                backgroundColor={"$background"}
+                ai={"center"}
+                borderRadius={"$4"}
+                jc={"center"}
+                borderBottomEndRadius={"$6"}
+                borderBottomStartRadius={"$6"}
+              >
+                {/* Amount */}
+                <Paragraph fontWeight={"bold"} fontSize={"$4"}>
+                  9999
+                  {/* Unit */}
+                </Paragraph>
+                <Paragraph
+                  opacity={0.75}
+                  fontSize={"$2"}
+                  color={"$gray10"}
+                  mt={"$-3"}
+                >
+                  g
+                </Paragraph>
+              </YStack>
+            </Button>
+          </XStack>
+        </XStack>
+        {/* Food Items */}
+        {!loading ? (
+          <YStack w={"100%"} gap={"$1"}>
+            {filteredFoodItems.map((foodItem, i) => (
+              <FoodItem key={i} foodItem={foodItem} />
+            ))}
+          </YStack>
+        ) : (
+          <View w={"100%"} ai={"center"} jc={"center"} h={"$8"}>
+            <Loader />
+          </View>
+        )}
+        {/* Add food item btn */}
+
         <Button
           icon={PlusCircle}
           scaleIcon={1.5}
@@ -230,9 +225,20 @@ export default function MealType({ mealTypeId, name }: Props) {
             handleAddFoodPress();
           }}
         >
-          Agregar Comida
+          <Link
+            href={{
+              pathname: "/(addIngredientFormModal)/mealType/[mealTypeId]",
+              params: { mealTypeId: mealTypeId },
+            }}
+          >
+            Agregar Comida
+          </Link>
         </Button>
-      </Link>
+      </YStack>
+      {/* TODO: Replace with Meal Summary calculations */}
+      <Paragraph mt={"$0.25"} color={"$gray10"} fontSize={"$2"}>
+        Total de calorías: 9999
+      </Paragraph>
     </YStack>
   );
 }

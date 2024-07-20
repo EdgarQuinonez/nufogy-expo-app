@@ -55,11 +55,11 @@ export default function FoodSearchView({}: Props) {
     <View flex={1} px={"$4"}>
       {/* TopBar */}
       <XStack w={"100%"} ai={"center"} jc={"space-between"} py={"$4"}>
-        <Button onPress={() => router.back()} chromeless asChild>
+        <Button w={"$4"} onPress={() => router.back()} asChild>
           <ArrowLeft />
         </Button>
-        <H3>Añadir a desayuno</H3>
-        <View w={"24px"} backgroundColor={"$colorTransparent"} />
+        <H3>Añadir comida</H3>
+        <View w={"$4"} backgroundColor={"$colorTransparent"} />
       </XStack>
 
       <SearchBar setSearchQuery={debouncedSetSearchQuery} size={"$4"} />
@@ -117,7 +117,7 @@ export default function FoodSearchView({}: Props) {
         gap={"$1"}
         alignSelf={"flex-end"}
       >
-        <Button
+        {/* <Button
           unstyled={true}
           backgroundColor={"#E15252"}
           px={"$4"}
@@ -131,18 +131,24 @@ export default function FoodSearchView({}: Props) {
             <ArrowLeft color={"$background"} />
             <Paragraph color={"$background"}>Cancelar</Paragraph>
           </XStack>
-        </Button>
+        </Button> */}
         <Button
           unstyled={true}
-          backgroundColor={"#1E1940"}
+          flex={1}
+          backgroundColor={"$green10"}
           px={"$4"}
           py={"$3"}
           borderRadius={"$4"}
           color={"$background"}
+          onPress={() => {
+            router.back();
+          }}
         >
           <XStack gap={"$1"} ai={"center"} jc={"center"}>
-            <Paragraph color={"$background"}>Guardar</Paragraph>
-            <Check color={"$background"} />
+            <Paragraph color={"$background"} fontWeight={"bold"}>
+              Terminar
+            </Paragraph>
+            <Check ml={"$0.25"} color={"$background"} />
           </XStack>
         </Button>
       </XStack>
