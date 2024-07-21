@@ -3,12 +3,11 @@ import React from "react";
 import { removeItem } from "@utils/AsyncStorage";
 import { useRouter } from "expo-router";
 import useProfile from "@utils/useProfile";
+import { colors } from "globalStyles";
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { loading, error, profile } = useProfile();
-
-  console.log(profile);
+  const { loading, error, userProfile } = useProfile();
 
   const handleLogout = async () => {
     try {
@@ -20,9 +19,16 @@ export default function ProfileScreen() {
     }
   };
   return (
-    <View flex={1} ai={"flex-start"} jc={"center"}>
+    <View flex={1} ai={"center"} jc={"center"}>
       <Text>ProfileScreen</Text>
-      <Button onPress={handleLogout}>Cerrar sesión</Button>
+      <Button
+        bg={"$red9"}
+        onPress={handleLogout}
+        fontWeight={"bold"}
+        color={colors.background.main}
+      >
+        Cerrar sesión
+      </Button>
     </View>
   );
 }

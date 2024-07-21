@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ProfileContext } from "@providers/ProfileContext"; // Update the path as needed
+import { ProfileContext } from "@providers/ProfileContext";
 
 const useProfile = () => {
   const context = useContext(ProfileContext);

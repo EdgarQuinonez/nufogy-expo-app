@@ -1,43 +1,48 @@
-import { getItem } from "@utils/AsyncStorage";
+import { getItem } from "@utils/AsyncStorage"; // Make sure you have AsyncStorage utils
 import { useAuth } from "@utils/useAuth";
-import useFetch from "@utils/useFetch";
 import { createContext, useEffect, useState } from "react";
 
 interface ProfileContextValue {
-  profile: any | null;
+  userProfile: any | null;
   loading: boolean;
   error: any;
 }
 
 const ProfileContext = createContext<ProfileContextValue>({
-  profile: null,
+  userProfile: null,
   loading: true,
   error: null,
 });
 
 const ProfileProvider = ({ children }: any) => {
-  const [profile, setProfile] = useState<any>(null);
-  const authToken = useAuth();
-  const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/profile/get`;
-
-  const {
-    loading,
-    error,
-    value: userProfile,
-  } = useFetch(apiEndpoint, {
-    headers: {
-      Authorization: `Token ${authToken}`,
-    },
-  });
+  const [userProfile, setUserProfile] = useState<any | null>(null);
 
   useEffect(() => {
-    if (userProfile) {
-      setProfile(userProfile);
-    }
-  }, [userProfile]);
+    const fetchUserProfile = async () => {
+      try {
+        const profileString = await getItem("userProfile");
+        if (typeof profileString === "string") {
+          const profileData = JSON.parse(profileString);
+          setUserProfile(profileData);
+        } else {
+          // TODO: Handle the case where there's no profile in AsyncStorage (e.g., first login)
+        }
+      } catch (error) {
+        console.error("Error fetching profile from AsyncStorage:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  const contextValue = {
+    userProfile,
+    loading: userProfile === null,
+    error: null,
+  };
 
   return (
-    <ProfileContext.Provider value={{ profile, loading, error }}>
+    <ProfileContext.Provider value={contextValue}>
       {children}
     </ProfileContext.Provider>
   );

@@ -18,7 +18,7 @@ import nufogyLogo from "@assets/images/nufogy_logo.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PasswordInput from "@components/PasswordInput";
 import SignUpWithGoogleButton from "@components/SignUpWithGoogleButton";
-import { setItem } from "@utils/AsyncStorage";
+import { getItem, setItem } from "@utils/AsyncStorage";
 import axios from "axios";
 import { useToastController } from "@tamagui/toast";
 import { globalStyles } from "globalStyles";
@@ -27,6 +27,30 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { KeyboardAvoidingView } from "react-native";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
+
+const fetchUserProfile = async () => {
+  try {
+    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/profile/get`;
+    const authToken = await getItem("authToken");
+
+    const response = await axios.get(apiEndpoint, {
+      headers: {
+        Authorization: `Token ${authToken}`,
+      },
+    });
+
+    if (response.status === 200) {
+      console.log(response.data);
+      const profileData = response.data;
+
+      await setItem("userProfile", JSON.stringify(profileData));
+    } else {
+      // Handle error response
+    }
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+  }
+};
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -57,6 +81,8 @@ const LoginScreen = () => {
         const data = await response.data;
         const token = data.token;
         await setItem("authToken", token);
+
+        await fetchUserProfile();
 
         setStatus("submitted");
 
