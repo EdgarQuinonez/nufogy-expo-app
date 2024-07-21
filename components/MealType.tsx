@@ -20,28 +20,84 @@ import {
 } from "@tamagui/lucide-icons";
 import type { IconProps } from "@tamagui/helpers-icon";
 import React, { useContext } from "react";
-import { globalStyles } from "globalStyles";
+import { colors, globalStyles } from "globalStyles";
 import FoodItem from "./FoodItem";
 import { FoodContext } from "@providers/FoodContext";
 import { Link } from "expo-router";
 import useFetch from "@utils/useFetch";
 import { DiaryFoodLog, FoodLogRequestBody } from "@types";
 import { useAuth } from "@utils/useAuth";
+import calculateNutritionSummary from "@utils/nutritionSummary";
+
+const MacroSummaryItem = ({
+  label,
+  value,
+}: {
+  label: "protein" | "carbohydrate" | "fat";
+  value: number;
+}) => {
+  let color;
+  switch (label) {
+    case "protein":
+      color = colors.protein;
+      break;
+    case "carbohydrate":
+      color = colors.carbohydrate;
+      break;
+    case "fat":
+      color = colors.fat;
+      break;
+    default:
+      color = "$gray6";
+  }
+
+  return (
+    <Button
+      unstyled={true}
+      disabled={true}
+      h={48}
+      w={48}
+      borderRadius={"$4"}
+      backgroundColor={color}
+    >
+      <XStack
+        w={"100%"}
+        h={"fit"}
+        backgroundColor={"$background"}
+        ai={"center"}
+        jc={"center"}
+        borderRadius={"$4"}
+        borderBottomEndRadius={"$6"}
+        borderBottomStartRadius={"$6"}
+        gap={"$1"}
+      >
+        <Paragraph color={colors.text.main} fontWeight={"bold"} fontSize={"$4"}>
+          {value}
+        </Paragraph>
+        <Paragraph opacity={0.75} fontSize={"$2"} color={"$gray10"}>
+          g
+        </Paragraph>
+      </XStack>
+    </Button>
+  );
+};
 
 export type Props = {
   mealTypeId: number;
   name: string;
-  foodItems: DiaryFoodLog[];
+  foodLogs: DiaryFoodLog[];
 };
 
-export default function MealType({ mealTypeId, name, foodItems }: Props) {
+export default function MealType({ mealTypeId, name, foodLogs }: Props) {
   const { handleAddFoodPress } = useContext(FoodContext);
 
   let icon: React.ReactElement<IconProps>;
   let mealTypeColor: string;
 
-  const filteredFoodItems =
-    foodItems?.filter((item) => item.meal_type === mealTypeId) || [];
+  const filteredFoodLogs =
+    foodLogs?.filter((item) => item.meal_type === mealTypeId) || [];
+
+  const mealSummary = calculateNutritionSummary(filteredFoodLogs);
 
   switch (name.toLowerCase()) {
     case "desayuno":
@@ -85,116 +141,23 @@ export default function MealType({ mealTypeId, name, foodItems }: Props) {
 
           {/* Meal Summary Buttons */}
           <XStack gap={"$1"}>
-            {/* Protein Btn */}
-            <Button
-              unstyled={true}
-              disabled={true}
-              h={"$4"}
-              w={"$4"}
-              borderRadius={"$4"}
-              style={globalStyles.protein}
-            >
-              <YStack
-                w={"100%"}
-                h={"fit"}
-                backgroundColor={"$background"}
-                ai={"center"}
-                jc={"center"}
-                borderRadius={"$4"}
-                borderBottomEndRadius={"$6"}
-                borderBottomStartRadius={"$6"}
-              >
-                {/* Amount */}
-                <Paragraph fontWeight={"bold"} fontSize={"$4"}>
-                  9999
-                  {/* Unit */}
-                </Paragraph>
-                <Paragraph
-                  opacity={0.75}
-                  fontSize={"$2"}
-                  color={"$gray10"}
-                  mt={"$-3"}
-                >
-                  g
-                </Paragraph>
-              </YStack>
-            </Button>
-            {/* Carbs Btn */}
-            <Button
-              unstyled={true}
-              disabled={true}
-              h={"$4"}
-              w={"$4"}
-              borderRadius={"$4"}
-              style={globalStyles.carbs}
-            >
-              <YStack
-                w={"100%"}
-                h={"fit"}
-                backgroundColor={"$background"}
-                ai={"center"}
-                borderRadius={"$4"}
-                jc={"center"}
-                borderBottomEndRadius={"$6"}
-                borderBottomStartRadius={"$6"}
-              >
-                {/* Amount */}
-                <Paragraph fontWeight={"bold"} fontSize={"$4"}>
-                  9999
-                  {/* Unit */}
-                </Paragraph>
-                <Paragraph
-                  opacity={0.75}
-                  fontSize={"$2"}
-                  color={"$gray10"}
-                  mt={"$-3"}
-                >
-                  g
-                </Paragraph>
-              </YStack>
-            </Button>
-            {/* Fat Btn */}
-            <Button
-              unstyled={true}
-              disabled={true}
-              h={"$4"}
-              w={"$4"}
-              borderRadius={"$4"}
-              style={globalStyles.fat}
-            >
-              <YStack
-                w={"100%"}
-                h={"fit"}
-                backgroundColor={"$background"}
-                ai={"center"}
-                borderRadius={"$4"}
-                jc={"center"}
-                borderBottomEndRadius={"$6"}
-                borderBottomStartRadius={"$6"}
-              >
-                {/* Amount */}
-                <Paragraph fontWeight={"bold"} fontSize={"$4"}>
-                  9999
-                  {/* Unit */}
-                </Paragraph>
-                <Paragraph
-                  opacity={0.75}
-                  fontSize={"$2"}
-                  color={"$gray10"}
-                  mt={"$-3"}
-                >
-                  g
-                </Paragraph>
-              </YStack>
-            </Button>
+            <MacroSummaryItem
+              label="protein"
+              value={Math.round(mealSummary.protein)}
+            />
+            <MacroSummaryItem
+              label="carbohydrate"
+              value={Math.round(mealSummary.carbohydrate)}
+            />
+            <MacroSummaryItem label="fat" value={Math.round(mealSummary.fat)} />
           </XStack>
         </XStack>
         {/* Food Items */}
 
-        {filteredFoodItems.length > 0 ? (
+        {filteredFoodLogs.length > 0 ? (
           <YStack w={"100%"} gap={"$1"}>
-            {filteredFoodItems.map((foodItem, i) => (
-              <FoodItem key={i} foodItem={foodItem} />
+            {filteredFoodLogs.map((foodLog, i) => (
+              <FoodItem key={i} foodLog={foodLog} />
             ))}
           </YStack>
         ) : (
@@ -236,7 +199,7 @@ export default function MealType({ mealTypeId, name, foodItems }: Props) {
       </YStack>
       {/* TODO: Replace with Meal Summary calculations */}
       <Paragraph mt={"$0.25"} color={"$gray10"} fontSize={"$2"}>
-        Total de calorías: 9999
+        Total de calorías: {Math.round(mealSummary.calories)}
       </Paragraph>
     </View>
   );

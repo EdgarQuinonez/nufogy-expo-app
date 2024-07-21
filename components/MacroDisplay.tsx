@@ -2,6 +2,7 @@ import { Beef, CakeSlice } from "@tamagui/lucide-icons";
 import Avocado from "@assets/icons/Avocado";
 import { Button, Paragraph, View, XStack } from "tamagui";
 import { FunctionComponent } from "react";
+import { colors } from "globalStyles";
 
 interface MacroDisplayProps {
   macroType: "protein" | "carbohydrate" | "fat";
@@ -20,17 +21,17 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
     case "protein":
       icon = <Beef />;
       label = "Proteína";
-      backgroundColor = "#EF7D7D";
+      backgroundColor = colors.protein;
       break;
     case "carbohydrate":
       icon = <CakeSlice />;
       label = "Carbohidratos";
-      backgroundColor = "#41BF84";
+      backgroundColor = colors.carbohydrate;
       break;
     case "fat":
       icon = <Avocado width={26} height={26} />;
       label = "Grasas";
-      backgroundColor = "#77ABD9";
+      backgroundColor = colors.fat;
       break;
     default:
       // Handle invalid macroType gracefully, you can throw an error or set default values here

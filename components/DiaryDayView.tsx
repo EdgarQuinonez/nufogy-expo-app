@@ -16,10 +16,10 @@ import useFetch from "@utils/useFetch";
 import { useAuth } from "@utils/useAuth";
 
 export type Props = {
-  foodItems: DiaryFoodLog[];
+  foodLogs: DiaryFoodLog[];
 };
 
-export default function DiaryDayView({ foodItems }: Props) {
+export default function DiaryDayView({ foodLogs }: Props) {
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/mealtype/`;
   const authToken = useAuth();
   const {
@@ -64,7 +64,7 @@ export default function DiaryDayView({ foodItems }: Props) {
                     key={mealType.id}
                     mealTypeId={mealType.id}
                     name={mealType.name}
-                    foodItems={foodItems}
+                    foodLogs={foodLogs}
                   />
                 );
               }

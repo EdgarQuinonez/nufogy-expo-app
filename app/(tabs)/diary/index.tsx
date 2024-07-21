@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Paragraph, ScrollView, View, XStack, YStack } from "tamagui";
-import { globalStyles } from "globalStyles";
+import { colors, globalStyles } from "globalStyles";
 import { Beef, CakeSlice, X } from "@tamagui/lucide-icons";
 import Avocado from "@assets/icons/Avocado";
 import MonthWeekdayStrip from "@components/MonthWeekdayStrip";
@@ -20,6 +20,7 @@ import useFetch from "@utils/useFetch";
 import useParseFoodItem from "@utils/useParseFoodItem";
 import useNutritionCalculator from "@utils/useNutritionCalculator";
 import MacroDisplay from "@components/MacroDisplay";
+import parseFoodItemString from "@utils/parseFoodItemString";
 
 export default function DiaryScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -30,14 +31,14 @@ export default function DiaryScreen() {
   const {
     loading,
     error,
-    value: foodItems,
+    value: foodLogs,
   } = useFetch<DiaryFoodLog[]>(
     apiEndpoint,
     { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
     [authToken]
   );
-  const dayFilteredFoodItems =
-    foodItems?.filter((foodItem) => {
+  const dayFilteredFoodLogs =
+    foodLogs?.filter((foodItem) => {
       const foodItemDate = new Date(foodItem.dateTime);
       return (
         foodItemDate.getDate() === selectedDate.getDate() &&
@@ -57,7 +58,7 @@ export default function DiaryScreen() {
       fiber: 0,
     };
 
-    dayFilteredFoodItems.forEach((foodLog) => {
+    dayFilteredFoodLogs.forEach((foodLog) => {
       const foodItem = parseFoodItemString(foodLog.fs_object);
 
       const serving = Array.isArray(foodItem?.servings.serving)
@@ -84,7 +85,7 @@ export default function DiaryScreen() {
       }
     });
     return summary;
-  }, [dayFilteredFoodItems]);
+  }, [dayFilteredFoodLogs]);
 
   //  TODO: Replace with user data
   const targetCalories = 2000;
@@ -106,11 +107,14 @@ export default function DiaryScreen() {
               radius={65}
               value={daySummary.calories}
               maxValue={targetCalories}
-              activeStrokeWidth={25}
-              inActiveStrokeWidth={15}
-              progressValueColor="#FF0000"
+              activeStrokeWidth={18}
+              inActiveStrokeWidth={18}
+              progressValueColor={colors.text.main}
+              activeStrokeColor={colors.primary}
+              circleBackgroundColor={colors.background.main}
+              inActiveStrokeColor="#E0E0E0"
               title="KCAL"
-              titleColor="#000"
+              titleColor={colors.text.main}
               titleStyle={{ fontSize: 12, fontWeight: "bold" }}
             />
 
@@ -137,54 +141,12 @@ export default function DiaryScreen() {
               selectedDate={selectedDate}
               onSelectDateChange={onSelectedDateChange}
             />
-            {dayFilteredFoodItems && (
-              <DiaryDayView foodItems={dayFilteredFoodItems} />
+            {dayFilteredFoodLogs && (
+              <DiaryDayView foodLogs={dayFilteredFoodLogs} />
             )}
           </YStack>
         </View>
       </SafeAreaView>
     </ScrollView>
   );
-}
-function parseFoodItemString(foodItemString: FoodItemString) {
-  if (!foodItemString) return undefined;
-
-  const parseServing = (serving: FoodItemServingString): FoodItemServing => ({
-    calcium: parseInt(serving.calcium, 10),
-    calories: parseInt(serving.calories, 10),
-    carbohydrate: parseFloat(serving.carbohydrate),
-    cholesterol: parseInt(serving.cholesterol, 10),
-    fat: parseFloat(serving.fat),
-    fiber: parseFloat(serving.fiber),
-    iron: parseFloat(serving.iron),
-    measurement_description: serving.measurement_description,
-    metric_serving_amount: parseFloat(serving.metric_serving_amount),
-    metric_serving_unit: serving.metric_serving_unit,
-    monounsaturated_fat: parseInt(serving.monounsaturated_fat, 10),
-    number_of_units: parseFloat(serving.number_of_units),
-    polyunsaturated_fat: parseFloat(serving.polyunsaturated_fat),
-    potassium: parseInt(serving.potassium, 10),
-    protein: parseFloat(serving.protein),
-    saturated_fat: parseFloat(serving.saturated_fat),
-    serving_description: serving.serving_description,
-    serving_id: parseInt(serving.serving_id, 10),
-    serving_url: serving.serving_url,
-    sodium: parseInt(serving.sodium, 10),
-    sugar: parseFloat(serving.sugar),
-    vitamin_a: parseInt(serving.vitamin_a, 10),
-    vitamin_c: parseFloat(serving.vitamin_c),
-    vitamin_d: parseInt(serving.vitamin_d, 10),
-  });
-
-  return {
-    food_id: parseInt(foodItemString.food_id, 10),
-    food_name: foodItemString.food_name,
-    food_type: foodItemString.food_type,
-    food_url: foodItemString.food_url,
-    servings: {
-      serving: Array.isArray(foodItemString.servings.serving)
-        ? foodItemString.servings.serving.map(parseServing)
-        : parseServing(foodItemString.servings.serving),
-    },
-  };
 }

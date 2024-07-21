@@ -35,3 +35,17 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: "#000",
   },
 });
+
+export const colors = {
+  background: {
+    main: "#F1EEFE",
+  },
+  primary: "#1E1940",
+  circleBg: "#BDBDBD",
+  text: {
+    main: "#1E1940",
+  },
+  protein: "#EF7D7D",
+  carbohydrate: "#41BF84",
+  fat: "#77ABD9",
+};

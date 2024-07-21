@@ -6,11 +6,11 @@ import { DiaryFoodLog, FoodItemServing } from "@types";
 import SelectDropdown from "@components/SelectDropdown";
 
 export type Props = {
-  foodItem: DiaryFoodLog;
+  foodLog: DiaryFoodLog;
 };
 
-export default function FoodItem({ foodItem }: Props) {
-  const { fs_object, fs_serving, metric_serving_amount } = foodItem;
+export default function FoodItem({ foodLog }: Props) {
+  const { fs_object, fs_serving, metric_serving_amount } = foodLog;
   const foodName = fs_object.food_name;
 
   const servingData = Array.isArray(fs_object.servings.serving)
