@@ -21,11 +21,20 @@ import useParseFoodItem from "@utils/useParseFoodItem";
 import useNutritionCalculator from "@utils/useNutritionCalculator";
 import MacroDisplay from "@components/MacroDisplay";
 import parseFoodItemString from "@utils/parseFoodItemString";
+import useProfile from "@utils/useProfile";
+import {
+  calculateBMR,
+  calculateTDEE,
+  calculateRDI,
+  calculateMacros,
+} from "@utils/RDIcalculator";
 
 export default function DiaryScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const authToken = useAuth();
+  const { userProfile } = useProfile();
+
   // TODO: I don't know if it will be different url, but somehow you need to let the backend know which date you want to get the logs from and then filter for the day
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs `;
   const {
@@ -88,7 +97,30 @@ export default function DiaryScreen() {
   }, [dayFilteredFoodLogs]);
 
   //  TODO: Replace with user data
-  const targetCalories = 2000;
+  const bmr = calculateBMR(
+    userProfile?.age,
+    userProfile?.sex,
+    userProfile?.weight,
+    userProfile?.height
+  );
+  const tdee = calculateTDEE(bmr, userProfile?.physical_activity);
+  // TODO: Replace rate with user data
+  const rdi = calculateRDI(
+    tdee,
+    userProfile?.weight,
+    userProfile?.goal,
+    "gradual"
+  );
+  // TODO: Macros slide for macro targets
+  const macrosTargets = calculateMacros(
+    rdi,
+    userProfile?.weight,
+    userProfile?.goal,
+    userProfile?.physical_activity
+  );
+
+  const targetCalories = rdi;
+
   const onSelectedDateChange = (date: Date) => {
     setSelectedDate(date);
   };
@@ -101,7 +133,6 @@ export default function DiaryScreen() {
         {/* Day summary  */}
         <YStack px={"$2"} pb="$4" w={"100%"}>
           {/* Circle progress bar  */}
-          {/* TODO: Change circle progress colors and define them in globalSTyles */}
           <XStack ai={"center"} justifyContent={"space-between"}>
             <CircularProgress
               radius={65}

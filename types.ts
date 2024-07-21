@@ -151,4 +151,21 @@ export interface DiaryFoodLog {
   user_id: number;
 }
 
+export interface UserProfile {
+  id: number;
+  weight: number;
+  height: number;
+  medical_conditions: UserProfileMedicalConditions;
+  goal: number;
+  physical_activity: "sedentary" | "lightly" | "moderate" | "very" | "extra";
+  age: number;
+  sex: "male" | "female";
+  user_model: number;
+}
+
+export interface UserProfileMedicalConditions {
+  diabetes: boolean;
+  allergies: ("peanuts" | "dust")[];
+  hypertension: boolean;
+}
 export type StoredValue = string | number | boolean | object | null;

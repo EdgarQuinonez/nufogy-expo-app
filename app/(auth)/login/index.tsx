@@ -40,7 +40,6 @@ const fetchUserProfile = async () => {
     });
 
     if (response.status === 200) {
-      console.log(response.data);
       const profileData = response.data;
 
       await setItem("userProfile", JSON.stringify(profileData));

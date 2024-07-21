@@ -1,9 +1,10 @@
+import { UserProfile } from "@types";
 import { getItem } from "@utils/AsyncStorage"; // Make sure you have AsyncStorage utils
 import { useAuth } from "@utils/useAuth";
 import { createContext, useEffect, useState } from "react";
 
 interface ProfileContextValue {
-  userProfile: any | null;
+  userProfile: UserProfile | null;
   loading: boolean;
   error: any;
 }
@@ -15,7 +16,7 @@ const ProfileContext = createContext<ProfileContextValue>({
 });
 
 const ProfileProvider = ({ children }: any) => {
-  const [userProfile, setUserProfile] = useState<any | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
