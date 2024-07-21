@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, router } from "expo-router";
-import {
-  Avatar,
-  XStack,
-  Spacer,
-  YStack,
-  Paragraph,
-  Heading,
-  H1,
-  H2,
-  Button,
-} from "tamagui";
+import { Avatar, XStack, H2, Button } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getItem, removeItem } from "@utils/AsyncStorage";
 
@@ -25,16 +15,6 @@ const TopBar = () => {
     checkLoginStatus();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await removeItem("authToken");
-      setIsLoggedIn(false);
-      router.replace("/login");
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-
   return (
     <SafeAreaView>
       <XStack
@@ -47,7 +27,7 @@ const TopBar = () => {
       >
         <H2>Nufogy</H2>
         {isLoggedIn ? (
-          <Button unstyled onPress={handleLogout}>
+          <Link href={"/(settings)/profile"}>
             <Avatar circular size="$6">
               <Avatar.Image
                 accessibilityLabel="Cam"
@@ -55,7 +35,7 @@ const TopBar = () => {
               />
               <Avatar.Fallback backgroundColor="$blue10" />
             </Avatar>
-          </Button>
+          </Link>
         ) : (
           <Link href="/login" asChild>
             <Avatar circular size="$6">
