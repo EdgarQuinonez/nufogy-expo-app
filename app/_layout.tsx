@@ -15,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StoredValue } from "@types";
 import { AuthTokenProvider } from "@providers/AuthContext";
 import { ProfileProvider } from "@providers/ProfileContext";
+import { FoodContextProvider } from "@providers/FoodContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -72,20 +73,29 @@ function RootLayoutNav() {
         {isAuthenticated ? (
           <AuthTokenProvider>
             <ProfileProvider>
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen
-                  name="(tabs)"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="(settings)"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-              </Stack>
+              <FoodContextProvider>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(settings)"
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(addIngredientFormModal)"
+                    options={{
+                      headerShown: false,
+                      presentation: "modal",
+                    }}
+                  />
+                </Stack>
+              </FoodContextProvider>
             </ProfileProvider>
           </AuthTokenProvider>
         ) : (

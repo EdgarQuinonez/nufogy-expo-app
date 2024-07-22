@@ -15,7 +15,7 @@ import {
   Circle,
   Square,
 } from "tamagui";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useContext } from "react";
 import {
   ArrowLeft,
   Beef,
@@ -54,6 +54,7 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "@utils/useAuth";
 import useParseFoodItem from "@utils/useParseFoodItem";
 import useNutritionCalculator from "@utils/useNutritionCalculator";
+import { FoodContext } from "@providers/FoodContext";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -110,6 +111,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
 
   const router = useRouter();
   const { handleSubmit } = useForm();
+  const { foodLogs, setFoodLogs } = useContext(FoodContext);
 
   const saveFood = async () => {
     try {
@@ -132,6 +134,8 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
         });
 
         if (response.status === 201) {
+          const newFoodLog = response.data;
+          setFoodLogs((prevLogs) => [...prevLogs, newFoodLog]);
           router.back();
         } else {
           console.error("Failed to save food:", response.status);
@@ -213,7 +217,6 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                 {parsedFoodItem?.food_name}
               </H4>
               {/* Food Nutri Info Details Slides */}
-              {/* TODO: Replace with actual micros data */}
               <FoodInfoSlides
                 slides={[
                   <MacroCalorieSlide

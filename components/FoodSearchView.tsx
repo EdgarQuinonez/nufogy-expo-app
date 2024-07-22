@@ -21,7 +21,7 @@ export default function FoodSearchView({}: Props) {
 
   const router = useRouter();
 
-  const debouncedSetSearchQuery = useRef(debounce(setSearchQuery, 300)).current;
+  const debouncedSetSearchQuery = useRef(debounce(setSearchQuery, 200)).current;
 
   const apiEndpoint = `${
     process.env.EXPO_PUBLIC_API_BASE_URL

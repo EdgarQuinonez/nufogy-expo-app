@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Paragraph, ScrollView, View, XStack, YStack } from "tamagui";
 import { colors, globalStyles } from "globalStyles";
@@ -28,24 +28,26 @@ import {
   calculateRDI,
   calculateMacros,
 } from "@utils/RDIcalculator";
+import { FoodContext } from "@providers/FoodContext";
 
 export default function DiaryScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const authToken = useAuth();
+  // const authToken = useAuth();
   const { userProfile } = useProfile();
 
   // TODO: I don't know if it will be different url, but somehow you need to let the backend know which date you want to get the logs from and then filter for the day
-  const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs `;
-  const {
-    loading,
-    error,
-    value: foodLogs,
-  } = useFetch<DiaryFoodLog[]>(
-    apiEndpoint,
-    { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
-    [authToken]
-  );
+  // const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs `;
+  // const {
+  //   loading,
+  //   error,
+  //   value: foodLogs,
+  // } = useFetch<DiaryFoodLog[]>(
+  //   apiEndpoint,
+  //   { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
+  //   [authToken]
+  // );
+  const { foodLogs } = useContext(FoodContext);
   const dayFilteredFoodLogs =
     foodLogs?.filter((foodItem) => {
       const foodItemDate = new Date(foodItem.dateTime);
@@ -96,7 +98,6 @@ export default function DiaryScreen() {
     return summary;
   }, [dayFilteredFoodLogs]);
 
-  //  TODO: Replace with user data
   const bmr = calculateBMR(
     userProfile?.age,
     userProfile?.sex,

@@ -80,7 +80,6 @@ const LoginScreen = () => {
         const data = await response.data;
         const token = data.token;
         await setItem("authToken", token);
-
         await fetchUserProfile();
 
         setStatus("submitted");

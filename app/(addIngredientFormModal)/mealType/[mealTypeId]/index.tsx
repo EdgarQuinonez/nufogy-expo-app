@@ -6,11 +6,14 @@ import { getItem } from "@utils/AsyncStorage";
 import { StoredValue } from "@types";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "globalStyles";
+import { KeyboardAvoidingView } from "react-native";
 
 export default function FoodSearchViewWrapper() {
   return (
     <SafeAreaView style={globalStyles.container}>
-      <FoodSearchView />
+      <KeyboardAvoidingView>
+        <FoodSearchView />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
