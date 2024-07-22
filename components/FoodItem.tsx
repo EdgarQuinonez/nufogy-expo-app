@@ -1,7 +1,7 @@
 import { View, Text, XStack, YStack, Input, Select, Paragraph } from "tamagui";
 import React from "react";
 import { Dot, Utensils, X } from "@tamagui/lucide-icons";
-import { globalStyles } from "globalStyles";
+import { colors, globalStyles } from "globalStyles";
 import { DiaryFoodLog, FoodItemServing } from "@types";
 import SelectDropdown from "@components/SelectDropdown";
 
@@ -63,19 +63,19 @@ export default function FoodItem({ foodLog }: Props) {
           <XStack flex={1} gap={"$2"}>
             {/* Protein */}
             <MacroDisplay
-              color={globalStyles.protein}
+              color={colors.protein}
               amount={Math.round(parseFloat(servingData.protein))}
               unit="g"
             />
             {/* Carbs */}
             <MacroDisplay
-              color={globalStyles.carbs}
+              color={colors.carbohydrate}
               amount={Math.round(parseFloat(servingData.carbohydrate))}
               unit="g"
             />
             {/* Fat */}
             <MacroDisplay
-              color={globalStyles.fat}
+              color={colors.fat}
               amount={Math.round(parseFloat(servingData.fat))}
               unit="g"
             />
@@ -91,13 +91,13 @@ function MacroDisplay({
   amount,
   unit,
 }: {
-  color: any;
+  color: string;
   amount: number;
   unit: string;
 }) {
   return (
     <XStack ai={"center"} jc={"center"} gap={"$1"} w={"$4"}>
-      <View style={color} h={"$0.75"} w={"$0.75"} borderRadius={"$true"} />
+      <View bg={color} h={"$0.75"} w={"$0.75"} borderRadius={"$true"} />
       <Paragraph>{amount}</Paragraph>
       <Paragraph color={"$gray10"}>{unit}</Paragraph>
     </XStack>

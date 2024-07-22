@@ -56,6 +56,7 @@ import useParseFoodItem from "@utils/useParseFoodItem";
 import useNutritionCalculator from "@utils/useNutritionCalculator";
 import { FoodContext } from "@providers/FoodContext";
 import calculateNutritionSummary from "@utils/nutritionSummary";
+import { useToastController } from "@tamagui/toast";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -66,6 +67,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
   const [dateTime, setDateTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const authToken = useAuth();
+  const toast = useToastController();
 
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/fs/getingridient/${foodItemId}`;
   const {
@@ -135,10 +137,16 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
         });
 
         if (response.status === 201) {
+          toast.show("Alimento guardado con éxito", {
+            message: "¡Buen provecho!",
+          });
           const newFoodLog = response.data;
           setFoodLogs((prevLogs) => [...prevLogs, newFoodLog]);
           router.back();
         } else {
+          toast.show("Error", {
+            message: "Hubo un error al guardar el alimento.",
+          });
           console.error("Failed to save food:", response.status);
         }
       }
