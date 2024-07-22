@@ -31,18 +31,15 @@ import {
 import { FoodContext } from "@providers/FoodContext";
 
 export default function DiaryScreen() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const { userProfile } = useProfile();
-  const { foodLogs, daySummary } = useContext(FoodContext);
-  const dayFilteredFoodLogs =
-    foodLogs?.filter((foodItem) => {
-      const foodItemDate = new Date(foodItem.dateTime);
-      return (
-        foodItemDate.getDate() === selectedDate.getDate() &&
-        foodItemDate.getMonth() === selectedDate.getMonth() &&
-        foodItemDate.getFullYear() === selectedDate.getFullYear()
-      );
-    }) || [];
+  const {
+    selectedDate,
+    setSelectedDate,
+    getDayFilteredFoodLogs,
+    foodLogs,
+    daySummary,
+  } = useContext(FoodContext);
+  const dayFilteredFoodLogs = getDayFilteredFoodLogs(selectedDate);
 
   const bmr = calculateBMR(
     userProfile?.age,

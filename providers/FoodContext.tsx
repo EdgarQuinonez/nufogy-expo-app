@@ -12,6 +12,9 @@ interface FoodContextProps {
   setFoodLogs: React.Dispatch<React.SetStateAction<DiaryFoodLog[]>>;
   daySummary: DaySummary;
   setDaySummary: React.Dispatch<React.SetStateAction<DaySummary>>; // Setter
+  getDayFilteredFoodLogs: (date: Date) => DiaryFoodLog[];
+  selectedDate: Date;
+  setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
 }
 
 const FoodContext = createContext<FoodContextProps>({
@@ -30,11 +33,15 @@ const FoodContext = createContext<FoodContextProps>({
     fiber: 0,
   },
   setDaySummary: () => {},
+  getDayFilteredFoodLogs: () => [],
+  selectedDate: new Date(),
+  setSelectedDate: () => {},
 });
 
 const FoodContextProvider = ({ children }: any) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [foodLogs, setFoodLogs] = useState<DiaryFoodLog[]>([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [daySummary, setDaySummary] = useState<DaySummary>({
     protein: 0,
     carbohydrate: 0,
@@ -54,6 +61,17 @@ const FoodContextProvider = ({ children }: any) => {
     [authToken]
   );
 
+  const getDayFilteredFoodLogs = (date: Date) => {
+    return foodLogs.filter((foodItem) => {
+      const foodItemDate = new Date(foodItem.dateTime);
+      return (
+        foodItemDate.getDate() === date.getDate() &&
+        foodItemDate.getMonth() === date.getMonth() &&
+        foodItemDate.getFullYear() === date.getFullYear()
+      );
+    });
+  };
+
   useEffect(() => {
     if (fetchedFoodLogs) {
       setFoodLogs(fetchedFoodLogs);
@@ -61,8 +79,9 @@ const FoodContextProvider = ({ children }: any) => {
   }, [fetchedFoodLogs]);
 
   useEffect(() => {
-    setDaySummary(calculateNutritionSummary(foodLogs));
-  }, [foodLogs]);
+    const dayFilteredFoodLogs = getDayFilteredFoodLogs(selectedDate);
+    setDaySummary(calculateNutritionSummary(dayFilteredFoodLogs));
+  }, [foodLogs, selectedDate]);
 
   const handleAddFoodPress = () => {
     setIsModalVisible(true);
@@ -82,6 +101,9 @@ const FoodContextProvider = ({ children }: any) => {
         setFoodLogs,
         daySummary,
         setDaySummary,
+        getDayFilteredFoodLogs,
+        selectedDate,
+        setSelectedDate,
       }}
     >
       {children}
