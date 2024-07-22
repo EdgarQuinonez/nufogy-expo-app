@@ -1,4 +1,5 @@
-import { DiaryFoodLog } from "@types";
+import { DaySummary, DiaryFoodLog } from "@types";
+import calculateNutritionSummary from "@utils/nutritionSummary";
 import { useAuth } from "@utils/useAuth";
 import useFetch from "@utils/useFetch";
 import React, { createContext, useEffect, useState } from "react";
@@ -9,6 +10,8 @@ interface FoodContextProps {
   handleModalClose: () => void;
   foodLogs: DiaryFoodLog[];
   setFoodLogs: React.Dispatch<React.SetStateAction<DiaryFoodLog[]>>;
+  daySummary: DaySummary;
+  setDaySummary: React.Dispatch<React.SetStateAction<DaySummary>>; // Setter
 }
 
 const FoodContext = createContext<FoodContextProps>({
@@ -17,11 +20,31 @@ const FoodContext = createContext<FoodContextProps>({
   handleModalClose: () => {},
   foodLogs: [],
   setFoodLogs: () => {},
+  daySummary: {
+    protein: 0,
+    carbohydrate: 0,
+    fat: 0,
+    calories: 0,
+    sodium: 0,
+    sugar: 0,
+    fiber: 0,
+  },
+  setDaySummary: () => {},
 });
 
 const FoodContextProvider = ({ children }: any) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [foodLogs, setFoodLogs] = useState<DiaryFoodLog[]>([]);
+  const [daySummary, setDaySummary] = useState<DaySummary>({
+    protein: 0,
+    carbohydrate: 0,
+    fat: 0,
+    calories: 0,
+    sodium: 0,
+    sugar: 0,
+    fiber: 0,
+  });
+
   const authToken = useAuth();
 
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs`;
@@ -36,6 +59,10 @@ const FoodContextProvider = ({ children }: any) => {
       setFoodLogs(fetchedFoodLogs);
     }
   }, [fetchedFoodLogs]);
+
+  useEffect(() => {
+    setDaySummary(calculateNutritionSummary(foodLogs));
+  }, [foodLogs]);
 
   const handleAddFoodPress = () => {
     setIsModalVisible(true);
@@ -53,6 +80,8 @@ const FoodContextProvider = ({ children }: any) => {
         handleModalClose,
         foodLogs,
         setFoodLogs,
+        daySummary,
+        setDaySummary,
       }}
     >
       {children}

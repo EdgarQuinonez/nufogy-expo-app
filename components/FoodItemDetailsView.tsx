@@ -55,6 +55,7 @@ import { useAuth } from "@utils/useAuth";
 import useParseFoodItem from "@utils/useParseFoodItem";
 import useNutritionCalculator from "@utils/useNutritionCalculator";
 import { FoodContext } from "@providers/FoodContext";
+import calculateNutritionSummary from "@utils/nutritionSummary";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -111,7 +112,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
 
   const router = useRouter();
   const { handleSubmit } = useForm();
-  const { foodLogs, setFoodLogs } = useContext(FoodContext);
+  const { daySummary, setFoodLogs } = useContext(FoodContext);
 
   const saveFood = async () => {
     try {
@@ -229,7 +230,12 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                       sugar: calculatedNutritionValues?.sugar || 0,
                       fiber: calculatedNutritionValues?.fiber || 0,
                     }}
-                    currentIntakeAmounts={{ sodium: 0, sugar: 0, fiber: 2 }}
+                    currentIntakeAmounts={{
+                      sodium: daySummary.sodium,
+                      sugar: daySummary.sugar,
+                      fiber: daySummary.fiber,
+                    }}
+                    // TODO: Calculate user's recommended intake
                     totalAmounts={{ sodium: 1000, sugar: 25, fiber: 50 }}
                   />,
                 ]}

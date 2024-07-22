@@ -1,7 +1,9 @@
-import { DiaryFoodLog } from "@types";
+import { DaySummary, DiaryFoodLog } from "@types";
 import parseFoodItemString from "@utils/parseFoodItemString";
 
-export const calculateNutritionSummary = (foodLogs: DiaryFoodLog[]) => {
+export const calculateNutritionSummary = (
+  foodLogs: DiaryFoodLog[]
+): DaySummary => {
   const summary = {
     protein: 0,
     carbohydrate: 0,

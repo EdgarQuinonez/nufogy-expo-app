@@ -151,6 +151,16 @@ export interface DiaryFoodLog {
   user_id: number;
 }
 
+export interface DaySummary {
+  protein: number;
+  carbohydrate: number;
+  fat: number;
+  calories: number;
+  sodium: number;
+  sugar: number;
+  fiber: number;
+}
+
 export interface UserProfile {
   id: number;
   weight: number;
