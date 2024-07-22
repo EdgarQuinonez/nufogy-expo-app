@@ -1,26 +1,11 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Paragraph, ScrollView, View, XStack, YStack } from "tamagui";
+import { ScrollView, View, XStack, YStack } from "tamagui";
 import { colors, globalStyles } from "globalStyles";
-import { Beef, CakeSlice, X } from "@tamagui/lucide-icons";
-import Avocado from "@assets/icons/Avocado";
 import MonthWeekdayStrip from "@components/MonthWeekdayStrip";
 import DiaryDayView from "@components/DiaryDayView";
 import CircularProgress from "react-native-circular-progress-indicator";
-import {
-  DiaryFoodLog,
-  FoodItemServing,
-  FoodItemServingString,
-  FoodItemString,
-  StoredValue,
-} from "@types";
-import { getItem } from "@utils/AsyncStorage";
-import { useAuth } from "@utils/useAuth";
-import useFetch from "@utils/useFetch";
-import useParseFoodItem from "@utils/useParseFoodItem";
-import useNutritionCalculator from "@utils/useNutritionCalculator";
 import MacroDisplay from "@components/MacroDisplay";
-import parseFoodItemString from "@utils/parseFoodItemString";
 import useProfile from "@utils/useProfile";
 import {
   calculateBMR,
@@ -32,13 +17,9 @@ import { FoodContext } from "@providers/FoodContext";
 
 export default function DiaryScreen() {
   const { userProfile } = useProfile();
-  const {
-    selectedDate,
-    setSelectedDate,
-    getDayFilteredFoodLogs,
-    foodLogs,
-    daySummary,
-  } = useContext(FoodContext);
+  const { selectedDate, setSelectedDate, getDayFilteredFoodLogs, daySummary } =
+    useContext(FoodContext);
+
   const dayFilteredFoodLogs = getDayFilteredFoodLogs(selectedDate);
 
   const bmr = calculateBMR(
@@ -64,6 +45,8 @@ export default function DiaryScreen() {
   );
 
   const targetCalories = rdi;
+
+  console.log(dayFilteredFoodLogs);
 
   const onSelectedDateChange = (date: Date) => {
     setSelectedDate(date);

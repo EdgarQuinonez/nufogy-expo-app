@@ -64,7 +64,6 @@ export type Props = {
 };
 
 export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
-  // const [dateTime, setDateTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const authToken = useAuth();
   const toast = useToastController();
@@ -89,7 +88,6 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
   const {
     selectedServing,
     setSelectedServing,
-    unitAmount,
     setUnitAmount,
     calculatedNutritionValues,
     handleMacroInputChange,
@@ -179,6 +177,17 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
       );
     }
   }, [calculatedNutritionValues]);
+
+  useEffect(() => {
+    const newSelectedDate = selectedDate;
+    const currentTime = new Date();
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+    newSelectedDate.setHours(hours);
+    newSelectedDate.setMinutes(minutes);
+
+    setSelectedDate(newSelectedDate);
+  }, []);
 
   return (
     <Form onSubmit={handleSubmit(saveFood)} flex={1}>
@@ -336,6 +345,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                   >
                     <XStack>
                       <Clock />
+                      {/* Hour and minutes here should display the users current time */}
                       <Paragraph flex={1} textAlign={"center"}>
                         {format(selectedDate, "HH:mm")}
                       </Paragraph>
