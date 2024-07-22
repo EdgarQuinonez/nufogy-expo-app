@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "@tamagui/lucide-icons";
+import { colors } from "globalStyles";
 import React, { useEffect, useState } from "react";
 import { Button, Paragraph, XStack, YStack } from "tamagui";
 
@@ -93,28 +94,33 @@ export default function MonthWeekdayStrip({
       </XStack>
       {/* Week Days Strip */}
       <XStack ai={"center"} jc={"space-around"} w={"100%"} h={"$6"} px={"$2"}>
-        {dayNumbers.map((day) => (
-          <Button
-            key={day.getTime()}
-            ai={"center"}
-            jc={"center"} // Conditional Styling
-            backgroundColor={
-              day.toDateString() === selectedDate.toDateString()
-                ? "$blue10" // Example highlight color, replace with your desired color
-                : "transparent"
-            }
-            py={"$2"}
-            h={"100%"}
-            hoverStyle={{ opacity: 0.8 }}
-            pressStyle={{ opacity: 0.9 }}
-            chromeless
-          >
-            <YStack ai={"center"} jc={"center"} gap={"$2"}>
-              <Paragraph opacity={0.5}>{days[day.getDay()]}</Paragraph>
-              <Paragraph fontWeight={"bold"}>{day.getDate()}</Paragraph>
-            </YStack>
-          </Button>
-        ))}
+        {dayNumbers.map((day) => {
+          const isCurrentMonth = day.getMonth() === currentMonth;
+          const isSelectedDate =
+            day.toDateString() === selectedDate.toDateString();
+          return (
+            <Button
+              key={day.getTime()}
+              ai={"center"}
+              jc={"center"}
+              backgroundColor={isSelectedDate ? colors.accent : "transparent"}
+              py={"$2"}
+              h={"100%"}
+              hoverStyle={{ opacity: 0.8 }}
+              pressStyle={{ opacity: 0.9 }}
+              chromeless
+              opacity={isCurrentMonth ? 1 : 0.25}
+              onPress={() => onSelectDateChange(day)}
+            >
+              <YStack ai={"center"} jc={"center"} gap={"$2"}>
+                <Paragraph opacity={isSelectedDate ? 0.8 : 0.5}>
+                  {days[day.getDay()]}
+                </Paragraph>
+                <Paragraph fontWeight={"bold"}>{day.getDate()}</Paragraph>
+              </YStack>
+            </Button>
+          );
+        })}
       </XStack>
     </YStack>
   );

@@ -102,15 +102,15 @@ export default function MealType({ mealTypeId, name, foodLogs }: Props) {
   switch (name.toLowerCase()) {
     case "desayuno":
       icon = <EggFried />;
-      mealTypeColor = "$yellow9";
+      mealTypeColor = colors.breakfast;
       break;
     case "comida":
       icon = <CookingPot />;
-      mealTypeColor = "$orange7";
+      mealTypeColor = colors.lunch;
       break;
     case "cena":
       icon = <Fish />;
-      mealTypeColor = "$purple7";
+      mealTypeColor = colors.dinner;
       break;
     default:
       icon = <UtensilsCrossed />;

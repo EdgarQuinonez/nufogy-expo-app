@@ -107,7 +107,7 @@ export default function DiaryScreen() {
         {/* Lower 2 / 3. Calendar and Meal types  */}
         <View px={"$2"}>
           <YStack
-            backgroundColor={"$background"}
+            backgroundColor={colors.background.main}
             borderRadius={"$7"}
             borderBottomLeftRadius={"$0"}
             borderBottomRightRadius={"$0"}

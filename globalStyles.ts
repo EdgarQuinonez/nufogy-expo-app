@@ -41,6 +41,7 @@ export const colors = {
     main: "#F1EEFE",
   },
   primary: "#1E1940",
+  accent: "#ABD3DB",
   circleBg: "#BDBDBD",
   text: {
     main: "#1E1940",
@@ -48,4 +49,7 @@ export const colors = {
   protein: "#EF7D7D",
   carbohydrate: "#41BF84",
   fat: "#77ABD9",
+  breakfast: "$yellow9",
+  lunch: "$orange7",
+  dinner: "$purple7",
 };

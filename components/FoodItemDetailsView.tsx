@@ -64,7 +64,7 @@ export type Props = {
 };
 
 export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
-  const [dateTime, setDateTime] = useState(new Date());
+  // const [dateTime, setDateTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const authToken = useAuth();
   const toast = useToastController();
@@ -114,7 +114,8 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
 
   const router = useRouter();
   const { handleSubmit } = useForm();
-  const { daySummary, setFoodLogs } = useContext(FoodContext);
+  const { daySummary, setFoodLogs, selectedDate, setSelectedDate } =
+    useContext(FoodContext);
 
   const saveFood = async () => {
     try {
@@ -126,7 +127,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
           meal_type: parseInt(mealTypeId),
           metric_serving_amount: selectedServing.metric_serving_amount,
           metric_serving_unit: selectedServing.metric_serving_unit,
-          dateTime: dateTime.toISOString(),
+          dateTime: selectedDate.toISOString(),
         };
 
         const response = await axios.post(apiEndpoint, bodyData, {
@@ -158,7 +159,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
   const onChangeDateTime = (event: any, selectedDate: Date | undefined) => {
     setShowDatePicker(false);
     if (selectedDate instanceof Date) {
-      setDateTime(selectedDate);
+      setSelectedDate(selectedDate);
     } else {
       console.warn("Invalid date selected:", selectedDate);
     }
@@ -336,7 +337,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                     <XStack>
                       <Clock />
                       <Paragraph flex={1} textAlign={"center"}>
-                        {format(dateTime, "HH:mm")}
+                        {format(selectedDate, "HH:mm")}
                       </Paragraph>
                     </XStack>
                   </Button>
@@ -418,7 +419,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
 
       {showDatePicker && (
         <DateTimePicker
-          value={dateTime}
+          value={selectedDate}
           mode="time"
           is24Hour={true}
           display="default"
