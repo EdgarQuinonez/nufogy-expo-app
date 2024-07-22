@@ -64,19 +64,19 @@ export default function FoodItem({ foodLog }: Props) {
             {/* Protein */}
             <MacroDisplay
               color={globalStyles.protein}
-              amount={servingData.protein}
+              amount={Math.round(parseFloat(servingData.protein))}
               unit="g"
             />
             {/* Carbs */}
             <MacroDisplay
               color={globalStyles.carbs}
-              amount={servingData.carbohydrate}
+              amount={Math.round(parseFloat(servingData.carbohydrate))}
               unit="g"
             />
             {/* Fat */}
             <MacroDisplay
               color={globalStyles.fat}
-              amount={servingData.fat}
+              amount={Math.round(parseFloat(servingData.fat))}
               unit="g"
             />
           </XStack>
@@ -92,11 +92,11 @@ function MacroDisplay({
   unit,
 }: {
   color: any;
-  amount: string;
+  amount: number;
   unit: string;
 }) {
   return (
-    <XStack ai={"center"} jc={"center"} gap={"$1"}>
+    <XStack ai={"center"} jc={"center"} gap={"$1"} w={"$4"}>
       <View style={color} h={"$0.75"} w={"$0.75"} borderRadius={"$true"} />
       <Paragraph>{amount}</Paragraph>
       <Paragraph color={"$gray10"}>{unit}</Paragraph>
