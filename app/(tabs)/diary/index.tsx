@@ -48,8 +48,6 @@ export default function DiaryScreen() {
 
   const targetCalories = rdi;
 
-  console.log(dayFilteredFoodLogs);
-
   const onSelectedDateChange = (date: Date) => {
     setSelectedDate(date);
   };
@@ -66,7 +64,7 @@ export default function DiaryScreen() {
               <XStack w={"100%"}>
                 <View>
                   <CircularProgress
-                    radius={72}
+                    radius={84}
                     value={daySummary.calories}
                     maxValue={targetCalories}
                     activeStrokeWidth={18}
@@ -105,21 +103,25 @@ export default function DiaryScreen() {
                   </XStack>
                 </View>
               </XStack>,
-              <View w={"100%"}>
-                <Paragraph>Slide 2</Paragraph>
-              </View>,
+              <YStack w={"100%"} gap={"$2"}>
+                <MacroDisplay
+                  macroType={"protein"}
+                  value={daySummary.protein || 0}
+                  target={macrosTargets.protein || 0}
+                />
+                <MacroDisplay
+                  macroType={"carbohydrate"}
+                  value={daySummary.carbohydrate || 0}
+                  target={macrosTargets.carbs || 0}
+                />
+                <MacroDisplay
+                  macroType={"fat"}
+                  value={daySummary.fat || 0}
+                  target={macrosTargets.fat || 0}
+                />
+              </YStack>,
             ]}
           />
-
-          {/* Macro Slide */}
-          {/* <YStack gap="$2" flex={1} pl={"$4"}>
-              <MacroDisplay macroType="protein" value={daySummary.protein} />
-              <MacroDisplay
-                macroType="carbohydrate"
-                value={daySummary.carbohydrate}
-              />
-              <MacroDisplay macroType="fat" value={daySummary.fat} />
-            </YStack> */}
         </YStack>
         {/* Lower 2 / 3. Calendar and Meal types  */}
         <View px={"$2"}>

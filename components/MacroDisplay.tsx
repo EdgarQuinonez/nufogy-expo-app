@@ -3,19 +3,21 @@ import Avocado from "@assets/icons/Avocado";
 import { Button, Paragraph, View, XStack } from "tamagui";
 import { FunctionComponent } from "react";
 import { colors } from "globalStyles";
+import * as Progress from "react-native-progress";
 
 interface MacroDisplayProps {
   macroType: "protein" | "carbohydrate" | "fat";
   value: number;
+  target: number;
   unit?: string;
 }
 
 const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
   macroType,
   value,
+  target,
   unit = "g",
 }) => {
-  // Determine icon, label, and color based on macroType
   let icon, label, backgroundColor;
   switch (macroType) {
     case "protein":
@@ -34,51 +36,83 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
       backgroundColor = colors.fat;
       break;
     default:
-      // Handle invalid macroType gracefully, you can throw an error or set default values here
       icon = null;
       label = "Unknown Macro";
-      backgroundColor = "#CCCCCC"; // A default color
+      backgroundColor = "#CCCCCC";
   }
 
-  // The rest of the component is the same as before, using the values from the switch case
   return (
-    <Button
-      unstyled={true}
-      backgroundColor={backgroundColor}
-      borderRadius="$4"
-      ai="center"
-      jc="center"
-      pl="$2"
-    >
-      <XStack gap="$2" ai="center" w="100%" justifyContent="space-between">
-        <XStack gap="$2">
-          {icon}
-          <Paragraph mr="$2" fontWeight="bold">
-            {label}
-          </Paragraph>
-        </XStack>
-        <XStack gap="$1" ai="center" justifyContent="center">
-          <View
-            pl="$3"
-            pr="$2"
-            py="$2"
-            w={"$6"}
-            ai={"center"}
-            jc={"flex-end"}
-            backgroundColor="$background"
-            borderTopLeftRadius="$7"
-            borderBottomLeftRadius="$7"
-            borderTopRightRadius="$4"
-            borderBottomRightRadius="$4"
-          >
-            <Paragraph>
-              {Math.round(value)}&nbsp;
-              <Paragraph color="$gray10">{unit}</Paragraph>
+    <XStack w={"100%"} ai={"center"} jc={"center"}>
+      {/* Container for Custom and Fill Overlap */}
+      <View flex={1} pos={"relative"}>
+        {/* Custom Progress Bar */}
+        <XStack
+          borderColor={colors.text.main}
+          borderWidth="$1"
+          backgroundColor={"transparent"}
+          borderRadius="$4"
+          ai="center"
+          jc="space-between"
+          pl="$2"
+          zIndex={3}
+          h={48}
+        >
+          <XStack gap="$2">
+            {icon}
+            <Paragraph mr="$2" fontWeight="bold">
+              {label}
             </Paragraph>
-          </View>
+          </XStack>
+          {/* { Progress Percentage } */}
+          <XStack w={"$6"} ai={"center"} jc={"flex-end"} pr={"$2"}>
+            <Paragraph fontWeight={"bold"} fontSize={"$6"}>
+              {Math.round((value / target) * 100)}&nbsp;
+            </Paragraph>
+            <Paragraph color="$gray10" pl={"$1"}>
+              %
+            </Paragraph>
+          </XStack>
         </XStack>
+        {/* Progress Bar Fill */}
+        <Progress.Bar
+          progress={value / target}
+          color={backgroundColor}
+          unfilledColor="transparent"
+          borderWidth={0}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            borderRadius: 12,
+            zIndex: 2,
+          }}
+          width={null}
+          height={48}
+        />
+        {/* Custom Bar Background */}
+        <View
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            borderRadius: 16,
+          }}
+          bg={colors.background.main}
+          zIndex={1}
+        />
+      </View>
+      {/* Target amount */}
+      <XStack gap={"$1"} w={"$7"} ai={"center"} jc={"flex-start"} ml={"$2"}>
+        <Paragraph fontWeight={"bold"}>{Math.round(value)}</Paragraph>
+        <Paragraph fontWeight={"bold"}>/</Paragraph>
+        <Paragraph fontWeight={"bold"}>{Math.round(target)}</Paragraph>
+        <Paragraph fontWeight={"bold"}>{unit}</Paragraph>
       </XStack>
-    </Button>
+    </XStack>
   );
 };
 
