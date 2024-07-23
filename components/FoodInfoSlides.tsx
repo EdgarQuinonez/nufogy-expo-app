@@ -1,7 +1,7 @@
 // FoodInfoSlides.tsx
 import { globalStyles } from "globalStyles";
 import React, { useState } from "react";
-import { Dimensions } from "react-native"; // Import from React Native
+import { Dimensions } from "react-native";
 import { View, ScrollView, XStack } from "tamagui";
 
 interface FoodInfoSlidesProps {
@@ -24,7 +24,7 @@ const FoodInfoSlides: React.FC<FoodInfoSlidesProps> = ({ slides }) => {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
-        scrollEventThrottle={16} // For performance on older devices
+        scrollEventThrottle={16}
       >
         {slides.map((slide, index) => (
           <View

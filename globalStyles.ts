@@ -41,10 +41,12 @@ export const colors = {
     main: "#F1EEFE",
   },
   primary: "#1E1940",
+  secondary: "#D485A6",
   accent: "#ABD3DB",
   circleBg: "#BDBDBD",
   text: {
     main: "#1E1940",
+    dim: "$gray10",
   },
   protein: "#EF7D7D",
   carbohydrate: "#41BF84",

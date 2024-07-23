@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, View, XStack, YStack } from "tamagui";
+import { Button, Paragraph, ScrollView, View, XStack, YStack } from "tamagui";
 import { colors, globalStyles } from "globalStyles";
 import MonthWeekdayStrip from "@components/MonthWeekdayStrip";
 import DiaryDayView from "@components/DiaryDayView";
@@ -14,6 +14,8 @@ import {
   calculateMacros,
 } from "@utils/RDIcalculator";
 import { FoodContext } from "@providers/FoodContext";
+import FoodInfoSlides from "@components/FoodInfoSlides";
+import { Goal } from "@tamagui/lucide-icons";
 
 export default function DiaryScreen() {
   const { userProfile } = useProfile();
@@ -58,34 +60,66 @@ export default function DiaryScreen() {
         style={[globalStyles.diaryBackground, globalStyles.container]}
       >
         {/* Day summary  */}
-        <YStack px={"$2"} pb="$4" w={"100%"}>
-          {/* Circle progress bar  */}
-          <XStack ai={"center"} justifyContent={"space-between"}>
-            <CircularProgress
-              radius={65}
-              value={daySummary.calories}
-              maxValue={targetCalories}
-              activeStrokeWidth={18}
-              inActiveStrokeWidth={18}
-              progressValueColor={colors.text.main}
-              activeStrokeColor={colors.primary}
-              circleBackgroundColor={colors.background.main}
-              inActiveStrokeColor="#E0E0E0"
-              title="KCAL"
-              titleColor={colors.text.main}
-              titleStyle={{ fontSize: 12, fontWeight: "bold" }}
-            />
+        <YStack pb="$4" w={"100%"}>
+          <FoodInfoSlides
+            slides={[
+              <XStack w={"100%"}>
+                <View>
+                  <CircularProgress
+                    radius={72}
+                    value={daySummary.calories}
+                    maxValue={targetCalories}
+                    activeStrokeWidth={18}
+                    inActiveStrokeWidth={18}
+                    progressValueColor={colors.text.main}
+                    activeStrokeColor={colors.primary}
+                    circleBackgroundColor={colors.background.main}
+                    inActiveStrokeColor="#E0E0E0"
+                    title="KCAL"
+                    titleColor={colors.text.main}
+                    titleStyle={{ fontSize: 12, fontWeight: "bold" }}
+                  />
+                </View>
+                <View f={1} ai={"flex-end"} jc={"flex-start"} px={"$6"}>
+                  <XStack
+                    ai={"center"}
+                    jc={"center"}
+                    px={"$2"}
+                    py={"$3"}
+                    gap={"$4"}
+                    borderRadius={"$2"}
+                    bg={colors.background.main}
+                    w={"100%"}
+                  >
+                    <Goal color={colors.secondary} size={32} />
+                    <View>
+                      <Paragraph color={colors.text.dim}>Objetivo: </Paragraph>
+                      <Paragraph
+                        fontSize={"$8"}
+                        fontWeight={"bold"}
+                        color={colors.text.main}
+                      >
+                        {Math.round(targetCalories)}
+                      </Paragraph>
+                    </View>
+                  </XStack>
+                </View>
+              </XStack>,
+              <View w={"100%"}>
+                <Paragraph>Slide 2</Paragraph>
+              </View>,
+            ]}
+          />
 
-            {/* Macro Slide */}
-            <YStack gap="$2" flex={1} pl={"$4"}>
+          {/* Macro Slide */}
+          {/* <YStack gap="$2" flex={1} pl={"$4"}>
               <MacroDisplay macroType="protein" value={daySummary.protein} />
               <MacroDisplay
                 macroType="carbohydrate"
                 value={daySummary.carbohydrate}
               />
               <MacroDisplay macroType="fat" value={daySummary.fat} />
-            </YStack>
-          </XStack>
+            </YStack> */}
         </YStack>
         {/* Lower 2 / 3. Calendar and Meal types  */}
         <View px={"$2"}>
