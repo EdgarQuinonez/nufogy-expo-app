@@ -21,7 +21,7 @@ export default function FoodSearchView({}: Props) {
 
   const router = useRouter();
 
-  const debouncedSetSearchQuery = useRef(debounce(setSearchQuery, 200)).current;
+  const debouncedSetSearchQuery = useRef(debounce(setSearchQuery, 270)).current;
 
   const apiEndpoint = `${
     process.env.EXPO_PUBLIC_API_BASE_URL
@@ -135,6 +135,7 @@ export default function FoodSearchView({}: Props) {
           onPress={() => {
             router.back();
           }}
+          pressStyle={{ opacity: 0.8 }}
         >
           <XStack gap={"$1"} ai={"center"} jc={"center"}>
             <Paragraph color={"$background"} fontWeight={"bold"}>

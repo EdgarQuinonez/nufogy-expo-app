@@ -179,7 +179,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
     if (defaultServing) {
       setServing(defaultServing);
     }
-  }, []);
+  }, [defaultServing]);
 
   return (
     <Form onSubmit={handleSubmit(saveFood)} flex={1}>
@@ -284,8 +284,10 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                         unstyled={true}
                         keyboardType="numeric"
                         returnKeyType="done"
-                        placeholder={Math.round(
-                          calculatedNutritionValues.number_of_units
+                        placeholder={(
+                          Math.round(
+                            calculatedNutritionValues.number_of_units * 10
+                          ) / 10
                         ).toString()}
                         onChangeText={(text) => {
                           setAmount(
@@ -391,6 +393,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                 onPress={() => {
                   router.back();
                 }}
+                pressStyle={{ opacity: 0.8 }}
               >
                 <XStack gap={"$1"} ai={"center"} jc={"center"}>
                   <ArrowLeft color={"$background"} />
@@ -405,6 +408,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                 borderRadius={"$4"}
                 color={"$background"}
                 onPress={saveFood}
+                pressStyle={{ opacity: 0.8 }}
               >
                 <XStack gap={"$1"} ai={"center"} jc={"center"}>
                   <Paragraph color={"$background"}>Guardar</Paragraph>

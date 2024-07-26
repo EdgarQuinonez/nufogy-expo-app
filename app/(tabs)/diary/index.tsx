@@ -16,37 +16,15 @@ import {
 import { FoodContext } from "@providers/FoodContext";
 import FoodInfoSlides from "@components/FoodInfoSlides";
 import { Goal } from "@tamagui/lucide-icons";
+import useRDI from "@utils/useRDI";
 
 export default function DiaryScreen() {
   const { userProfile } = useProfile();
+  const { rdi, macrosTargets } = useRDI();
   const { selectedDate, setSelectedDate, getDayFilteredFoodLogs, daySummary } =
     useContext(FoodContext);
 
   const dayFilteredFoodLogs = getDayFilteredFoodLogs(selectedDate);
-
-  const bmr = calculateBMR(
-    userProfile?.age,
-    userProfile?.sex,
-    userProfile?.weight,
-    userProfile?.height
-  );
-  const tdee = calculateTDEE(bmr, userProfile?.physical_activity);
-  // TODO: Replace rate with user data
-  const rdi = calculateRDI(
-    tdee,
-    userProfile?.weight,
-    userProfile?.goal,
-    "gradual"
-  );
-
-  const macrosTargets = calculateMacros(
-    rdi,
-    userProfile?.weight,
-    userProfile?.goal,
-    userProfile?.physical_activity
-  );
-
-  const targetCalories = rdi;
 
   const onSelectedDateChange = (date: Date) => {
     setSelectedDate(date);
@@ -66,7 +44,9 @@ export default function DiaryScreen() {
                   <CircularProgress
                     radius={84}
                     value={daySummary.calories}
-                    maxValue={targetCalories}
+                    maxValue={
+                      daySummary.calories <= rdi ? rdi : daySummary.calories
+                    }
                     activeStrokeWidth={18}
                     inActiveStrokeWidth={18}
                     progressValueColor={colors.text.main}
@@ -97,7 +77,7 @@ export default function DiaryScreen() {
                         fontWeight={"bold"}
                         color={colors.text.main}
                       >
-                        {Math.round(targetCalories)}
+                        {Math.round(rdi)}
                       </Paragraph>
                     </View>
                   </XStack>
