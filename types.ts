@@ -117,6 +117,7 @@ export interface CalculatedNutritionValues {
   sodium: number;
   sugar: number;
   fiber: number;
+  number_of_units: number;
 }
 
 export interface GetFoodItemResponseData {

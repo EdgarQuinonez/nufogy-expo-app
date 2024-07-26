@@ -4,6 +4,9 @@ import { Dot, Utensils, X } from "@tamagui/lucide-icons";
 import { colors, globalStyles } from "globalStyles";
 import { DiaryFoodLog, FoodItemServing } from "@types";
 import SelectDropdown from "@components/SelectDropdown";
+import useNutritionCalculator from "@utils/useNutritionCalculator";
+import parseFoodItemString from "@utils/parseFoodItemString";
+import { calculateNutritionValues } from "@utils/nutritionValuesCalculator";
 
 export type Props = {
   foodLog: DiaryFoodLog;
@@ -13,14 +16,20 @@ export default function FoodItem({ foodLog }: Props) {
   const { fs_object, fs_serving, metric_serving_amount } = foodLog;
   const foodName = fs_object.food_name;
 
-  const servingData = Array.isArray(fs_object.servings.serving)
-    ? fs_object.servings.serving.find(
-        (ser) => parseInt(ser.serving_id) === fs_serving
-      )
-    : fs_object.servings.serving;
+  const foodItem = parseFoodItemString(fs_object);
+
+  const servingData = Array.isArray(foodItem?.servings.serving)
+    ? foodItem?.servings.serving.find((ser) => ser.serving_id === fs_serving)
+    : foodItem?.servings.serving;
+
+  const calculatedNutritionValues = calculateNutritionValues(
+    metric_serving_amount,
+    servingData
+  );
 
   return (
-    servingData && (
+    servingData &&
+    calculatedNutritionValues && (
       <XStack
         ai={"center"}
         jc={"flex-start"}
@@ -46,7 +55,7 @@ export default function FoodItem({ foodLog }: Props) {
                 </Paragraph>
               </View>
               <Dot color={"$gray7"} />
-              <Paragraph>{metric_serving_amount}</Paragraph>
+              <Paragraph>{Math.round(metric_serving_amount)}</Paragraph>
               <Paragraph ml={"$1"} color={"$gray10"}>
                 {servingData.metric_serving_unit}
               </Paragraph>
@@ -54,7 +63,7 @@ export default function FoodItem({ foodLog }: Props) {
             {/* Calories */}
             <XStack gap={"$1"}>
               <Paragraph fontWeight={"bold"} fontSize={"$6"}>
-                {servingData.calories}
+                {Math.round(calculatedNutritionValues.calories)}
               </Paragraph>
               <Paragraph color={"$gray10"}>kcal</Paragraph>
             </XStack>
@@ -64,19 +73,19 @@ export default function FoodItem({ foodLog }: Props) {
             {/* Protein */}
             <MacroDisplay
               color={colors.protein}
-              amount={Math.round(parseFloat(servingData.protein))}
+              amount={calculatedNutritionValues?.protein}
               unit="g"
             />
             {/* Carbs */}
             <MacroDisplay
               color={colors.carbohydrate}
-              amount={Math.round(parseFloat(servingData.carbohydrate))}
+              amount={calculatedNutritionValues?.carbohydrate}
               unit="g"
             />
             {/* Fat */}
             <MacroDisplay
               color={colors.fat}
-              amount={Math.round(parseFloat(servingData.fat))}
+              amount={calculatedNutritionValues?.fat}
               unit="g"
             />
           </XStack>
@@ -92,13 +101,13 @@ function MacroDisplay({
   unit,
 }: {
   color: string;
-  amount: number;
+  amount?: number;
   unit: string;
 }) {
   return (
     <XStack ai={"center"} jc={"center"} gap={"$1"} w={"$4"}>
       <View bg={color} h={"$0.75"} w={"$0.75"} borderRadius={"$true"} />
-      <Paragraph>{amount}</Paragraph>
+      <Paragraph>{Math.round(amount || 0)}</Paragraph>
       <Paragraph color={"$gray10"}>{unit}</Paragraph>
     </XStack>
   );

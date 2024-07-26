@@ -48,7 +48,7 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
         {/* Custom Progress Bar */}
         <XStack
           borderColor={colors.text.main}
-          borderWidth="$1"
+          borderWidth={1}
           backgroundColor={"transparent"}
           borderRadius="$4"
           ai="center"
@@ -99,7 +99,7 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
             right: 0,
             top: 0,
             bottom: 0,
-            borderRadius: 16,
+            borderRadius: 12,
           }}
           bg={colors.background.main}
           zIndex={1}
@@ -107,10 +107,14 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
       </View>
       {/* Target amount */}
       <XStack gap={"$1"} w={"$7"} ai={"center"} jc={"flex-start"} ml={"$2"}>
-        <Paragraph fontWeight={"bold"}>{Math.round(value)}</Paragraph>
-        <Paragraph fontWeight={"bold"}>/</Paragraph>
-        <Paragraph fontWeight={"bold"}>{Math.round(target)}</Paragraph>
-        <Paragraph fontWeight={"bold"}>{unit}</Paragraph>
+        <Paragraph color={colors.text.main}>{Math.round(value)}</Paragraph>
+        <Paragraph fontWeight={"bold"} color={colors.text.dim}>
+          /
+        </Paragraph>
+        <Paragraph color={colors.text.main}>{Math.round(target)}</Paragraph>
+        <Paragraph fontWeight={"bold"} color={colors.text.dim}>
+          {unit}
+        </Paragraph>
       </XStack>
     </XStack>
   );

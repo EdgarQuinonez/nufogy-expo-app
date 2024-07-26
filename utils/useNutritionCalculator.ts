@@ -1,72 +1,74 @@
-import { useState, useEffect, useMemo } from "react";
-import { FoodItemServing } from "@types";
+import { CalculatedNutritionValues, FoodItemServing } from "@types";
+import { calculateNutritionValues } from "@utils/nutritionValuesCalculator";
+import { useEffect, useState } from "react";
 
-export default function useNutritionCalculator(
-  initialServing?: FoodItemServing,
-  initialUnitAmount?: number
-) {
-  const [selectedServing, setSelectedServing] =
-    useState<FoodItemServing | null>(initialServing || null);
-  const [unitAmount, setUnitAmount] = useState(
-    initialUnitAmount ?? initialServing?.number_of_units ?? 0
+export type MacroMetricServingAmountValues =
+  | ["protein" | "carbohydrate" | "fat", number]
+  | null;
+
+export default function useNutritionCalculator() {
+  const [serving, setServing] = useState<FoodItemServing | null>(null);
+  const [amount, setAmount] = useState<number | MacroMetricServingAmountValues>(
+    null
   );
+  const [calculatedNutritionValues, setCalculatedNutritionValues] =
+    useState<CalculatedNutritionValues | null>({
+      calories: 0,
+      protein: 0,
+      carbohydrate: 0,
+      fat: 0,
+      sodium: 0,
+      sugar: 0,
+      fiber: 0,
+      number_of_units: 0,
+    });
 
-  const [modifiedMacros, setModifiedMacros] = useState<{
-    protein?: number;
-    carbohydrate?: number;
-    fat?: number;
-  }>({});
+  // let amount: number;
+  // if (serving) {
+  //   amount =
+  //     (serving?.metric_serving_amount / serving?.number_of_units) *
+  //     metricServingAmount;
+  // }
 
-  const calculatedNutritionValues = useMemo(() => {
-    if (!selectedServing) return null;
-
-    let multiplier = unitAmount / selectedServing.number_of_units;
-    if (modifiedMacros.protein) {
-      multiplier = modifiedMacros.protein / selectedServing.protein;
-    } else if (modifiedMacros.carbohydrate) {
-      multiplier = modifiedMacros.carbohydrate / selectedServing.carbohydrate;
-    } else if (modifiedMacros.fat) {
-      multiplier = modifiedMacros.fat / selectedServing.fat;
-    }
-
-    return {
-      calories: Math.round(selectedServing.calories * multiplier),
-      protein: selectedServing.protein * multiplier,
-      carbohydrate: selectedServing.carbohydrate * multiplier,
-      fat: selectedServing.fat * multiplier,
-      sodium: Math.round(selectedServing.sodium * multiplier),
-      sugar: Math.round(selectedServing.sugar * multiplier),
-      fiber: Math.round(selectedServing.fiber * multiplier),
-    };
-  }, [unitAmount, selectedServing, modifiedMacros]);
-
-  const handleMacroInputChange = (
-    macro: "protein" | "carbohydrate" | "fat",
-    value: number
-  ) => {
-    setModifiedMacros((prev) => ({ ...prev, [macro]: value }));
-
-    if (selectedServing) {
-      const newUnitAmount =
-        (value / selectedServing[macro]) * selectedServing.number_of_units;
-      setUnitAmount(newUnitAmount);
-    }
-  };
-
-  // Effect to reset modifications when the serving changes
+  // 1: Initial Load and serving update: Default (Placeholder) Values from Serving (e.g. number_of_units)
   useEffect(() => {
-    if (selectedServing) {
-      setModifiedMacros({});
-      setUnitAmount(selectedServing.number_of_units);
+    if (serving) {
+      const servingNutritionValues: CalculatedNutritionValues = {
+        calories: serving.calories,
+        protein: serving.protein,
+        carbohydrate: serving.carbohydrate,
+        fat: serving.fat,
+        sodium: serving.sodium,
+        sugar: serving.sugar,
+        fiber: serving.fiber,
+        number_of_units: serving.number_of_units,
+      };
+
+      setCalculatedNutritionValues(servingNutritionValues);
     }
-  }, [selectedServing]);
+  }, [serving]);
+
+  useEffect(() => {
+    // 2: User Input: Update number_of_units. Transform to metric_serving_amount.
+    if (!serving) return;
+    if (typeof amount === "number") {
+      setCalculatedNutritionValues(
+        calculateNutritionValues(
+          (serving.metric_serving_amount / serving.number_of_units) * amount,
+          serving
+        )
+      );
+
+      // 3: User Input: Update macros.
+    } else if (amount) {
+      setCalculatedNutritionValues(calculateNutritionValues(amount, serving));
+    }
+  }, [amount]);
 
   return {
-    selectedServing,
-    setSelectedServing,
-    unitAmount,
-    setUnitAmount,
+    serving,
+    setServing,
+    setAmount,
     calculatedNutritionValues,
-    handleMacroInputChange,
   };
 }

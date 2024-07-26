@@ -85,7 +85,7 @@ export default function DonutGraph({ data }: Props) {
         </Svg>
         <YStack pos={"absolute"} jc={"center"} ai={"center"}>
           <Paragraph fontWeight={"bold"} fontSize={"$6"}>
-            {data.calories}
+            {Math.round(data.calories)}
           </Paragraph>
           <Paragraph color={"$gray10"}>kcal</Paragraph>
         </YStack>

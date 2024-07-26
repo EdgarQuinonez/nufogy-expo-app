@@ -38,7 +38,7 @@ export default function DiaryScreen() {
     userProfile?.goal,
     "gradual"
   );
-  // TODO: Macros slide for macro targets
+
   const macrosTargets = calculateMacros(
     rdi,
     userProfile?.weight,

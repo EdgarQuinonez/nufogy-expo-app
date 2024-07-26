@@ -21,14 +21,17 @@ export const calculateNutritionSummary = (
       ? foodItem?.servings.serving[0]
       : foodItem?.servings.serving;
     if (serving) {
+      const multiplier =
+        foodLog.metric_serving_amount / serving.metric_serving_amount;
+
       const calculatedNutritionValues = {
-        protein: serving.protein,
-        carbohydrate: serving.carbohydrate,
-        fat: serving.fat,
-        calories: serving.calories,
-        sodium: serving.sodium,
-        sugar: serving.sugar,
-        fiber: serving.fiber,
+        protein: serving.protein * multiplier,
+        carbohydrate: serving.carbohydrate * multiplier,
+        fat: serving.fat * multiplier,
+        calories: serving.calories * multiplier,
+        sodium: serving.sodium * multiplier,
+        sugar: serving.sugar * multiplier,
+        fiber: serving.fiber * multiplier,
       };
 
       summary.protein += calculatedNutritionValues?.protein || 0;

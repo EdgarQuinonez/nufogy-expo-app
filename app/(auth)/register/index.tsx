@@ -23,7 +23,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import SignUpWithGoogleButton from "@components/SignUpWithGoogleButton";
 import PasswordStrengthInputGroup from "@components/PasswordStrengthInputGroup";
 import axios from "axios";
-import { globalStyles } from "globalStyles";
+import { colors, globalStyles } from "globalStyles";
 import {
   useForm,
   Controller,
@@ -114,7 +114,9 @@ const RegisterScreen = () => {
             px={"$4"}
           >
             <YStack alignItems="center" justifyContent="center">
-              <Heading paddingVertical="$2">Crear una cuenta</Heading>
+              <Heading paddingVertical="$2" color={colors.text.main}>
+                Crear una cuenta
+              </Heading>
               <Image
                 source={{
                   uri: nufogyLogoUri,
@@ -124,7 +126,7 @@ const RegisterScreen = () => {
               />
             </YStack>
             <YStack>
-              <Label>Usuario</Label>
+              <Label color={colors.text.main}>Usuario</Label>
               <Controller
                 control={control}
                 name="username"
@@ -139,6 +141,7 @@ const RegisterScreen = () => {
                     ref={ref}
                     size={"$4"}
                     placeholder="ej. pedroelfire"
+                    color={colors.text.main}
                   />
                 )}
               />

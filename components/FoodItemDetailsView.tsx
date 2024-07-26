@@ -57,6 +57,8 @@ import useNutritionCalculator from "@utils/useNutritionCalculator";
 import { FoodContext } from "@providers/FoodContext";
 import calculateNutritionSummary from "@utils/nutritionSummary";
 import { useToastController } from "@tamagui/toast";
+import useProfile from "@utils/useProfile";
+import useRDI from "@utils/useRDI";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -66,7 +68,10 @@ export type Props = {
 export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const authToken = useAuth();
+  const { rdi } = useRDI();
   const toast = useToastController();
+  const router = useRouter();
+  const { handleSubmit } = useForm();
 
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/fs/getingridient/${foodItemId}`;
   const {
@@ -78,53 +83,37 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
     { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
     [authToken]
   );
+  const { daySummary, setFoodLogs, selectedDate, setSelectedDate } =
+    useContext(FoodContext);
 
   const parsedFoodItem = useParseFoodItem(foodItem?.data);
 
-  const serving = Array.isArray(parsedFoodItem?.servings.serving)
+  const defaultServing = Array.isArray(parsedFoodItem?.servings.serving)
     ? parsedFoodItem?.servings.serving[0]
     : parsedFoodItem?.servings.serving;
 
-  const {
-    selectedServing,
-    setSelectedServing,
-    setUnitAmount,
-    calculatedNutritionValues,
-    handleMacroInputChange,
-  } = useNutritionCalculator(serving);
-
-  const [placeholderUnit, setPlaceholderUnit] = useState(
-    selectedServing?.number_of_units.toString() || "1"
-  );
-
-  useEffect(() => {
-    if (serving) {
-      setSelectedServing(serving);
-      setUnitAmount(serving.number_of_units);
-    }
-  }, [serving]);
-
-  useEffect(() => {
-    if (selectedServing) {
-      setPlaceholderUnit(selectedServing.number_of_units.toString());
-    }
-  }, [selectedServing]);
-
-  const router = useRouter();
-  const { handleSubmit } = useForm();
-  const { daySummary, setFoodLogs, selectedDate, setSelectedDate } =
-    useContext(FoodContext);
+  const { serving, setServing, setAmount, calculatedNutritionValues } =
+    useNutritionCalculator();
 
   const saveFood = async () => {
     try {
       const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs/`;
-      if (parsedFoodItem && selectedServing && typeof mealTypeId === "string") {
+      if (
+        calculatedNutritionValues &&
+        parsedFoodItem &&
+        serving &&
+        typeof mealTypeId === "string"
+      ) {
         const bodyData: FoodLogRequestBody = {
           fs_id: parsedFoodItem.food_id,
-          fs_serving: selectedServing.serving_id,
+          fs_serving: serving.serving_id,
           meal_type: parseInt(mealTypeId),
-          metric_serving_amount: selectedServing.metric_serving_amount,
-          metric_serving_unit: selectedServing.metric_serving_unit,
+          // Calculate metric_serving_amount from units (user input)
+          metric_serving_amount:
+            (calculatedNutritionValues?.number_of_units /
+              serving.number_of_units) *
+            serving.metric_serving_amount,
+          metric_serving_unit: serving.metric_serving_unit,
           dateTime: selectedDate.toISOString(),
         };
 
@@ -163,15 +152,9 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
     }
   };
 
-  const handleServingChange = (newServing: FoodItemServing) => {
-    setSelectedServing(newServing);
-
-    setUnitAmount(newServing.number_of_units);
-  };
-
   const caloriePercentage = useMemo(() => {
     if (calculatedNutritionValues) {
-      const calorieTarget = 2000; // TODO: Replace with actual target
+      const calorieTarget = rdi;
       return Math.round(
         (calculatedNutritionValues.calories / calorieTarget) * 100
       );
@@ -179,26 +162,29 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
   }, [calculatedNutritionValues]);
 
   useEffect(() => {
-    const newSelectedDate = selectedDate;
-    const currentTime = new Date();
-    const hours = currentTime.getHours();
-    const minutes = currentTime.getMinutes();
-    newSelectedDate.setHours(hours);
-    newSelectedDate.setMinutes(minutes);
+    // Initially set user's current time as the selected time
+    const setToCurrentTime = () => {
+      const newSelectedDate = selectedDate;
+      const currentTime = new Date();
+      const hours = currentTime.getHours();
+      const minutes = currentTime.getMinutes();
+      newSelectedDate.setHours(hours);
+      newSelectedDate.setMinutes(minutes);
 
-    setSelectedDate(newSelectedDate);
+      setSelectedDate(newSelectedDate);
+    };
+    setToCurrentTime();
+
+    // Initially calculate nutrition values for default serving
+    if (defaultServing) {
+      setServing(defaultServing);
+    }
   }, []);
 
   return (
     <Form onSubmit={handleSubmit(saveFood)} flex={1}>
       {loading ? (
-        <YStack
-          f={1}
-          // ai={"center"}
-          jc={"flex-start"}
-          px={"$2"}
-          pt={"$12"}
-        >
+        <YStack f={1} jc={"flex-start"} px={"$2"} pt={"$12"}>
           <Square
             h={"$4"}
             w={"$8"}
@@ -215,7 +201,6 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
       ) : (
         foodItem &&
         parsedFoodItem &&
-        selectedServing &&
         calculatedNutritionValues && (
           <YStack f={1} jc={"space-between"}>
             {/* Content */}
@@ -240,13 +225,14 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                 slides={[
                   <MacroCalorieSlide
                     calculatedNutritionValues={calculatedNutritionValues}
-                    onMacroInputChange={handleMacroInputChange}
+                    onMacroInputChange={setAmount}
                   />,
                   <MicrosSlide
                     calculatedNutritionValues={{
-                      sodium: calculatedNutritionValues?.sodium || 0,
-                      sugar: calculatedNutritionValues?.sugar || 0,
-                      fiber: calculatedNutritionValues?.fiber || 0,
+                      sodium:
+                        Math.round(calculatedNutritionValues?.sodium) || 0,
+                      sugar: Math.round(calculatedNutritionValues?.sugar) || 0,
+                      fiber: Math.round(calculatedNutritionValues?.fiber) || 0,
                     }}
                     currentIntakeAmounts={{
                       sodium: daySummary.sodium,
@@ -298,10 +284,13 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                         unstyled={true}
                         keyboardType="numeric"
                         returnKeyType="done"
-                        placeholder={placeholderUnit}
+                        placeholder={Math.round(
+                          calculatedNutritionValues.number_of_units
+                        ).toString()}
                         onChangeText={(text) => {
-                          setUnitAmount(
-                            parseFloat(text) || selectedServing.number_of_units
+                          setAmount(
+                            parseFloat(text) ||
+                              calculatedNutritionValues.number_of_units
                           );
                         }}
                         textAlign="left"
@@ -320,7 +309,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                       borderColor={"$color11"}
                     >
                       <SelectDropdown
-                        onServingChange={handleServingChange}
+                        onServingChange={setServing}
                         serving={parsedFoodItem?.servings.serving}
                       />
                     </XStack>

@@ -6,6 +6,7 @@ import { FoodItemServing } from "@types";
 import DonutGraph from "./DonutGraph"; // Import the DonutGraph component
 import Avocado from "@assets/icons/Avocado";
 import { Beef, CakeSlice } from "@tamagui/lucide-icons";
+import { MacroMetricServingAmountValues } from "@utils/useNutritionCalculator";
 
 interface MacroCalorieSlideProps {
   calculatedNutritionValues: {
@@ -14,17 +15,16 @@ interface MacroCalorieSlideProps {
     fat: number;
     calories: number;
   };
-  onMacroInputChange: (
-    macro: "protein" | "carbohydrate" | "fat",
-    value: number
-  ) => void;
+  onMacroInputChange: React.Dispatch<
+    React.SetStateAction<number | MacroMetricServingAmountValues>
+  >;
 }
 
 const MacroCalorieSlide: React.FC<MacroCalorieSlideProps> = ({
   calculatedNutritionValues,
   onMacroInputChange,
 }) => {
-  const { protein, carbohydrate, fat, calories } = calculatedNutritionValues;
+  const { protein, carbohydrate, fat } = calculatedNutritionValues;
   const macrosSum = protein + carbohydrate + fat;
 
   return (
@@ -36,21 +36,23 @@ const MacroCalorieSlide: React.FC<MacroCalorieSlideProps> = ({
           name="Proteína"
           amount={protein}
           macrosSum={macrosSum}
-          onAmountChange={(value) => onMacroInputChange("protein", value)}
+          onAmountChange={(value) => onMacroInputChange(["protein", value])}
         />
         <MacroInputField
           icon={<CakeSlice />}
           name="Carbohidratos"
           amount={carbohydrate}
           macrosSum={macrosSum}
-          onAmountChange={(value) => onMacroInputChange("carbohydrate", value)}
+          onAmountChange={(value) =>
+            onMacroInputChange(["carbohydrate", value])
+          }
         />
         <MacroInputField
           icon={<Avocado />}
           name="Grasas"
           amount={fat}
           macrosSum={macrosSum}
-          onAmountChange={(value) => onMacroInputChange("fat", value)}
+          onAmountChange={(value) => onMacroInputChange(["fat", value])}
         />
       </YStack>
     </XStack>
