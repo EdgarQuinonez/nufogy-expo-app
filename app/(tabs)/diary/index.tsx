@@ -6,20 +6,12 @@ import MonthWeekdayStrip from "@components/MonthWeekdayStrip";
 import DiaryDayView from "@components/DiaryDayView";
 import CircularProgress from "react-native-circular-progress-indicator";
 import MacroDisplay from "@components/MacroDisplay";
-import useProfile from "@utils/useProfile";
-import {
-  calculateBMR,
-  calculateTDEE,
-  calculateRDI,
-  calculateMacros,
-} from "@utils/RDIcalculator";
 import { FoodContext } from "@providers/FoodContext";
 import FoodInfoSlides from "@components/FoodInfoSlides";
 import { Goal } from "@tamagui/lucide-icons";
 import useRDI from "@utils/useRDI";
 
 export default function DiaryScreen() {
-  const { userProfile } = useProfile();
   const { rdi, macrosTargets } = useRDI();
   const { selectedDate, setSelectedDate, getDayFilteredFoodLogs, daySummary } =
     useContext(FoodContext);
@@ -66,7 +58,7 @@ export default function DiaryScreen() {
                     py={"$3"}
                     gap={"$4"}
                     borderRadius={"$2"}
-                    bg={colors.background.main}
+                    // bg={colors.background.main}
                     w={"100%"}
                   >
                     <Goal color={colors.secondary} size={32} />

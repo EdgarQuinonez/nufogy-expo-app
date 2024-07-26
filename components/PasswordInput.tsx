@@ -1,5 +1,6 @@
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import { UserLoginInputs } from "@types";
+import { colors } from "globalStyles";
 import React, { useState } from "react";
 import {
   RefCallBack,
@@ -29,16 +30,15 @@ export default function PasswordInput({
 }: Props): JSX.Element {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { borderColor, background025 } = useTheme();
-
   return (
     <XStack
       alignItems="center"
       gap="$2"
-      borderColor={borderColor}
+      // borderColor={colors.text.dim}
       borderWidth={1}
-      backgroundColor={background025}
+      bg={colors.background.accent}
       borderRadius={"$4"}
+      focusStyle={{ borderColor: colors.text.dim }}
     >
       <Input
         unstyled={true}
@@ -59,7 +59,11 @@ export default function PasswordInput({
         onPress={() => setShowPassword(!showPassword)}
         chromeless
       >
-        {showPassword ? <Eye /> : <EyeOff />}
+        {showPassword ? (
+          <Eye color={colors.text.dim} />
+        ) : (
+          <EyeOff color={colors.text.dim} />
+        )}
       </Button>
     </XStack>
   );

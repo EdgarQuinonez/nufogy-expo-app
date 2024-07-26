@@ -21,7 +21,7 @@ import SignUpWithGoogleButton from "@components/SignUpWithGoogleButton";
 import { getItem, setItem } from "@utils/AsyncStorage";
 import axios from "axios";
 import { useToastController } from "@tamagui/toast";
-import { globalStyles } from "globalStyles";
+import { colors, globalStyles } from "globalStyles";
 import { UserLogin, UserLoginInputs } from "types";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { KeyboardAvoidingView } from "react-native";
@@ -100,12 +100,18 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView
-      style={{ ...globalStyles.container, justifyContent: "center" }}
+      style={{
+        ...globalStyles.container,
+        justifyContent: "center",
+        backgroundColor: colors.background.main,
+      }}
     >
       <KeyboardAvoidingView>
         <Form onSubmit={handleSubmit(handleLogin)} width={"100%"}>
           <YStack alignItems="center" justifyContent="center">
-            <Heading paddingVertical="$2">Iniciar Sesión</Heading>
+            <Heading paddingVertical="$2" color={colors.text.main}>
+              Iniciar Sesión
+            </Heading>
             <Image
               source={{
                 uri: nufogyLogoUri,
@@ -115,7 +121,7 @@ const LoginScreen = () => {
             />
           </YStack>
           <YStack>
-            <Label>Correo o usuario</Label>
+            <Label color={colors.text.main}>Correo o usuario</Label>
             <Controller
               control={control}
               name="username"
@@ -129,7 +135,11 @@ const LoginScreen = () => {
               }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <Input
+                  unstyled={true}
+                  borderWidth={1}
+                  focusStyle={{ borderColor: colors.text.dim }}
                   size={"$4"}
+                  bg={colors.background.accent}
                   placeholder="ej. pedroelfire"
                   autoCapitalize="none"
                   returnKeyType="next"
@@ -152,7 +162,7 @@ const LoginScreen = () => {
             )}
           </YStack>
           <YStack gap="$2">
-            <Label>Contraseña</Label>
+            <Label color={colors.text.main}>Contraseña</Label>
             <Controller
               control={control}
               name="password"
@@ -174,15 +184,29 @@ const LoginScreen = () => {
           </YStack>
           <Form.Trigger asChild disabled={status !== "off"} marginTop="$2">
             <Button
-              backgroundColor={"$primary"}
-              icon={status === "submitting" ? () => <Spinner /> : undefined}
-              iconAfter={status === "off" ? () => <ChevronRight /> : undefined}
+              backgroundColor={colors.primary}
+              color={colors.background.main}
+              icon={
+                status === "submitting"
+                  ? () => <Spinner color={colors.background.main} />
+                  : undefined
+              }
+              iconAfter={
+                status === "off"
+                  ? () => <ChevronRight color={colors.background.main} />
+                  : undefined
+              }
             >
               Iniciar Sesión
             </Button>
           </Form.Trigger>
           <YStack>
-            <Button display="flex" alignSelf="center" chromeless>
+            <Button
+              display="flex"
+              alignSelf="center"
+              color={colors.text.main}
+              chromeless
+            >
               ¿Olvidaste tu contraseña?
             </Button>
             <SignUpWithGoogleButton />
@@ -196,9 +220,14 @@ const LoginScreen = () => {
               width={"100%"}
               gap="$2"
             >
-              <Label>¿No tienes una cuenta?</Label>
+              <Label color={colors.text.main}>¿No tienes una cuenta?</Label>
               <Link href={"/register"} asChild>
-                <Button unstyled={true} chromeless fontWeight={"bold"}>
+                <Button
+                  unstyled={true}
+                  color={colors.text.main}
+                  chromeless
+                  fontWeight={"bold"}
+                >
                   Regístrate
                 </Button>
               </Link>
