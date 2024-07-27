@@ -21,17 +21,17 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
   let icon, label, backgroundColor;
   switch (macroType) {
     case "protein":
-      icon = <Beef />;
+      icon = <Beef color={colors.text.main} />;
       label = "Proteína";
       backgroundColor = colors.protein;
       break;
     case "carbohydrate":
-      icon = <CakeSlice />;
+      icon = <CakeSlice color={colors.text.main} />;
       label = "Carbohidratos";
       backgroundColor = colors.carbohydrate;
       break;
     case "fat":
-      icon = <Avocado width={26} height={26} />;
+      icon = <Avocado color={colors.text.main} width={26} height={26} />;
       label = "Grasas";
       backgroundColor = colors.fat;
       break;
@@ -47,7 +47,7 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
       <View flex={1} pos={"relative"}>
         {/* Custom Progress Bar */}
         <XStack
-          borderColor={colors.text.main}
+          borderColor={"$colorTransparent"}
           borderWidth={1}
           backgroundColor={"transparent"}
           borderRadius="$4"
@@ -59,16 +59,20 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
         >
           <XStack gap="$2">
             {icon}
-            <Paragraph mr="$2" fontWeight="bold">
+            <Paragraph mr="$2" fontWeight="bold" color={colors.text.main}>
               {label}
             </Paragraph>
           </XStack>
           {/* { Progress Percentage } */}
           <XStack w={"$6"} ai={"center"} jc={"flex-end"} pr={"$2"}>
-            <Paragraph fontWeight={"bold"} fontSize={"$6"}>
+            <Paragraph
+              fontWeight={"bold"}
+              fontSize={"$6"}
+              color={colors.text.main}
+            >
               {Math.round((value / target) * 100)}&nbsp;
             </Paragraph>
-            <Paragraph color="$gray10" pl={"$1"}>
+            <Paragraph color={colors.text.dim} pl={"$1"}>
               %
             </Paragraph>
           </XStack>
@@ -108,11 +112,11 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
       {/* Target amount */}
       <XStack gap={"$1"} w={"$7"} ai={"center"} jc={"flex-start"} ml={"$2"}>
         <Paragraph color={colors.text.main}>{Math.round(value)}</Paragraph>
-        <Paragraph fontWeight={"bold"} color={colors.text.dim}>
+        <Paragraph fontWeight={"bold"} color={colors.text.main}>
           /
         </Paragraph>
         <Paragraph color={colors.text.main}>{Math.round(target)}</Paragraph>
-        <Paragraph fontWeight={"bold"} color={colors.text.dim}>
+        <Paragraph fontWeight={"bold"} color={colors.text.main}>
           {unit}
         </Paragraph>
       </XStack>

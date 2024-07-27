@@ -105,7 +105,7 @@ const RegisterScreen = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: colors.background.main }}>
       <ScrollView>
         <KeyboardAvoidingView>
           <Form
@@ -132,6 +132,10 @@ const RegisterScreen = () => {
                 name="username"
                 render={({ field: { onChange, onBlur, value, ref } }) => (
                   <Input
+                    unstyled={true}
+                    borderWidth={1}
+                    focusStyle={{ borderColor: colors.text.dim }}
+                    bg={colors.background.accent}
                     onChangeText={onChange}
                     autoCapitalize="none"
                     returnKeyType="next"
@@ -150,12 +154,16 @@ const RegisterScreen = () => {
               )}
             </YStack>
             <YStack>
-              <Label>Correo</Label>
+              <Label color={colors.text.main}>Correo</Label>
               <Controller
                 control={control}
                 name="email"
                 render={({ field: { onChange, onBlur, value, ref } }) => (
                   <Input
+                    unstyled={true}
+                    borderWidth={1}
+                    bg={colors.background.accent}
+                    focusStyle={{ borderColor: colors.text.dim }}
                     onChangeText={onChange}
                     autoCapitalize="none"
                     returnKeyType="next"
@@ -182,10 +190,17 @@ const RegisterScreen = () => {
             />
             <Form.Trigger asChild disabled={status !== "off"} marginTop="$2">
               <Button
-                backgroundColor={"$primary"}
-                icon={status === "submitting" ? () => <Spinner /> : undefined}
+                bg={colors.primary}
+                color={colors.background.main}
+                icon={
+                  status === "submitting"
+                    ? () => <Spinner color={colors.background.main} />
+                    : undefined
+                }
                 iconAfter={
-                  status === "off" ? () => <ChevronRight /> : undefined
+                  status === "off"
+                    ? () => <ChevronRight color={colors.background.main} />
+                    : undefined
                 }
               >
                 Registrarse
@@ -199,9 +214,14 @@ const RegisterScreen = () => {
                 width={"100%"}
                 gap="$2"
               >
-                <Label>¿Ya tienes una cuenta?</Label>
+                <Label color={colors.text.main}>¿Ya tienes una cuenta?</Label>
                 <Link href={"/login"} asChild>
-                  <Button unstyled={true} chromeless fontWeight={"bold"}>
+                  <Button
+                    unstyled={true}
+                    chromeless
+                    fontWeight={"bold"}
+                    color={colors.text.main}
+                  >
                     Inicia sesión
                   </Button>
                 </Link>

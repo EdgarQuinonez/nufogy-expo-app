@@ -10,6 +10,7 @@ import { FoodContext } from "@providers/FoodContext";
 import FoodInfoSlides from "@components/FoodInfoSlides";
 import { Goal } from "@tamagui/lucide-icons";
 import useRDI from "@utils/useRDI";
+import { useAuth } from "@utils/useAuth";
 
 export default function DiaryScreen() {
   const { rdi, macrosTargets } = useRDI();
@@ -58,7 +59,7 @@ export default function DiaryScreen() {
                     py={"$3"}
                     gap={"$4"}
                     borderRadius={"$2"}
-                    // bg={colors.background.main}
+                    bg={colors.background.main}
                     w={"100%"}
                   >
                     <Goal color={colors.secondary} size={32} />
