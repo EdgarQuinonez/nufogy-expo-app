@@ -42,7 +42,7 @@ export default function PasswordInput({
     >
       <Input
         unstyled={true}
-        returnKeyType="send"
+        returnKeyType="done"
         autoCapitalize="none"
         autoCorrect={false}
         flex={1}

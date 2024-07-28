@@ -1,5 +1,6 @@
 import { CheckCircle, Eye, EyeOff } from "@tamagui/lucide-icons";
 import { UserRegistrationInputs } from "@types";
+import { colors } from "globalStyles";
 import React, { useState, useEffect, useRef } from "react";
 import {
   Control,
@@ -52,7 +53,7 @@ export default function PasswordStrengthInputGroup({
 
   return (
     <YStack gap="$1" marginTop="$2">
-      <Label>Contraseña</Label>
+      <Label color={colors.text.main}>Contraseña</Label>
       <PasswordInput
         control={control}
         size={size}
@@ -69,7 +70,7 @@ export default function PasswordStrengthInputGroup({
       {errors.password && (
         <Paragraph color="red">{errors.password.message}</Paragraph>
       )}
-      <Label>Confirmar contraseña</Label>
+      <Label color={colors.text.main}>Confirmar contraseña</Label>
       <PasswordInput
         control={control}
         size={size}
@@ -84,7 +85,7 @@ export default function PasswordStrengthInputGroup({
       {isPasswordConfirmed ? (
         <XStack jc={"center"} ai={"center"} width={"100%"} gap={"$2"}>
           <CheckCircle color="green" />
-          <Label>Las contraseñas coinciden</Label>
+          <Label color={colors.text.main}>Las contraseñas coinciden</Label>
         </XStack>
       ) : null}
     </YStack>
@@ -108,16 +109,16 @@ function PasswordInput({
   setShowPassword,
   name,
 }: PasswordInputProps): JSX.Element {
-  const { background025 } = useTheme();
-
   return (
     <YStack>
       <XStack
         alignItems="center"
         gap="$2"
+        // borderColor={colors.text.dim}
         borderWidth={1}
-        backgroundColor={background025}
+        bg={colors.background.accent}
         borderRadius={"$4"}
+        focusStyle={{ borderColor: colors.text.dim }}
       >
         <Controller
           control={control}
@@ -130,6 +131,7 @@ function PasswordInput({
               }}
               onBlur={onBlur}
               autoCapitalize="none"
+              returnKeyType={name === "password" ? "next" : "done"}
               autoCorrect={false}
               autoComplete="off"
               value={value}
@@ -147,7 +149,11 @@ function PasswordInput({
           onPress={() => setShowPassword(!showPassword)}
           chromeless
         >
-          {showPassword ? <Eye /> : <EyeOff />}
+          {showPassword ? (
+            <Eye color={colors.text.dim} />
+          ) : (
+            <EyeOff color={colors.text.dim} />
+          )}
         </Button>
       </XStack>
     </YStack>
