@@ -17,7 +17,7 @@ export type Props = {};
 export default function FoodSearchView({}: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const { mealTypeId } = useLocalSearchParams();
-  const authToken = useAuth();
+  const { authToken } = useAuth();
 
   const router = useRouter();
 

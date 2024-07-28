@@ -52,7 +52,7 @@ const FoodContextProvider = ({ children }: any) => {
     fiber: 0,
   });
 
-  const authToken = useAuth();
+  const { authToken } = useAuth();
 
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs`;
   const { value: fetchedFoodLogs } = useFetch<DiaryFoodLog[]>(

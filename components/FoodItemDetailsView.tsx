@@ -67,7 +67,7 @@ export type Props = {
 
 export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const authToken = useAuth();
+  const { authToken } = useAuth();
   const { rdi } = useRDI();
   const toast = useToastController();
   const router = useRouter();

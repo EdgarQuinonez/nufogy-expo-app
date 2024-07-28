@@ -8,7 +8,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 import { Provider } from "./Provider";
 import { getItem } from "@utils/AsyncStorage";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,6 +16,7 @@ import { StoredValue } from "@types";
 import { AuthTokenProvider } from "@providers/AuthContext";
 import { ProfileProvider } from "@providers/ProfileContext";
 import { FoodContextProvider } from "@providers/FoodContext";
+import { useAuth } from "@utils/useAuth";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -51,63 +52,71 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { authToken } = useAuth();
+  const router = useRouter();
+  const segments = useSegments();
+  const [isLoading, setIsLoading] = useState(true);
+  StatusBar.setBarStyle("dark-content");
 
   useEffect(() => {
     const checkAuthStatus = async () => {
-      StatusBar.setBarStyle("dark-content");
       try {
-        const authToken = await getItem("authToken");
-        setIsAuthenticated(!!authToken);
+        console.log("authToken in RootLayoutNav", authToken);
+        if (authToken) {
+          router.replace("(tabs)");
+        } else {
+          router.replace("(auth)/login");
+        }
       } catch (error) {
         console.error("Error checking auth status:", error);
-        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
       }
     };
+
     checkAuthStatus();
-  }, []);
+  }, [authToken, segments]);
+
+  if (isLoading) {
+    return null; // Return null while loading
+  }
 
   return (
     <Provider>
       <ThemeProvider value={DefaultTheme}>
-        {isAuthenticated ? (
-          <AuthTokenProvider>
-            <ProfileProvider>
-              <FoodContextProvider>
-                <Stack screenOptions={{ headerShown: false }}>
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{
-                      headerShown: false,
-                    }}
-                  />
-                  <Stack.Screen
-                    name="(settings)"
-                    options={{
-                      headerShown: false,
-                    }}
-                  />
-                  <Stack.Screen
-                    name="(addIngredientFormModal)"
-                    options={{
-                      headerShown: false,
-                      presentation: "modal",
-                    }}
-                  />
-                </Stack>
-              </FoodContextProvider>
-            </ProfileProvider>
-          </AuthTokenProvider>
-        ) : (
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen
-              name="(auth)"
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack>
-        )}
+        <AuthTokenProvider>
+          <ProfileProvider>
+            <FoodContextProvider>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen
+                  name="(auth)"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="(tabs)"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="(settings)"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="(addIngredientFormModal)"
+                  options={{
+                    headerShown: false,
+                    presentation: "modal",
+                  }}
+                />
+              </Stack>
+            </FoodContextProvider>
+          </ProfileProvider>
+        </AuthTokenProvider>
       </ThemeProvider>
     </Provider>
   );

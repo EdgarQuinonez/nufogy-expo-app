@@ -21,7 +21,7 @@ export type Props = {
 
 export default function DiaryDayView({ foodLogs }: Props) {
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/mealtype/`;
-  const authToken = useAuth();
+  const { authToken } = useAuth();
   const {
     loading,
     error,

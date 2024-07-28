@@ -22,16 +22,16 @@ import { getItem, setItem } from "@utils/AsyncStorage";
 import axios from "axios";
 import { useToastController } from "@tamagui/toast";
 import { colors, globalStyles } from "globalStyles";
-import { UserLogin, UserLoginInputs } from "types";
+import { StoredValue, UserLogin, UserLoginInputs } from "types";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { KeyboardAvoidingView } from "react-native";
+import { useAuth } from "@utils/useAuth";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
-const fetchUserProfile = async () => {
+const fetchUserProfile = async (authToken: StoredValue) => {
   try {
     const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/profile/get`;
-    const authToken = await getItem("authToken");
 
     const response = await axios.get(apiEndpoint, {
       headers: {
@@ -60,6 +60,7 @@ const LoginScreen = () => {
     control,
     formState: { errors },
   } = useForm<UserLoginInputs>();
+  const { authToken, setAuthToken } = useAuth();
   const usernameRef = useRef<any>(null);
   const passwordRef = useRef<any>(null);
 
@@ -79,20 +80,21 @@ const LoginScreen = () => {
       if (response.status === 200) {
         const data = await response.data;
         const token = data.token;
-        await setItem("authToken", token);
-        await fetchUserProfile();
+        setAuthToken(token);
+        await fetchUserProfile(token);
 
         setStatus("submitted");
 
         router.replace("/(tabs)");
-      } else {
-        setStatus("off");
-        toast.show("Error", {
-          message: "Hubo un error al iniciar sesión.",
-        });
       }
     } catch (error) {
-      console.error("Error during login:", (error as any).response.data);
+      setStatus("off");
+
+      toast.show("Error", {
+        message:
+          "Hubo un error al iniciar sesión. Por favor, intenta de nuevo.",
+      });
+      // console.error("Error during login:", (error as any).response.data);
     } finally {
       setStatus("off");
     }
