@@ -8,7 +8,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
+import { Slot, SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 import { Provider } from "./Provider";
 import { getItem } from "@utils/AsyncStorage";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -58,37 +58,7 @@ function RootLayoutNav() {
     <Provider>
       <ThemeProvider value={DefaultTheme}>
         <SessionProvider>
-          <ProfileProvider>
-            <FoodContextProvider>
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen
-                  name="(auth)"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="(tabs)"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="(settings)"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="(addIngredientFormModal)"
-                  options={{
-                    headerShown: false,
-                    presentation: "modal",
-                  }}
-                />
-              </Stack>
-            </FoodContextProvider>
-          </ProfileProvider>
+          <Slot />
         </SessionProvider>
       </ThemeProvider>
     </Provider>
