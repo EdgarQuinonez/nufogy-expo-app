@@ -1,79 +1,48 @@
-import React, { createContext, useEffect, useState } from "react";
-import { getItem, removeItem, setItem } from "@utils/AsyncStorage";
-import { StoredValue } from "@types";
-import { useRouter } from "expo-router";
+import { useContext, createContext, type PropsWithChildren } from "react";
+import { useStorageState } from "@utils/useStorageState";
 
-export interface AuthContextType {
-  authToken: StoredValue;
-  setAuthToken: (newToken: StoredValue) => void;
-  logout: () => Promise<void>;
-}
-
-const AuthTokenContext = createContext<AuthContextType>({
-  authToken: null,
-  setAuthToken: () => {},
-  logout: async () => {},
+const AuthContext = createContext<{
+  signIn: () => void;
+  signOut: () => void;
+  session?: string | null;
+  isLoading: boolean;
+}>({
+  signIn: () => null,
+  signOut: () => null,
+  session: null,
+  isLoading: false,
 });
 
-interface AuthTokenProviderProps {
-  children: React.ReactNode;
-  // authToken?: StoredValue;
+// This hook can be used to access the user info.
+export function useSession() {
+  const value = useContext(AuthContext);
+  if (process.env.NODE_ENV !== "production") {
+    if (!value) {
+      throw new Error("useSession must be wrapped in a <SessionProvider />");
+    }
+  }
+
+  return value;
 }
 
-const AuthTokenProvider: React.FC<AuthTokenProviderProps> = ({
-  children,
-  // authToken: initialAuthToken = null,
-}) => {
-  const [authToken, setAuthToken] = useState<StoredValue>(null);
-  const router = useRouter();
-
-  // Load initial state from AsyncStorage on mount
-  useEffect(() => {
-    const loadAuthToken = async () => {
-      try {
-        const storedToken = await getItem("authToken");
-        console.log("storedToken", storedToken);
-        if (storedToken) {
-          setAuthToken(storedToken);
-        }
-      } catch (error) {
-        console.error("Error loading authToken:", error);
-      }
-    };
-
-    loadAuthToken();
-  }, []);
-
-  // Save to AsyncStorage whenever authToken changes
-  useEffect(() => {
-    const saveAuthToken = async () => {
-      try {
-        console.log("authToken", authToken);
-        if (authToken) {
-          await setItem("authToken", authToken);
-        } else {
-          await removeItem("authToken");
-        }
-      } catch (error) {
-        console.error("Error saving authToken:", error);
-      }
-    };
-
-    saveAuthToken();
-  }, [authToken]);
-
-  const logout = async () => {
-    setAuthToken(null);
-
-    router.replace("/(auth)/login");
-    router.back();
-  };
+export function SessionProvider({ children }: PropsWithChildren) {
+  const [[isLoading, session], setSession] = useStorageState("session");
 
   return (
-    <AuthTokenContext.Provider value={{ authToken, setAuthToken, logout }}>
+    <AuthContext.Provider
+      value={{
+        signIn: () => {
+          // Perform sign-in logic here
+          setSession("xxx");
+        },
+        signOut: () => {
+          setSession(null);
+        },
+        session,
+        isLoading,
+      }}
+    >
       {children}
-    </AuthTokenContext.Provider>
+    </AuthContext.Provider>
   );
-};
-
-export { AuthTokenContext, AuthTokenProvider };
+}
