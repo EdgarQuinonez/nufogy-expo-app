@@ -26,6 +26,7 @@ import { StoredValue, UserLogin, UserLoginInputs } from "types";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { KeyboardAvoidingView } from "react-native";
 import { useAuth } from "@utils/useAuth";
+import { useSession } from "@providers/AuthContext";
 
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
@@ -60,7 +61,7 @@ const LoginScreen = () => {
     control,
     formState: { errors },
   } = useForm<UserLoginInputs>();
-  const { authToken, setAuthToken } = useAuth();
+  const { signIn } = useSession();
   const usernameRef = useRef<any>(null);
   const passwordRef = useRef<any>(null);
 
@@ -68,36 +69,25 @@ const LoginScreen = () => {
     "off"
   );
 
-  const handleLogin: SubmitHandler<UserLoginInputs> = async (data) => {
-    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/api-token-auth/`;
+  const handleLogin: SubmitHandler<UserLoginInputs> = (data) => {
     setStatus("submitting");
+    // Sign in
     try {
-      const response = await axios.post(apiEndpoint, {
-        username: data.username.trim(),
-        password: data.password.trim(),
-      });
-
-      if (response.status === 200) {
-        const data = await response.data;
-        const token = data.token;
-        setAuthToken(token);
-        await fetchUserProfile(token);
-
-        setStatus("submitted");
-
-        router.replace("/(tabs)");
-      }
-    } catch (error) {
+      signIn(data);
+    } catch (e) {
       setStatus("off");
 
       toast.show("Error", {
         message:
           "Hubo un error al iniciar sesión. Por favor, intenta de nuevo.",
       });
-      // console.error("Error during login:", (error as any).response.data);
     } finally {
       setStatus("off");
     }
+    setStatus("submitted");
+    // Fetch user profile
+    // Redirect to home
+    router.replace("/(tabs)");
   };
 
   return (

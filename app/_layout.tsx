@@ -13,7 +13,7 @@ import { Provider } from "./Provider";
 import { getItem } from "@utils/AsyncStorage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StoredValue } from "@types";
-import { AuthTokenProvider } from "@providers/AuthContext";
+import { SessionProvider } from "@providers/AuthContext";
 import { ProfileProvider } from "@providers/ProfileContext";
 import { FoodContextProvider } from "@providers/FoodContext";
 import { useAuth } from "@utils/useAuth";
@@ -52,39 +52,12 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { authToken } = useAuth();
-  const router = useRouter();
-  const segments = useSegments();
-  const [isLoading, setIsLoading] = useState(true);
   StatusBar.setBarStyle("dark-content");
-
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        console.log("authToken in RootLayoutNav", authToken);
-        if (authToken) {
-          router.replace("(tabs)");
-        } else {
-          router.replace("(auth)/login");
-        }
-      } catch (error) {
-        console.error("Error checking auth status:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuthStatus();
-  }, [authToken, segments]);
-
-  if (isLoading) {
-    return null; // Return null while loading
-  }
 
   return (
     <Provider>
       <ThemeProvider value={DefaultTheme}>
-        <AuthTokenProvider>
+        <SessionProvider>
           <ProfileProvider>
             <FoodContextProvider>
               <Stack screenOptions={{ headerShown: false }}>
@@ -116,7 +89,7 @@ function RootLayoutNav() {
               </Stack>
             </FoodContextProvider>
           </ProfileProvider>
-        </AuthTokenProvider>
+        </SessionProvider>
       </ThemeProvider>
     </Provider>
   );
