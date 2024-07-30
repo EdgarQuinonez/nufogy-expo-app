@@ -10,14 +10,14 @@ import useFetch from "@utils/useFetch";
 import { debounce } from "tamagui";
 
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
-import { useAuth } from "@utils/useAuth";
+import { useSession } from "@providers/AuthContext";
 
 export type Props = {};
 
 export default function FoodSearchView({}: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const { mealTypeId } = useLocalSearchParams();
-  const { authToken } = useAuth();
+  const { session } = useSession();
 
   const router = useRouter();
 
@@ -35,8 +35,8 @@ export default function FoodSearchView({}: Props) {
     value: foods,
   } = useFetch<FoodSearchResponseData>(
     apiEndpoint,
-    { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
-    [searchQuery, authToken]
+    { headers: { Authorization: session ? `Token ${session}` : "" } },
+    [searchQuery, session]
   );
 
   return (
@@ -83,7 +83,7 @@ export default function FoodSearchView({}: Props) {
                 key={item.food_id}
                 href={{
                   pathname:
-                    "/(addIngredientFormModal)/mealType/[mealTypeId]/foodItemDetails/[foodItemId]",
+                    "/(app)/(addIngredientFormModal)/mealType/[mealTypeId]/foodItemDetails/[foodItemId]",
                   params: { mealTypeId: mealTypeId, foodItemId: item.food_id },
                 }}
               >

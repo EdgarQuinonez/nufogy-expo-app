@@ -51,7 +51,7 @@ import MicrosSlide from "@components/MicrosSlide";
 import FoodInfoSlides from "./FoodInfoSlides";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useAuth } from "@utils/useAuth";
+
 import useParseFoodItem from "@utils/useParseFoodItem";
 import useNutritionCalculator from "@utils/useNutritionCalculator";
 import { FoodContext } from "@providers/FoodContext";
@@ -59,6 +59,7 @@ import calculateNutritionSummary from "@utils/nutritionSummary";
 import { useToastController } from "@tamagui/toast";
 import useProfile from "@utils/useProfile";
 import useRDI from "@utils/useRDI";
+import { useSession } from "@providers/AuthContext";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -67,7 +68,7 @@ export type Props = {
 
 export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const { authToken } = useAuth();
+  const { session } = useSession();
   const { rdi } = useRDI();
   const toast = useToastController();
   const router = useRouter();
@@ -80,8 +81,8 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
     value: foodItem,
   } = useFetch<GetFoodItemResponseData>(
     apiEndpoint,
-    { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
-    [authToken]
+    { headers: { Authorization: session ? `Token ${session}` : "" } },
+    [session]
   );
   const { daySummary, setFoodLogs, selectedDate, setSelectedDate } =
     useContext(FoodContext);
@@ -119,7 +120,7 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
 
         const response = await axios.post(apiEndpoint, bodyData, {
           headers: {
-            Authorization: `Token ${authToken}`,
+            Authorization: `Token ${session}`,
             "Content-Type": "application/json",
           },
         });

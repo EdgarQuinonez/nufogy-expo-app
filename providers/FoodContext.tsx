@@ -1,8 +1,9 @@
 import { DaySummary, DiaryFoodLog } from "@types";
 import calculateNutritionSummary from "@utils/nutritionSummary";
-import { useAuth } from "@utils/useAuth";
+
 import useFetch from "@utils/useFetch";
 import React, { createContext, useEffect, useState } from "react";
+import { useSession } from "@providers/AuthContext";
 
 interface FoodContextProps {
   isModalVisible: boolean;
@@ -52,13 +53,13 @@ const FoodContextProvider = ({ children }: any) => {
     fiber: 0,
   });
 
-  const { authToken } = useAuth();
+  const { session } = useSession();
 
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/logs`;
   const { value: fetchedFoodLogs } = useFetch<DiaryFoodLog[]>(
     apiEndpoint,
-    { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
-    [authToken]
+    { headers: { Authorization: session ? `Token ${session}` : "" } },
+    [session]
   );
 
   const getDayFilteredFoodLogs = (date: Date) => {

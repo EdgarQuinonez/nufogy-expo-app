@@ -1,6 +1,6 @@
 import { UserProfile } from "@types";
 import { getItem } from "@utils/AsyncStorage"; // Make sure you have AsyncStorage utils
-import { useAuth } from "@utils/useAuth";
+
 import { createContext, useEffect, useState } from "react";
 
 interface ProfileContextValue {

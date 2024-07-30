@@ -16,7 +16,6 @@ import { StoredValue } from "@types";
 import { SessionProvider } from "@providers/AuthContext";
 import { ProfileProvider } from "@providers/ProfileContext";
 import { FoodContextProvider } from "@providers/FoodContext";
-import { useAuth } from "@utils/useAuth";
 
 export {
   // Catch any errors thrown by the Layout component.

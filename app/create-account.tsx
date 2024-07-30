@@ -91,7 +91,9 @@ const RegisterScreen = () => {
         toast.show("¡Registro exitoso!", {
           message: "¡Bienvenido a Nufogy!",
         });
-        router.navigate("login/index");
+
+        // TODO: Sign in auto and redirect to home
+        router.navigate("/sign-in");
       } else {
         toast.show("Error", {
           message: "Hubo un error al registrar tu cuenta.",
@@ -105,131 +107,133 @@ const RegisterScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: colors.background.main }}>
-      <ScrollView>
-        <KeyboardAvoidingView>
-          <Form
-            onSubmit={handleSubmit(handleRegister)}
-            width={"100%"}
-            px={"$4"}
-          >
-            <YStack alignItems="center" justifyContent="center">
-              <Heading paddingVertical="$2" color={colors.text.main}>
-                Crear una cuenta
-              </Heading>
-              <Image
-                source={{
-                  uri: nufogyLogoUri,
-                  width: 104,
-                  height: 104,
-                }}
-              />
-            </YStack>
-            <YStack>
-              <Label color={colors.text.main}>Usuario</Label>
-              <Controller
-                control={control}
-                name="username"
-                render={({ field: { onChange, onBlur, value, ref } }) => (
-                  <Input
-                    unstyled={true}
-                    borderWidth={1}
-                    focusStyle={{ borderColor: colors.text.dim }}
-                    bg={colors.background.accent}
-                    onChangeText={onChange}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    autoCorrect={false}
-                    onBlur={onBlur}
-                    value={value}
-                    ref={ref}
-                    size={"$4"}
-                    placeholder="ej. pedroelfire"
-                    color={colors.text.main}
-                  />
-                )}
-              />
-              {errors.username && (
-                <Paragraph color="red">{errors.username.message}</Paragraph>
-              )}
-            </YStack>
-            <YStack>
-              <Label color={colors.text.main}>Correo</Label>
-              <Controller
-                control={control}
-                name="email"
-                render={({ field: { onChange, onBlur, value, ref } }) => (
-                  <Input
-                    unstyled={true}
-                    borderWidth={1}
-                    bg={colors.background.accent}
-                    focusStyle={{ borderColor: colors.text.dim }}
-                    onChangeText={onChange}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    autoCorrect={false}
-                    inputMode="email"
-                    onBlur={onBlur}
-                    value={value}
-                    ref={ref}
-                    size={"$4"}
-                    placeholder="ej. pedroelfire@gmail.com"
-                  />
-                )}
-              />
-              {errors.email && (
-                <Paragraph color="red">{errors.email.message}</Paragraph>
-              )}
-            </YStack>
-
-            <PasswordStrengthInputGroup
-              size={"$4"}
-              onPasswordChange={onPasswordChange}
-              control={control}
-              errors={errors}
+    <SafeAreaView
+      style={{
+        ...globalStyles.container,
+        justifyContent: "center",
+        backgroundColor: colors.background.main,
+      }}
+    >
+      {/* <ScrollView > */}
+      <KeyboardAvoidingView>
+        <Form onSubmit={handleSubmit(handleRegister)} width={"100%"} px={"$4"}>
+          <YStack alignItems="center" justifyContent="center">
+            <Heading paddingVertical="$2" color={colors.text.main}>
+              Crear una cuenta
+            </Heading>
+            <Image
+              source={{
+                uri: nufogyLogoUri,
+                width: 104,
+                height: 104,
+              }}
             />
-            <Form.Trigger asChild disabled={status !== "off"} marginTop="$2">
-              <Button
-                bg={colors.primary}
-                color={colors.background.main}
-                icon={
-                  status === "submitting"
-                    ? () => <Spinner color={colors.background.main} />
-                    : undefined
-                }
-                iconAfter={
-                  status === "off"
-                    ? () => <ChevronRight color={colors.background.main} />
-                    : undefined
-                }
-              >
-                Registrarse
-              </Button>
-            </Form.Trigger>
-            <YStack>
-              <SignUpWithGoogleButton />
-              <XStack
-                alignItems="center"
-                justifyContent="center"
-                width={"100%"}
-                gap="$2"
-              >
-                <Label color={colors.text.main}>¿Ya tienes una cuenta?</Label>
-                <Link href={"/login"} asChild>
-                  <Button
-                    unstyled={true}
-                    chromeless
-                    fontWeight={"bold"}
-                    color={colors.text.main}
-                  >
-                    Inicia sesión
-                  </Button>
-                </Link>
-              </XStack>
-            </YStack>
-          </Form>
-        </KeyboardAvoidingView>
-      </ScrollView>
+          </YStack>
+          <YStack>
+            <Label color={colors.text.main}>Usuario</Label>
+            <Controller
+              control={control}
+              name="username"
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <Input
+                  unstyled={true}
+                  borderWidth={1}
+                  focusStyle={{ borderColor: colors.text.dim }}
+                  bg={colors.background.accent}
+                  onChangeText={onChange}
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  autoCorrect={false}
+                  onBlur={onBlur}
+                  value={value}
+                  ref={ref}
+                  size={"$4"}
+                  placeholder="ej. pedroelfire"
+                  color={colors.text.main}
+                />
+              )}
+            />
+            {errors.username && (
+              <Paragraph color="red">{errors.username.message}</Paragraph>
+            )}
+          </YStack>
+          <YStack>
+            <Label color={colors.text.main}>Correo</Label>
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <Input
+                  unstyled={true}
+                  borderWidth={1}
+                  bg={colors.background.accent}
+                  focusStyle={{ borderColor: colors.text.dim }}
+                  onChangeText={onChange}
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  autoCorrect={false}
+                  inputMode="email"
+                  onBlur={onBlur}
+                  value={value}
+                  ref={ref}
+                  size={"$4"}
+                  placeholder="ej. pedroelfire@gmail.com"
+                />
+              )}
+            />
+            {errors.email && (
+              <Paragraph color="red">{errors.email.message}</Paragraph>
+            )}
+          </YStack>
+
+          <PasswordStrengthInputGroup
+            size={"$4"}
+            onPasswordChange={onPasswordChange}
+            control={control}
+            errors={errors}
+          />
+          <Form.Trigger asChild disabled={status !== "off"} marginTop="$2">
+            <Button
+              bg={colors.primary}
+              color={colors.background.main}
+              icon={
+                status === "submitting"
+                  ? () => <Spinner color={colors.background.main} />
+                  : undefined
+              }
+              iconAfter={
+                status === "off"
+                  ? () => <ChevronRight color={colors.background.main} />
+                  : undefined
+              }
+            >
+              Registrarse
+            </Button>
+          </Form.Trigger>
+          <YStack>
+            <SignUpWithGoogleButton />
+            <XStack
+              alignItems="center"
+              justifyContent="center"
+              width={"100%"}
+              gap="$2"
+            >
+              <Label color={colors.text.main}>¿Ya tienes una cuenta?</Label>
+              <Link href={"/sign-in"} asChild>
+                <Button
+                  unstyled={true}
+                  chromeless
+                  fontWeight={"bold"}
+                  color={colors.text.main}
+                >
+                  Inicia sesión
+                </Button>
+              </Link>
+            </XStack>
+          </YStack>
+        </Form>
+      </KeyboardAvoidingView>
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 };

@@ -26,7 +26,7 @@ import { FoodContext } from "@providers/FoodContext";
 import { Link } from "expo-router";
 import useFetch from "@utils/useFetch";
 import { DiaryFoodLog, FoodLogRequestBody } from "@types";
-import { useAuth } from "@utils/useAuth";
+
 import calculateNutritionSummary from "@utils/nutritionSummary";
 
 const MacroSummaryItem = ({
@@ -178,7 +178,7 @@ export default function MealType({ mealTypeId, name, foodLogs }: Props) {
         {/* Add food item btn */}
         <Link
           href={{
-            pathname: "/(addIngredientFormModal)/mealType/[mealTypeId]",
+            pathname: "/(app)/(addIngredientFormModal)/mealType/[mealTypeId]",
             params: { mealTypeId: mealTypeId },
           }}
           asChild

@@ -33,6 +33,11 @@ export default function AppLayout() {
             }}
           />
           <Stack.Screen
+            name="createProfile"
+            options={{ presentation: "modal" }}
+          />
+
+          <Stack.Screen
             name="(settings)"
             options={{
               headerShown: false,

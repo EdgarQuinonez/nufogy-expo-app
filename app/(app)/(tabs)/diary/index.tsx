@@ -10,7 +10,6 @@ import { FoodContext } from "@providers/FoodContext";
 import FoodInfoSlides from "@components/FoodInfoSlides";
 import { Goal } from "@tamagui/lucide-icons";
 import useRDI from "@utils/useRDI";
-import { useAuth } from "@utils/useAuth";
 
 export default function DiaryScreen() {
   const { rdi, macrosTargets } = useRDI();

@@ -13,7 +13,7 @@ import { StyleSheet } from "react-native";
 import MealType from "@components/MealType";
 import { DiaryFoodLog, MealType as MealTypeTypes, StoredValue } from "@types";
 import useFetch from "@utils/useFetch";
-import { useAuth } from "@utils/useAuth";
+import { useSession } from "@providers/AuthContext";
 
 export type Props = {
   foodLogs: DiaryFoodLog[];
@@ -21,15 +21,15 @@ export type Props = {
 
 export default function DiaryDayView({ foodLogs }: Props) {
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/mealtype/`;
-  const { authToken } = useAuth();
+  const { session } = useSession();
   const {
     loading,
     error,
     value: mealTypes,
   } = useFetch<MealTypeTypes[]>(
     apiEndpoint,
-    { headers: { Authorization: authToken ? `Token ${authToken}` : "" } },
-    [authToken]
+    { headers: { Authorization: session ? `Token ${session}` : "" } },
+    [session]
   );
 
   return (

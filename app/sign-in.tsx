@@ -23,26 +23,26 @@ import axios from "axios";
 import { useToastController } from "@tamagui/toast";
 import { colors, globalStyles } from "globalStyles";
 import { StoredValue, UserLogin, UserLoginInputs } from "types";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { KeyboardAvoidingView } from "react-native";
-import { useAuth } from "@utils/useAuth";
+
 import { useSession } from "@providers/AuthContext";
 
+console.log(nufogyLogo);
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
-const fetchUserProfile = async (authToken: StoredValue) => {
+const fetchUserProfile = async (session: StoredValue) => {
   try {
     const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/profile/get`;
 
     const response = await axios.get(apiEndpoint, {
       headers: {
-        Authorization: `Token ${authToken}`,
+        Authorization: `Token ${session}`,
       },
     });
 
     if (response.status === 200) {
       const profileData = response.data;
-
+      // TODO: replace deprecated AsyncStorage with new SecureStorage
       await setItem("userProfile", JSON.stringify(profileData));
     } else {
       // Handle error response
@@ -87,7 +87,7 @@ const LoginScreen = () => {
     setStatus("submitted");
     // Fetch user profile
     // Redirect to home
-    router.replace("/(tabs)");
+    router.replace("/(app)/(tabs)");
   };
 
   return (
@@ -104,13 +104,7 @@ const LoginScreen = () => {
             <Heading paddingVertical="$2" color={colors.text.main}>
               Iniciar Sesión
             </Heading>
-            <Image
-              source={{
-                uri: nufogyLogoUri,
-                width: 104,
-                height: 104,
-              }}
-            />
+            <Image source={{ uri: nufogyLogoUri, width: 104, height: 104 }} />
           </YStack>
           <YStack>
             <Label color={colors.text.main}>Correo o usuario</Label>
@@ -213,7 +207,7 @@ const LoginScreen = () => {
               gap="$2"
             >
               <Label color={colors.text.main}>¿No tienes una cuenta?</Label>
-              <Link href={"/register"} asChild>
+              <Link href={"/create-account"} asChild>
                 <Button
                   unstyled={true}
                   color={colors.text.main}
