@@ -1,10 +1,13 @@
-import { Tabs } from "expo-router";
+import { Tabs, useLocalSearchParams } from "expo-router";
 import { useTheme } from "tamagui";
 import { Bot, LayoutGrid, Notebook, Salad } from "@tamagui/lucide-icons";
 import TopBar from "@components/TopBar";
 
 export default function TabLayout() {
   const theme = useTheme();
+  const params = useLocalSearchParams();
+
+  console.log("params", params);
 
   return (
     <Tabs
