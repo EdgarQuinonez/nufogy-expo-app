@@ -26,31 +26,10 @@ import { StoredValue, UserLogin, UserLoginInputs } from "types";
 import { KeyboardAvoidingView } from "react-native";
 
 import { useSession } from "@providers/AuthContext";
+import { useProfile } from "@providers/ProfileContext";
 
-console.log(nufogyLogo);
-const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
-
-const fetchUserProfile = async (session: StoredValue) => {
-  try {
-    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/profile/get`;
-
-    const response = await axios.get(apiEndpoint, {
-      headers: {
-        Authorization: `Token ${session}`,
-      },
-    });
-
-    if (response.status === 200) {
-      const profileData = response.data;
-      // TODO: replace deprecated AsyncStorage with new SecureStorage
-      await setItem("userProfile", JSON.stringify(profileData));
-    } else {
-      // Handle error response
-    }
-  } catch (error) {
-    console.error("Error fetching profile:", error);
-  }
-};
+// TODO FIX: Image.resolveAssetSource(nufogyLogo) is null
+// const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -61,7 +40,8 @@ const LoginScreen = () => {
     control,
     formState: { errors },
   } = useForm<UserLoginInputs>();
-  const { signIn } = useSession();
+  const { session, signIn } = useSession();
+  const { userProfile } = useProfile();
   const usernameRef = useRef<any>(null);
   const passwordRef = useRef<any>(null);
 
@@ -71,12 +51,19 @@ const LoginScreen = () => {
 
   const handleLogin: SubmitHandler<UserLoginInputs> = (data) => {
     setStatus("submitting");
-    // Sign in
     try {
       signIn(data);
+      setStatus("submitted");
+      // if (session && userProfile) {
+      //   router.replace("/(app)/(tabs)");
+      // } else if (session && !userProfile) {
+      //   router.replace("/(app)/createProfile");
+      // }
+      if (session) {
+        router.replace("/(app)/createProfile");
+      }
     } catch (e) {
       setStatus("off");
-
       toast.show("Error", {
         message:
           "Hubo un error al iniciar sesión. Por favor, intenta de nuevo.",
@@ -84,10 +71,6 @@ const LoginScreen = () => {
     } finally {
       setStatus("off");
     }
-    setStatus("submitted");
-    // Fetch user profile
-    // Redirect to home
-    router.replace("/(app)/(tabs)");
   };
 
   return (
@@ -104,7 +87,7 @@ const LoginScreen = () => {
             <Heading paddingVertical="$2" color={colors.text.main}>
               Iniciar Sesión
             </Heading>
-            <Image source={{ uri: nufogyLogoUri, width: 104, height: 104 }} />
+            {/* <Image source={{ uri: nufogyLogoUri, width: 104, height: 104 }} /> */}
           </YStack>
           <YStack>
             <Label color={colors.text.main}>Correo o usuario</Label>

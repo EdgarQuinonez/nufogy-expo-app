@@ -2,56 +2,46 @@ import { Text } from "tamagui";
 import { Redirect, Stack } from "expo-router";
 
 import { useSession } from "@providers/AuthContext";
-import { ProfileProvider } from "@providers/ProfileContext";
+import { ProfileProvider, useProfile } from "@providers/ProfileContext";
 import { FoodContextProvider } from "@providers/FoodContext";
 
 export default function AppLayout() {
   const { session, isLoading } = useSession();
+  const { userProfile, isLoading: profileIsLoading } = useProfile();
 
-  if (isLoading) {
+  if (isLoading || profileIsLoading) {
     return <Text>Loading...</Text>;
   }
 
   if (!session) {
     return <Redirect href="/sign-in" />;
+  } else if (!userProfile) {
+    return <Redirect href="/createProfile" />;
   }
 
   return (
-    <ProfileProvider>
-      <FoodContextProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen
-        name="(auth)"
-        options={{
-          headerShown: false,
-        }}
-      /> */}
-          <Stack.Screen
-            name="(tabs)"
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="createProfile"
-            options={{ presentation: "modal" }}
-          />
-
-          <Stack.Screen
-            name="(settings)"
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="(addIngredientFormModal)"
-            options={{
-              headerShown: false,
-              presentation: "modal",
-            }}
-          />
-        </Stack>
-      </FoodContextProvider>
-    </ProfileProvider>
+    <FoodContextProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="(settings)"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="(addIngredientFormModal)"
+          options={{
+            headerShown: false,
+            presentation: "modal",
+          }}
+        />
+      </Stack>
+    </FoodContextProvider>
   );
 }

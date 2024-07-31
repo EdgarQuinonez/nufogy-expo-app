@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   XStack,
   H3,
   Paragraph,
@@ -11,41 +10,24 @@ import {
   Input,
   H4,
   H2,
-  H5,
-  Circle,
   Square,
 } from "tamagui";
 import React, { useState, useMemo, useEffect, useContext } from "react";
 import {
   ArrowLeft,
-  Beef,
-  Bot,
-  CakeSlice,
   Check,
   Clock,
   Info,
   Shapes,
   Weight,
 } from "@tamagui/lucide-icons";
-import Avocado from "@assets/icons/Avocado";
-import CircularProgress from "react-native-circular-progress-indicator";
 import SelectDropdown from "./SelectDropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { format, parse } from "date-fns";
-import ProjectedProgressBar from "./ProjectedProgressBar";
+import { format } from "date-fns";
 import { useRouter } from "expo-router";
-import {
-  FoodItem,
-  FoodItemServing,
-  FoodItemServingString,
-  GetFoodItemResponseData,
-  FoodLogRequestBody,
-  StoredValue,
-} from "@types";
+import { GetFoodItemResponseData, FoodLogRequestBody } from "@types";
 import useFetch from "@utils/useFetch";
-import MicronutrientBar from "@components/MicronutrientBar";
-import MacroInputField from "@components/MacroInputField";
-import DonutGraph from "./DonutGraph";
+
 import MacroCalorieSlide from "@components/MacroCalorieSlide";
 import MicrosSlide from "@components/MicrosSlide";
 import FoodInfoSlides from "./FoodInfoSlides";
@@ -55,9 +37,9 @@ import { useForm } from "react-hook-form";
 import useParseFoodItem from "@utils/useParseFoodItem";
 import useNutritionCalculator from "@utils/useNutritionCalculator";
 import { FoodContext } from "@providers/FoodContext";
-import calculateNutritionSummary from "@utils/nutritionSummary";
+
 import { useToastController } from "@tamagui/toast";
-import useProfile from "@utils/useProfile";
+
 import useRDI from "@utils/useRDI";
 import { useSession } from "@providers/AuthContext";
 

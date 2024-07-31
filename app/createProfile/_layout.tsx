@@ -1,8 +1,22 @@
-import { Stack } from "expo-router";
-import { StatusBar } from "react-native";
+import { useSession } from "@providers/AuthContext";
+import { useProfile } from "@providers/ProfileContext";
+import { Redirect, Stack } from "expo-router";
+import { Text } from "tamagui";
 
 export default function CreateProfileLayout() {
-  //   StatusBar.setBarStyle("dark-content");
+  const { session, isLoading } = useSession();
+  const { userProfile, isLoading: profileIsLoading } = useProfile();
+
+  if (isLoading || profileIsLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (!session) {
+    return <Redirect href="/sign-in" />;
+  } else if (userProfile) {
+    return <Redirect href="/" />;
+  }
+
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen

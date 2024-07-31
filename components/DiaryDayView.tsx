@@ -1,17 +1,7 @@
-import React, { useEffect } from "react";
-import {
-  Paragraph,
-  View,
-  Text,
-  YStack,
-  XStack,
-  ScrollView,
-  H3,
-  H4,
-} from "tamagui";
-import { StyleSheet } from "react-native";
+import React from "react";
+import { Paragraph, View, YStack, H4 } from "tamagui";
 import MealType from "@components/MealType";
-import { DiaryFoodLog, MealType as MealTypeTypes, StoredValue } from "@types";
+import { DiaryFoodLog, MealType as MealTypeTypes } from "@types";
 import useFetch from "@utils/useFetch";
 import { useSession } from "@providers/AuthContext";
 

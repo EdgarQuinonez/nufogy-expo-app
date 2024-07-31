@@ -32,8 +32,11 @@ import {
 } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useSession } from "@providers/AuthContext";
+import { UserRegistration } from "@types";
 
-const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
+// TODO FIX: Image.resolveAssetSource(nufogyLogo) is null
+// const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
 const registrationSchema = yup.object({
   username: yup
@@ -59,6 +62,7 @@ const registrationSchema = yup.object({
 
 const RegisterScreen = () => {
   const router = useRouter();
+  const { signIn } = useSession();
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
   );
@@ -77,7 +81,7 @@ const RegisterScreen = () => {
 
   const onPasswordChange = (password: string, confirmed: boolean) => {};
 
-  const handleRegister: SubmitHandler<FieldValues> = async (data) => {
+  const handleRegister: SubmitHandler<UserRegistration> = async (data) => {
     const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/create`;
     setStatus("submitting");
     try {
@@ -91,9 +95,9 @@ const RegisterScreen = () => {
         toast.show("¡Registro exitoso!", {
           message: "¡Bienvenido a Nufogy!",
         });
-
-        // TODO: Sign in auto and redirect to home
-        router.navigate("/sign-in");
+        signIn(data);
+        // TODO: Create user profile
+        router.navigate("/");
       } else {
         toast.show("Error", {
           message: "Hubo un error al registrar tu cuenta.",
@@ -121,13 +125,13 @@ const RegisterScreen = () => {
             <Heading paddingVertical="$2" color={colors.text.main}>
               Crear una cuenta
             </Heading>
-            <Image
+            {/* <Image
               source={{
                 uri: nufogyLogoUri,
                 width: 104,
                 height: 104,
               }}
-            />
+            /> */}
           </YStack>
           <YStack>
             <Label color={colors.text.main}>Usuario</Label>

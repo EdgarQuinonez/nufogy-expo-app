@@ -1,35 +1,64 @@
 import { UserProfile } from "@types";
-import { getItem } from "@utils/AsyncStorage"; // Make sure you have AsyncStorage utils
+import { getItem, removeItem, setItem } from "@utils/AsyncStorage";
+import axios from "axios";
 
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useSession } from "@providers/AuthContext";
 
 interface ProfileContextValue {
   userProfile: UserProfile | null;
-  loading: boolean;
-  error: any;
+  isLoading: boolean;
 }
 
 const ProfileContext = createContext<ProfileContextValue>({
   userProfile: null,
-  loading: true,
-  error: null,
+  isLoading: true,
 });
 
-const ProfileProvider = ({ children }: any) => {
+export function useProfile() {
+  const value = useContext(ProfileContext);
+  if (process.env.NODE_ENV !== "production") {
+    if (!value) {
+      throw new Error("useSession must be wrapped in a <SessionProvider />");
+    }
+  }
+  return value;
+}
+
+export function ProfileProvider({ children }: any) {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const { session } = useSession();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const profileString = await getItem("userProfile");
-        if (typeof profileString === "string") {
-          const profileData = JSON.parse(profileString);
+        const profileData = (await getItem(
+          "userProfile"
+        )) as UserProfile | null;
+        if (profileData) {
           setUserProfile(profileData);
         } else {
-          // TODO: Handle the case where there's no profile in AsyncStorage (e.g., first login)
+          // Handle first login (In case profile is found in server)
+
+          const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/profile/get`;
+          const response = await axios.get(apiEndpoint, {
+            headers: {
+              Authorization: `Token ${session}`,
+            },
+          });
+
+          if (response.status === 200) {
+            const profileData = response.data;
+
+            await setItem("userProfile", profileData);
+            setUserProfile(profileData);
+          }
         }
       } catch (error) {
         console.error("Error fetching profile from AsyncStorage:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -38,8 +67,7 @@ const ProfileProvider = ({ children }: any) => {
 
   const contextValue = {
     userProfile,
-    loading: userProfile === null,
-    error: null,
+    isLoading,
   };
 
   return (
@@ -47,6 +75,4 @@ const ProfileProvider = ({ children }: any) => {
       {children}
     </ProfileContext.Provider>
   );
-};
-
-export { ProfileContext, ProfileProvider };
+}

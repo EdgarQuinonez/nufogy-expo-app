@@ -2,14 +2,14 @@ import { View, Text, Button } from "tamagui";
 import React from "react";
 import { removeItem } from "@utils/AsyncStorage";
 import { useRouter } from "expo-router";
-import useProfile from "@utils/useProfile";
+import { useProfile } from "@providers/ProfileContext";
 import { colors } from "globalStyles";
 import { useSession } from "@providers/AuthContext";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { signOut } = useSession();
-  const { loading, error, userProfile } = useProfile();
+  const { userProfile } = useProfile();
 
   const handleSignOut = () => {
     signOut();

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import useProfile from "@utils/useProfile";
+import { useProfile } from "@providers/ProfileContext";
 import {
   calculateBMR,
   calculateTDEE,

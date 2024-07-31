@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "@tamagui/lucide-icons";
 import { colors } from "globalStyles";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Paragraph, XStack, YStack } from "tamagui";
 
 export type Props = {
