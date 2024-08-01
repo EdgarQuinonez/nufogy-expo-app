@@ -48,6 +48,7 @@ export const colors = {
   text: {
     main: "#0e1101",
     dim: "#d8d1d6",
+    dim1: "#898789",
   },
   protein: "#EF7D7D",
   carbohydrate: "#41BF84",

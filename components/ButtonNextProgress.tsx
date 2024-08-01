@@ -5,28 +5,27 @@ import CircularProgress from "react-native-circular-progress-indicator";
 import { Button, Text, View } from "tamagui";
 
 interface ButtonProgressNextProps {
-  step: number;
   nextScreen: string;
   disabled?: boolean;
 }
-
 const ButtonProgressNext: React.FC<ButtonProgressNextProps> = ({
-  step,
   nextScreen,
   disabled = false,
 }) => {
   const router = useRouter();
 
-  const calculateProgress = (step: number) => {
-    return (step / 6) * 100;
-  };
-
   return (
-    <View h={128} w={"100%"} ai={"center"} jc={"center"}>
+    <View
+      h={128}
+      w={"100%"}
+      ai={"center"}
+      jc={"center"}
+      bg={colors.background.main}
+    >
       <View pos={"relative"} ai={"center"} jc={"center"}>
         <View pos={"absolute"} h={56} w={56} ai={"center"} jc={"center"}>
           <CircularProgress
-            value={calculateProgress(step)}
+            value={1}
             radius={28}
             activeStrokeWidth={6}
             inActiveStrokeWidth={6}

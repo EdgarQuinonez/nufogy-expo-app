@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link, router } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Avatar, XStack, H2, Button, View } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ChevronDown, ChevronLeft } from "@tamagui/lucide-icons";
+import { colors } from "globalStyles";
 
 const CreateProfileTopBar = () => {
+  const router = useRouter();
+  const canGoBack = router.canGoBack();
   return (
     <SafeAreaView>
       <XStack
@@ -13,11 +16,13 @@ const CreateProfileTopBar = () => {
         paddingHorizontal="$2"
         justifyContent="space-between"
         alignItems="center"
-        backgroundColor={"$colorTransparent"}
+        backgroundColor={colors.background.main}
       >
-        <Button chromeless>
-          <ChevronLeft size={24} />
-        </Button>
+        {canGoBack && (
+          <Button chromeless>
+            <ChevronLeft size={24} />
+          </Button>
+        )}
 
         <View h={24} w={24} />
       </XStack>
