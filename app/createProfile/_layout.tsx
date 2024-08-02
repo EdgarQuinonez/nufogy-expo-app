@@ -26,10 +26,42 @@ export default function CreateProfileLayout() {
   //   return <Redirect href="/" />;
   // }
 
+  let step;
+  let nextScreen;
+  switch (segments[2]) {
+    case "weight":
+      step = 1;
+      nextScreen = "/createProfile/(content)/height";
+      break;
+    case "height":
+      step = 2;
+      nextScreen = "/createProfile/(content)/goal";
+      break;
+    case "goal":
+      step = 3;
+      nextScreen = "/createProfile/(content)/activityLevel";
+      break;
+    case "activityLevel":
+      step = 4;
+      nextScreen = "/createProfile/(content)/age";
+      break;
+    case "age":
+      step = 5;
+      nextScreen = "/createProfile/(content)/thankYou";
+      break;
+    case "thankYou":
+      step = 6;
+      nextScreen = "/";
+      break;
+    default:
+      step = 1;
+      nextScreen = "/createProfile/(content)/height";
+  }
+
   return (
     <Form f={1}>
       <Slot />
-      <ButtonNextProgress nextScreen={"height/index"} />
+      <ButtonNextProgress step={step} nextScreen={nextScreen} />
     </Form>
   );
 }

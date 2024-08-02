@@ -56,4 +56,9 @@ export const colors = {
   breakfast: "$yellow9",
   lunch: "$orange7",
   dinner: "$purple7",
+  sedentary: "#EDA285",
+  lightly: "#E4D584",
+  moderate: "#B8EAA6",
+  very: "#A7B8F2",
+  extra: "#C691FB",
 };

@@ -13,13 +13,12 @@ const CreateProfileTopBar = () => {
       <XStack
         width="100%"
         height={72}
-        paddingHorizontal="$2"
         justifyContent="space-between"
         alignItems="center"
         backgroundColor={colors.background.main}
       >
         {canGoBack && (
-          <Button chromeless>
+          <Button onPress={router.back} chromeless>
             <ChevronLeft size={24} />
           </Button>
         )}

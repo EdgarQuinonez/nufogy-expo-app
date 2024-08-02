@@ -47,11 +47,14 @@ export default function WeightScreen() {
               returnKeyType={"done"}
               color={colors.text.main}
               placeholder={"0"}
+              placeholderTextColor={colors.text.main}
               onChangeText={(text) => setWeight(parseFloat(text))}
               fontSize={48}
+              maxWidth={82}
             />
             <Paragraph
               alignSelf="flex-end"
+              ml={"$2"}
               pb={"$2"}
               color={colors.text.main}
               fontSize={18}

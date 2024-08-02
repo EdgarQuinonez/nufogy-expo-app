@@ -7,8 +7,6 @@ export default function TabLayout() {
   const theme = useTheme();
   const params = useLocalSearchParams();
 
-  console.log("params", params);
-
   return (
     <Tabs
       screenOptions={{
