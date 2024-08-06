@@ -12,9 +12,16 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "globalStyles";
 import ButtonProgressNext from "@components/ButtonNextProgress";
+import { useFormData } from "@providers/FormProfileContext";
+import { Controller, useForm } from "react-hook-form";
 
 export default function GoalScreen() {
-  const [goal, setGoal] = useState(0);
+  const {
+    methods: {
+      control,
+      formState: { errors },
+    },
+  } = useFormData();
 
   return (
     <>
@@ -40,17 +47,25 @@ export default function GoalScreen() {
           mt={"$4"}
         >
           <XStack ai={"center"} jc={"center"}>
-            <Input
-              unstyled
-              keyboardType="numeric"
-              returnKeyType={"done"}
-              color={colors.text.main}
-              placeholder={"0"}
-              placeholderTextColor={colors.text.main}
-              onChangeText={(text) => setGoal(parseFloat(text))}
-              fontSize={48}
-              maxWidth={82}
+            <Controller
+              name="goal"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  unstyled
+                  keyboardType="numeric"
+                  returnKeyType={"done"}
+                  color={colors.text.main}
+                  placeholder={"0"}
+                  placeholderTextColor={colors.text.main}
+                  onChangeText={(text) => onChange(text)}
+                  value={value?.toString() || ""}
+                  fontSize={48}
+                  maxWidth={82}
+                />
+              )}
             />
+
             <Paragraph
               alignSelf="flex-end"
               ml={"$2"}

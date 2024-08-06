@@ -12,9 +12,20 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "globalStyles";
 import ButtonProgressNext from "@components/ButtonNextProgress";
+import { useFormData } from "@providers/FormProfileContext";
+import { Controller, useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { UserProfile } from "@types";
 
 export default function WeightScreen() {
-  const [weight, setWeight] = useState(0);
+  const {
+    methods: {
+      control,
+      register,
+      formState: { errors },
+    },
+  } = useFormData();
 
   return (
     <>
@@ -31,6 +42,7 @@ export default function WeightScreen() {
           Tu peso en la mañana después de ir al baño y antes de comer o beber
           algo, usando ropa ligera.
         </Paragraph>
+
         <View
           w={118}
           h={118}
@@ -41,17 +53,26 @@ export default function WeightScreen() {
           mt={"$4"}
         >
           <XStack ai={"center"} jc={"center"}>
-            <Input
-              unstyled
-              keyboardType="numeric"
-              returnKeyType={"done"}
-              color={colors.text.main}
-              placeholder={"0"}
-              placeholderTextColor={colors.text.main}
-              onChangeText={(text) => setWeight(parseFloat(text))}
-              fontSize={48}
-              maxWidth={82}
+            <Controller
+              name="weight"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  unstyled
+                  keyboardType="numeric"
+                  returnKeyType={"done"}
+                  color={colors.text.main}
+                  autoComplete="off"
+                  placeholder={"0"}
+                  placeholderTextColor={colors.text.main}
+                  fontSize={48}
+                  maxWidth={82}
+                  onChangeText={(text) => onChange(text)}
+                  value={value?.toString() || ""}
+                />
+              )}
             />
+
             <Paragraph
               alignSelf="flex-end"
               ml={"$2"}

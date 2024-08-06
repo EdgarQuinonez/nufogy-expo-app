@@ -162,16 +162,32 @@ export interface DaySummary {
   fiber: number;
 }
 
+export type physical_activity =
+  | "sedentary"
+  | "lightly"
+  | "moderate"
+  | "very"
+  | "extra";
+
 export interface UserProfile {
   id: number;
   weight: number;
   height: number;
   medical_conditions: UserProfileMedicalConditions;
   goal: number;
-  physical_activity: "sedentary" | "lightly" | "moderate" | "very" | "extra";
+  physical_activity: physical_activity;
   age: number;
   sex: "male" | "female";
   user_model: number;
+}
+
+export interface CreateProfileFormValues {
+  weight: number;
+  height: number;
+  goal: number;
+  physical_activity: physical_activity;
+  age: number;
+  sex: "male" | "female";
 }
 
 export interface UserProfileMedicalConditions {

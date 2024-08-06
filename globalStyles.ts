@@ -61,4 +61,5 @@ export const colors = {
   moderate: "#B8EAA6",
   very: "#A7B8F2",
   extra: "#C691FB",
+  error: "#e86b6b",
 };

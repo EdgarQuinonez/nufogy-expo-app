@@ -14,6 +14,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "globalStyles";
 import { Bike, Bone, Car, Dot, Heart } from "@tamagui/lucide-icons";
 import BicepsFlexed from "@assets/icons/BicepsFlexed";
+import { useFormData } from "@providers/FormProfileContext";
+import { Controller } from "react-hook-form";
+
+interface FormData {
+  physical_activity: string;
+}
 
 export interface ActivityLevelProps {
   physical_activity: string;
@@ -22,7 +28,10 @@ export interface ActivityLevelProps {
 }
 
 export default function ActivityLevelScreen() {
-  const [selectedActivity, setSelectedActivity] = useState("sedentary");
+  const {
+    methods: { control, watch },
+  } = useFormData();
+  const selectedActivity = watch("activityLevel");
 
   const activityLevels = ["sedentary", "lightly", "moderate", "very", "extra"];
 
@@ -36,11 +45,17 @@ export default function ActivityLevelScreen() {
         <ScrollView contentContainerStyle={{ ai: "center", jc: "center" }}>
           <YStack gap="$2" mt="$4">
             {activityLevels.map((level, i) => (
-              <ActivityLevel
+              <Controller
                 key={i}
-                physical_activity={level}
-                onPress={() => setSelectedActivity(level)}
-                isSelected={selectedActivity === level}
+                name="activityLevel"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <ActivityLevel
+                    physical_activity={level}
+                    onPress={() => onChange(level)}
+                    isSelected={value === level}
+                  />
+                )}
               />
             ))}
           </YStack>

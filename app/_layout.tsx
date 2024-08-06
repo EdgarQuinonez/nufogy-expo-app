@@ -16,6 +16,7 @@ import { StoredValue } from "@types";
 import { SessionProvider } from "@providers/AuthContext";
 import { ProfileProvider } from "@providers/ProfileContext";
 import { FoodContextProvider } from "@providers/FoodContext";
+import { FormDataProvider } from "@providers/FormProfileContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -58,7 +59,9 @@ function RootLayoutNav() {
       <ThemeProvider value={DefaultTheme}>
         <SessionProvider>
           <ProfileProvider>
-            <Slot />
+            <FormDataProvider>
+              <Slot />
+            </FormDataProvider>
           </ProfileProvider>
         </SessionProvider>
       </ThemeProvider>

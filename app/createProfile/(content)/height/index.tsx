@@ -12,9 +12,17 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "globalStyles";
 import ButtonProgressNext from "@components/ButtonNextProgress";
+import { Controller } from "react-hook-form";
+import { useFormData } from "@providers/FormProfileContext";
 
 export default function HeightScreen() {
-  const [height, setHeight] = useState(0);
+  const {
+    methods: {
+      control,
+
+      formState: { errors },
+    },
+  } = useFormData();
 
   return (
     <>
@@ -40,17 +48,25 @@ export default function HeightScreen() {
           mt={"$4"}
         >
           <XStack ai={"center"} jc={"center"}>
-            <Input
-              unstyled
-              keyboardType="numeric"
-              returnKeyType={"done"}
-              color={colors.text.main}
-              placeholder={"0"}
-              placeholderTextColor={colors.text.main}
-              onChangeText={(text) => setHeight(parseFloat(text))}
-              fontSize={48}
-              maxWidth={82}
+            <Controller
+              name="height"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  unstyled
+                  keyboardType="numeric"
+                  returnKeyType={"done"}
+                  color={colors.text.main}
+                  placeholder={"0"}
+                  placeholderTextColor={colors.text.main}
+                  onChangeText={(text) => onChange(text)}
+                  value={value?.toString() || ""}
+                  fontSize={48}
+                  maxWidth={82}
+                />
+              )}
             />
+
             <Paragraph
               alignSelf="flex-end"
               ml={"$2"}
