@@ -62,4 +62,6 @@ export const colors = {
   very: "#A7B8F2",
   extra: "#C691FB",
   error: "#e86b6b",
+  femaleGender: "#D6409F",
+  maleGender: "#77ABD9",
 };

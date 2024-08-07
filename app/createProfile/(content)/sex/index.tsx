@@ -16,6 +16,8 @@ import { Bike, Bone, Car, Dot, Heart } from "@tamagui/lucide-icons";
 import BicepsFlexed from "@assets/icons/BicepsFlexed";
 import { useFormData } from "@providers/FormProfileContext";
 import { Controller } from "react-hook-form";
+import GenderMale from "@assets/icons/GenderMale";
+import GenderFemale from "@assets/icons/GenderFemale";
 
 export interface SexButtonProps {
   sex: string;
@@ -31,14 +33,19 @@ export default function SexScreen() {
   const sex = ["male", "female"];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background.main }}>
-      <YStack f={1} ai="center" jc="center" gap="$2" px="$4">
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colors.background.main,
+      }}
+    >
+      <YStack f={1} ai="center" jc="center" gap="$2">
         <H4 color={colors.text.main}>Sexo de nacimiento</H4>
         <Paragraph color={colors.text.dim1} textAlign="center">
           Elige una opción:
         </Paragraph>
         <ScrollView contentContainerStyle={{ ai: "center", jc: "center" }}>
-          <XStack gap="$2" mt="$4">
+          <XStack gap="$2" mt="$4" mx={"$4"} ai={"center"} jc={"center"}>
             {sex.map((sex, i) => (
               <Controller
                 key={i}
@@ -68,13 +75,27 @@ function SexButton({ sex, onPress, isSelected }: SexButtonProps) {
   switch (sex) {
     case "male":
       title = "Masculino";
-      icon = <Car color={colors.text.main} />;
-      bgColor = colors.sedentary;
+      icon = (
+        <GenderMale
+          color={colors.maleGender}
+          width={"100%"}
+          height={"100%"}
+          viewBox="0 0 120 120"
+        />
+      );
+      bgColor = colors.background.accent;
       break;
     case "female":
       title = "Femenino";
-      icon = <Bone color={colors.text.main} />;
-      bgColor = colors.lightly;
+      icon = (
+        <GenderFemale
+          color={colors.femaleGender}
+          width={"100%"}
+          height={"100%"}
+          viewBox="0 0 120 120"
+        />
+      );
+      bgColor = colors.background.accent;
       break;
   }
   // TODO: Adjust colors and icons (use svgr sandbox to convert icons)
@@ -90,7 +111,9 @@ function SexButton({ sex, onPress, isSelected }: SexButtonProps) {
       h={"$20"}
     >
       <YStack ai={"center"} jc={"center"}>
-        {icon}
+        <View w={"100%"} h={"$16"}>
+          {icon}
+        </View>
         <Paragraph fontWeight={"bold"} color={colors.text.main} fontSize={"$6"}>
           {title}
         </Paragraph>

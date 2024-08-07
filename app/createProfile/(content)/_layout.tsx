@@ -19,7 +19,7 @@ export default function CreateProfileContentLayout() {
       <Stack.Screen name="height/index" />
       <Stack.Screen name="goal/index" />
       <Stack.Screen name="activityLevel/index" />
-      <Stack.Screen name="age/index" />
+      <Stack.Screen name="birthDate/index" />
       <Stack.Screen name="sex/index" />
       <Stack.Screen name="thankYou/index" />
     </Stack>
