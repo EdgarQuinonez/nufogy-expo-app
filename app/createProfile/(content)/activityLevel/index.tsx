@@ -17,10 +17,6 @@ import BicepsFlexed from "@assets/icons/BicepsFlexed";
 import { useFormData } from "@providers/FormProfileContext";
 import { Controller } from "react-hook-form";
 
-interface FormData {
-  physical_activity: string;
-}
-
 export interface ActivityLevelProps {
   physical_activity: string;
   onPress: () => void;

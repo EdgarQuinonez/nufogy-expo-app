@@ -42,6 +42,7 @@ import { useToastController } from "@tamagui/toast";
 
 import useRDI from "@utils/useRDI";
 import { useSession } from "@providers/AuthContext";
+import { colors } from "globalStyles";
 
 export type Props = {
   mealTypeId?: string | string[];
@@ -302,7 +303,9 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                 </XStack>
                 {/* Meal Time Input with DateTimePicker */}
                 <XStack ai={"center"} jc={"flex-end"} gap={"$2"} w={"100%"}>
-                  <Label fontWeight={"bold"}>Hora</Label>
+                  <Label fontWeight={"bold"} color={colors.text.main}>
+                    Hora
+                  </Label>
 
                   <Button
                     unstyled={true}
@@ -318,9 +321,12 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                     py={"$2"}
                   >
                     <XStack>
-                      <Clock />
-                      {/* Hour and minutes here should display the users current time */}
-                      <Paragraph flex={1} textAlign={"center"}>
+                      <Clock color={colors.text.main} />
+                      <Paragraph
+                        flex={1}
+                        textAlign={"center"}
+                        color={colors.text.main}
+                      >
                         {format(selectedDate, "HH:mm")}
                       </Paragraph>
                     </XStack>

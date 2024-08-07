@@ -1,9 +1,24 @@
-import { createContext, PropsWithChildren, useContext } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
-import { object, string, number, InferType, ObjectSchema, mixed } from "yup";
+import {
+  object,
+  string,
+  number,
+  InferType,
+  ObjectSchema,
+  mixed,
+  date,
+} from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSegments } from "expo-router";
 import { physical_activity } from "@types";
+import { parse } from "date-fns";
 
 interface WeightData {
   weight: number;
@@ -22,7 +37,7 @@ interface ActivityLevelData {
 }
 
 interface AgeData {
-  age: number;
+  birthDate: Date;
 }
 
 interface SexData {
@@ -69,10 +84,17 @@ const profileSchemas: ObjectSchema<FormData>[] = [
       .required("Please select an activity level"),
   }),
   object({
-    age: number()
-      .required("Age is required")
-      .min(1, "Age must be at least 1")
-      .max(120, "Age must be at most 120"),
+    birthDate: date()
+      .transform(function (value, originalValue) {
+        if (this.isType(value)) {
+          return value;
+        }
+        const result = parse(originalValue, "dd.MM.yyyy", new Date());
+        return result;
+      })
+      .typeError("please enter a valid date")
+      .required()
+      .min("1900-11-13", "Date is too early"),
   }),
   object({
     sex: string().required("Please select a sex"),
@@ -91,47 +113,54 @@ export function useFormData() {
 
 export const FormDataProvider = ({ children }: PropsWithChildren) => {
   const segments = useSegments();
-
-  let step;
-  let nextScreen;
-  switch (segments[2]) {
-    case "weight":
-      step = 1;
-      nextScreen = "/createProfile/(content)/height";
-      break;
-    case "height":
-      step = 2;
-      nextScreen = "/createProfile/(content)/goal";
-      break;
-    case "goal":
-      step = 3;
-      nextScreen = "/createProfile/(content)/activityLevel";
-      break;
-    case "activityLevel":
-      step = 4;
-      nextScreen = "/createProfile/(content)/age";
-      break;
-    case "age":
-      step = 5;
-      nextScreen = "/createProfile/(content)/sex";
-      break;
-    case "sex":
-      step = 6;
-      nextScreen = "/createProfile/(content)/thankYou";
-      break;
-    case "thankYou":
-      step = 7;
-      nextScreen = "/";
-      break;
-    default:
-      step = 1;
-      nextScreen = "/createProfile/(content)/height";
-  }
+  const [step, setStep] = useState<number>(1);
+  const [nextScreen, setNextScreen] = useState<string>(
+    "/createProfile/(content)/height"
+  );
 
   const methods = useForm({
     mode: "onChange",
     resolver: yupResolver(profileSchemas[step - 1]),
   });
+
+  useEffect(() => {
+    switch (segments[2]) {
+      case "weight":
+        setStep(1);
+        setNextScreen("/createProfile/(content)/height");
+        break;
+      case "height":
+        setStep(2);
+        setNextScreen("/createProfile/(content)/goal");
+        break;
+      case "goal":
+        setStep(3);
+        setNextScreen("/createProfile/(content)/activityLevel");
+        break;
+      case "activityLevel":
+        setStep(4);
+        setNextScreen("/createProfile/(content)/birthDate");
+        break;
+      case "birthDate":
+        setStep(5);
+        setNextScreen("/createProfile/(content)/sex");
+        break;
+      case "sex":
+        setStep(6);
+        setNextScreen("/createProfile/(content)/thankYou");
+        break;
+      case "thankYou":
+        setStep(7);
+        setNextScreen("/");
+        break;
+      default:
+        setStep(1);
+        setNextScreen("/createProfile/(content)/height");
+    }
+
+    // TODO: figure out how to persist data on back navigation. HOTFIX for triggering validation on each step.
+    // methods.reset();
+  }, [segments]);
 
   return (
     <FormDataContext.Provider value={{ methods, step, nextScreen }}>

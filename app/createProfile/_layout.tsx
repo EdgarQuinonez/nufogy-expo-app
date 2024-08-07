@@ -17,7 +17,8 @@ export default function CreateProfileLayout() {
   const {
     methods: {
       handleSubmit,
-      formState: { errors, isValid },
+      trigger,
+      formState: { errors },
     },
     step,
     nextScreen,
@@ -35,6 +36,10 @@ export default function CreateProfileLayout() {
   // } else if (userProfile) {
   //   return <Redirect href="/" />;
   // }
+  const handleNext = async () => {
+    const isStepValid = await trigger();
+    if (isStepValid) router.push(nextScreen);
+  };
 
   const onSubmit = () => {
     if (step === 7) {
@@ -50,10 +55,7 @@ export default function CreateProfileLayout() {
       <ButtonNextProgress
         step={step}
         nextScreen={nextScreen}
-        disabled={!isValid}
-        onPress={
-          step === 7 ? handleSubmit(onSubmit) : () => router.push(nextScreen)
-        }
+        onPress={step === 7 ? handleSubmit(onSubmit) : handleNext}
       />
     </Form>
   );
