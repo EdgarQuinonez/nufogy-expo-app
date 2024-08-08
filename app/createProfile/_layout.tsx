@@ -10,6 +10,7 @@ import {
 import { useProfile } from "@providers/ProfileContext";
 import { ChevronLeft } from "@tamagui/lucide-icons";
 import { CreateProfileFormValues } from "@types";
+import { differenceInYears } from "date-fns";
 import { Redirect, Slot, Stack, useRouter, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { colors } from "globalStyles";
@@ -37,27 +38,52 @@ export default function CreateProfileLayout() {
     return <Text>Loading...</Text>;
   }
 
-  // if (!session) {
-  //   return <Redirect href="/sign-in" />;
-  // } else if (userProfile) {
-  //   return <Redirect href="/" />;
-  // }
+  if (!session) {
+    return <Redirect href="/sign-in" />;
+  } else if (userProfile) {
+    return <Redirect href="/" />;
+  }
   const handleNext = async () => {
     const isStepValid = await trigger();
     if (isStepValid) router.push(nextScreen);
   };
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      console.log("submitting form");
-      console.log(data);
+      const { birthDate, thankYou, ...rest } = data as any;
+      const age = differenceInYears(new Date(), birthDate);
+
+      const requestData: CreateProfileFormValues = {
+        age,
+        physical_activity: rest.activityLevel,
+        sex: rest.sex,
+        weight: parseFloat(rest.weight),
+        height: parseFloat(rest.height),
+        goal: parseFloat(rest.goal),
+      };
+      const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/profile/update`;
+      const response = await fetch(apiEndpoint, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${session}`,
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} error. ${response.body}`);
+      }
+
+      const responseData = await response.json();
     } catch (error) {
-      console.error(error);
+      console.error("Error submitting form:", error);
     }
   };
 
   return (
     <Form f={1} onSubmit={handleSubmit(onSubmit)}>
+      <StatusBar style="dark" />
       <Slot />
 
       <ButtonNextProgress

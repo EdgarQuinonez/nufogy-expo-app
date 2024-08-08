@@ -13,13 +13,9 @@ export default function AppLayout() {
     return <Text>Loading...</Text>;
   }
 
-  // if (!session) {
-  //   return <Redirect href="/sign-in" />;
-  // } else if (!userProfile) {
-  //   return <Redirect href="/createProfile" />;
-  // }
-
-  if (session) {
+  if (!session) {
+    return <Redirect href="/sign-in" />;
+  } else if (!userProfile) {
     return <Redirect href="/createProfile" />;
   }
 

@@ -42,7 +42,7 @@ interface AgeData {
 }
 
 interface SexData {
-  sex: string;
+  sex: "male" | "female";
 }
 
 export type FormData =
@@ -100,7 +100,9 @@ const profileSchemas: ObjectSchema<FormData>[] = [
       .min("1900-11-13", "Date is too early"),
   }),
   object({
-    sex: string().required("Please select a sex"),
+    sex: mixed<"male" | "female">()
+      .oneOf(["female", "male"])
+      .required("Please select a sex"),
   }),
   object({
     thankYou: boolean().default(true),
