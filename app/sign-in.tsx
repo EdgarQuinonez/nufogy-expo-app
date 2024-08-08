@@ -29,7 +29,7 @@ import { useSession } from "@providers/AuthContext";
 import { useProfile } from "@providers/ProfileContext";
 
 // TODO FIX: Image.resolveAssetSource(nufogyLogo) is null
-// const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
+const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -54,14 +54,7 @@ const LoginScreen = () => {
     try {
       signIn(data);
       setStatus("submitted");
-      // if (session && userProfile) {
-      //   router.replace("/(app)/(tabs)");
-      // } else if (session && !userProfile) {
-      //   router.replace("/(app)/createProfile");
-      // }
-      if (session) {
-        router.replace("/(app)/createProfile");
-      }
+      router.replace("/(app)");
     } catch (e) {
       setStatus("off");
       toast.show("Error", {
@@ -87,7 +80,7 @@ const LoginScreen = () => {
             <Heading paddingVertical="$2" color={colors.text.main}>
               Iniciar Sesión
             </Heading>
-            {/* <Image source={{ uri: nufogyLogoUri, width: 104, height: 104 }} /> */}
+            <Image source={{ uri: nufogyLogoUri, width: 104, height: 104 }} />
           </YStack>
           <YStack>
             <Label color={colors.text.main}>Correo o usuario</Label>

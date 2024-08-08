@@ -32,14 +32,6 @@ export default function AgeScreen() {
   const onChangeDateTime = (event: any, selectedDate: Date | undefined) => {
     setShowDatePicker(false);
 
-    console.log(
-      "Selected Date:",
-      selectedDate,
-      "Type:",
-      typeof selectedDate,
-      errors
-    );
-
     if (selectedDate instanceof Date) {
       setValue("birthDate", selectedDate);
     } else {
@@ -94,7 +86,11 @@ export default function AgeScreen() {
 
       {showDatePicker && (
         <DateTimePicker
-          value={control._formValues.birthDate ?? new Date()}
+          value={
+            typeof control._formValues.birthDate === "string"
+              ? new Date()
+              : control._formValues.birthDate
+          }
           mode="date"
           display="default"
           onChange={onChangeDateTime}

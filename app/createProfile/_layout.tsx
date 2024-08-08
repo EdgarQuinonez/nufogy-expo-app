@@ -2,13 +2,19 @@ import ButtonNextProgress from "@components/ButtonNextProgress";
 
 import CreateProfileTopBar from "@components/CreateProfileTopBar";
 import { useSession } from "@providers/AuthContext";
-import { FormDataProvider, useFormData } from "@providers/FormProfileContext";
+import {
+  FormDataProvider,
+  useFormData,
+  FormData,
+} from "@providers/FormProfileContext";
 import { useProfile } from "@providers/ProfileContext";
 import { ChevronLeft } from "@tamagui/lucide-icons";
+import { CreateProfileFormValues } from "@types";
 import { Redirect, Slot, Stack, useRouter, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { colors } from "globalStyles";
 import React from "react";
+import { SubmitHandler } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Form, Text, View } from "tamagui";
 
@@ -41,21 +47,24 @@ export default function CreateProfileLayout() {
     if (isStepValid) router.push(nextScreen);
   };
 
-  const onSubmit = () => {
-    if (step === 7) {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    try {
       console.log("submitting form");
-    } else {
-      throw new Error("Form is not complete.");
+      console.log(data);
+    } catch (error) {
+      console.error(error);
     }
   };
 
   return (
-    <Form f={1}>
+    <Form f={1} onSubmit={handleSubmit(onSubmit)}>
       <Slot />
+
       <ButtonNextProgress
         step={step}
         nextScreen={nextScreen}
-        onPress={step === 7 ? handleSubmit(onSubmit) : handleNext}
+        onPress={handleNext}
+        totalSteps={7}
       />
     </Form>
   );

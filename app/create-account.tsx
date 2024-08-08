@@ -35,8 +35,7 @@ import * as yup from "yup";
 import { useSession } from "@providers/AuthContext";
 import { UserRegistration } from "@types";
 
-// TODO FIX: Image.resolveAssetSource(nufogyLogo) is null
-// const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
+const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
 const registrationSchema = yup.object({
   username: yup
@@ -96,8 +95,7 @@ const RegisterScreen = () => {
           message: "¡Bienvenido a Nufogy!",
         });
         signIn(data);
-        // TODO: Create user profile
-        router.navigate("/");
+        router.navigate("/(app)");
       } else {
         toast.show("Error", {
           message: "Hubo un error al registrar tu cuenta.",
@@ -125,13 +123,13 @@ const RegisterScreen = () => {
             <Heading paddingVertical="$2" color={colors.text.main}>
               Crear una cuenta
             </Heading>
-            {/* <Image
+            <Image
               source={{
                 uri: nufogyLogoUri,
                 width: 104,
                 height: 104,
               }}
-            /> */}
+            />
           </YStack>
           <YStack>
             <Label color={colors.text.main}>Usuario</Label>

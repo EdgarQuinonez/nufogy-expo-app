@@ -28,11 +28,13 @@ export default function ThankYouScreen() {
       style={{
         flex: 1,
         backgroundColor: colors.background.main,
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <Image
         source={{ uri: nufogyLogoUri }}
-        style={{ width: 200, height: 200 }}
+        style={{ width: 172, height: 172 }}
       />
       <YStack f={1} ai="center" jc="center" gap="$2">
         <H4 color={colors.text.main}>Bienvenido a Nufogy</H4>

@@ -14,6 +14,7 @@ import {
   ObjectSchema,
   mixed,
   date,
+  boolean,
 } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSegments } from "expo-router";
@@ -44,19 +45,21 @@ interface SexData {
   sex: string;
 }
 
-type FormData =
+export type FormData =
   | WeightData
   | HeightData
   | GoalData
   | ActivityLevelData
   | AgeData
-  | SexData;
+  | SexData
+  | { thankYou: boolean };
 
 interface FormContextValue {
   methods: ReturnType<typeof useForm<FormData>>;
   step: number;
   nextScreen: string;
 }
+
 const FormDataContext = createContext<FormContextValue | undefined>(undefined);
 
 const profileSchemas: ObjectSchema<FormData>[] = [
@@ -99,6 +102,9 @@ const profileSchemas: ObjectSchema<FormData>[] = [
   object({
     sex: string().required("Please select a sex"),
   }),
+  object({
+    thankYou: boolean().default(true),
+  }),
 ];
 
 export function useFormData() {
@@ -118,7 +124,19 @@ export const FormDataProvider = ({ children }: PropsWithChildren) => {
     "/createProfile/(content)/height"
   );
 
+  const defaultValues = {
+    weight: "",
+    height: "",
+    goal: "",
+    activityLevel: "",
+    birthDate: "",
+    sex: "",
+    thankYou: true,
+  };
+
   const methods = useForm({
+    shouldUnregister: false,
+    defaultValues,
     mode: "onChange",
     resolver: yupResolver(profileSchemas[step - 1]),
   });
@@ -157,9 +175,6 @@ export const FormDataProvider = ({ children }: PropsWithChildren) => {
         setStep(1);
         setNextScreen("/createProfile/(content)/height");
     }
-
-    // TODO: figure out how to persist data on back navigation. HOTFIX for triggering validation on each step.
-    // methods.reset();
   }, [segments]);
 
   return (
