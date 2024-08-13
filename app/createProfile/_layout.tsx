@@ -41,11 +41,11 @@ export default function CreateProfileLayout() {
     return <Text>Loading...</Text>;
   }
 
-  // if (!session) {
-  //   return <Redirect href="/sign-in" />;
-  // } else if (userProfile) {
-  //   return <Redirect href="/" />;
-  // }
+  if (!session) {
+    return <Redirect href="/sign-in" />;
+  } else if (userProfile) {
+    return <Redirect href="/" />;
+  }
   const handleNext = async () => {
     const isStepValid = await trigger();
     if (isStepValid) router.push(nextScreen);
