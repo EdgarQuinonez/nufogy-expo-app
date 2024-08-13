@@ -10,6 +10,7 @@ import {
   Button,
 } from "tamagui";
 import React, { useRef, useState } from "react";
+import { Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "globalStyles";
 import ButtonProgressNext from "@components/ButtonNextProgress";
@@ -82,6 +83,7 @@ export default function AgeScreen() {
             </Button>
           )}
         />
+        <Image />
       </YStack>
 
       {showDatePicker && (

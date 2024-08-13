@@ -98,7 +98,7 @@ function SexButton({ sex, onPress, isSelected }: SexButtonProps) {
       bgColor = colors.background.accent;
       break;
   }
-  // TODO: Adjust colors and icons (use svgr sandbox to convert icons)
+
   return (
     <Button
       onPress={onPress}

@@ -28,7 +28,6 @@ import { KeyboardAvoidingView } from "react-native";
 import { useSession } from "@providers/AuthContext";
 import { useProfile } from "@providers/ProfileContext";
 
-// TODO FIX: Image.resolveAssetSource(nufogyLogo) is null
 const nufogyLogoUri = Image.resolveAssetSource(nufogyLogo).uri;
 
 const LoginScreen = () => {

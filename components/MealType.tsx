@@ -197,7 +197,6 @@ export default function MealType({ mealTypeId, name, foodLogs }: Props) {
           </Button>
         </Link>
       </YStack>
-      {/* TODO: Replace with Meal Summary calculations */}
       <Paragraph mt={"$0.25"} color={"$gray10"} fontSize={"$2"}>
         Total de calorías: {Math.round(mealSummary.calories)}
       </Paragraph>
