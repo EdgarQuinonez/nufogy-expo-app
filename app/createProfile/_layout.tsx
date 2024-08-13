@@ -10,8 +10,11 @@ import {
 import { useProfile } from "@providers/ProfileContext";
 import { ChevronLeft } from "@tamagui/lucide-icons";
 import { CreateProfileFormValues } from "@types";
+import { setItem } from "@utils/AsyncStorage";
+import axios from "axios";
 import { differenceInYears } from "date-fns";
 import { Redirect, Slot, Stack, useRouter, useSegments } from "expo-router";
+
 import { StatusBar } from "expo-status-bar";
 import { colors } from "globalStyles";
 import React from "react";
@@ -38,11 +41,11 @@ export default function CreateProfileLayout() {
     return <Text>Loading...</Text>;
   }
 
-  if (!session) {
-    return <Redirect href="/sign-in" />;
-  } else if (userProfile) {
-    return <Redirect href="/" />;
-  }
+  // if (!session) {
+  //   return <Redirect href="/sign-in" />;
+  // } else if (userProfile) {
+  //   return <Redirect href="/" />;
+  // }
   const handleNext = async () => {
     const isStepValid = await trigger();
     if (isStepValid) router.push(nextScreen);
@@ -62,22 +65,18 @@ export default function CreateProfileLayout() {
         goal: parseFloat(rest.goal),
       };
       const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/profile/update`;
-      const response = await fetch(apiEndpoint, {
-        method: "PUT",
+      const response = await axios.put(apiEndpoint, requestData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Token ${session}`,
         },
-        body: JSON.stringify(requestData),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status} error. ${response.body}`);
-      }
-
-      const responseData = await response.json();
+      const responseData = await response.data();
+      console.log("responseData", responseData);
+      await setItem("userProfile", responseData);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error submitting form:", (error as any).response.data);
     }
   };
 

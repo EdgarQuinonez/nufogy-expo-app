@@ -81,7 +81,7 @@ const RegisterScreen = () => {
   const onPasswordChange = (password: string, confirmed: boolean) => {};
 
   const handleRegister: SubmitHandler<UserRegistration> = async (data) => {
-    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/create`;
+    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/account/create/`;
     setStatus("submitting");
     try {
       const response = await axios.post(apiEndpoint, {
@@ -95,14 +95,14 @@ const RegisterScreen = () => {
           message: "¡Bienvenido a Nufogy!",
         });
         signIn(data);
-        router.navigate("/(app)");
+        router.replace("/(app)");
       } else {
         toast.show("Error", {
           message: "Hubo un error al registrar tu cuenta.",
         });
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error("Error during registration:", (error as any).response.data);
     } finally {
       setStatus("off");
     }
