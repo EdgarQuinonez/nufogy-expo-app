@@ -47,6 +47,7 @@ export default function AppLayout() {
           }}
         />
       </Stack>
+      
     </FoodContextProvider>
   );
 }
