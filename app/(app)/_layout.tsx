@@ -2,7 +2,11 @@ import { Text } from "tamagui";
 import { Redirect, Stack } from "expo-router";
 
 import { useSession } from "@providers/AuthContext";
-import { ProfileProvider, useProfile } from "@providers/ProfileContext";
+import {
+  hasEmptyFields,
+  ProfileProvider,
+  useProfile,
+} from "@providers/ProfileContext";
 import { FoodContextProvider } from "@providers/FoodContext";
 import { UserProfile } from "@types";
 
@@ -14,13 +18,11 @@ export default function AppLayout() {
     return <Text>Loading...</Text>;
   }
 
-  // if (!session) {
-  //   return <Redirect href="/sign-in" />;
-  // } else if (!userProfile || hasEmptyFields(userProfile)) {
-  //   return <Redirect href="/createProfile" />;
-  // }
-
-  if (session) {
+  if (!session) {
+    return <Redirect href="/sign-in" />;
+  } else if (!userProfile || hasEmptyFields(userProfile)) {
+    console.log("User profile", userProfile);
+    console.log("Redirecting to create profile");
     return <Redirect href="/createProfile" />;
   }
 
@@ -49,23 +51,4 @@ export default function AppLayout() {
       </Stack>
     </FoodContextProvider>
   );
-}
-
-function hasEmptyFields(userProfile: UserProfile): boolean {
-  const fieldsToCheck: (keyof UserProfile)[] = [
-    "weight",
-    "height",
-    "goal",
-    "physical_activity",
-    "age",
-    "sex",
-  ];
-
-  for (const field of fieldsToCheck) {
-    if (userProfile[field] === undefined || userProfile[field] === null) {
-      return true;
-    }
-  }
-
-  return false;
 }

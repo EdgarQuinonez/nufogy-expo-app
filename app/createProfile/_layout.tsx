@@ -7,7 +7,7 @@ import {
   useFormData,
   FormData,
 } from "@providers/FormProfileContext";
-import { useProfile } from "@providers/ProfileContext";
+import { hasEmptyFields, useProfile } from "@providers/ProfileContext";
 import { ChevronLeft } from "@tamagui/lucide-icons";
 import { CreateProfileFormValues } from "@types";
 import { setItem } from "@utils/AsyncStorage";
@@ -35,7 +35,7 @@ export default function CreateProfileLayout() {
   } = useFormData();
   const segments = useSegments();
   const { session, isLoading } = useSession();
-  const { userProfile, isLoading: profileIsLoading } = useProfile();
+  const { userProfile, isLoading: profileIsLoading, profileKey } = useProfile();
 
   if (isLoading || profileIsLoading) {
     return <Text>Loading...</Text>;
@@ -43,9 +43,10 @@ export default function CreateProfileLayout() {
 
   if (!session) {
     return <Redirect href="/sign-in" />;
-  } else if (userProfile) {
+  } else if (userProfile && !hasEmptyFields(userProfile)) {
     return <Redirect href="/" />;
   }
+
   const handleNext = async () => {
     const isStepValid = await trigger();
     if (isStepValid) router.push(nextScreen);
@@ -72,9 +73,16 @@ export default function CreateProfileLayout() {
         },
       });
 
-      const responseData = await response.data();
-      console.log("responseData", responseData);
-      await setItem("userProfile", responseData);
+      if (response.status >= 200 && response.status < 300 && response.data) {
+        const responseData = response.data;
+        if (profileKey) {
+          await setItem(profileKey, responseData);
+        }
+
+        router.replace("/");
+      } else {
+        console.error("Error submitting form:", response.status, response.data);
+      }
     } catch (error) {
       console.error("Error submitting form:", (error as any).response.data);
     }
