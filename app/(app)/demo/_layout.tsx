@@ -1,6 +1,6 @@
 import { Redirect, Stack } from "expo-router";
 
-export default function AppLayout() {
+export default function DemoLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen
@@ -12,4 +12,3 @@ export default function AppLayout() {
     </Stack>
   );
 }
-

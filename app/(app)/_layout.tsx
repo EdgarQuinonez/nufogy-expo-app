@@ -58,6 +58,12 @@ export default function AppLayout() {
                 headerShown: false,
               }}
             />
+            <Stack.Screen
+              name="demo"
+              options={{
+                headerShown: false,
+              }}
+            />
           </Stack>
         </FormDataProvider>
       </FoodContextProvider>
