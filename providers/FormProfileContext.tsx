@@ -123,7 +123,7 @@ export const FormDataProvider = ({ children }: PropsWithChildren) => {
   const segments = useSegments();
   const [step, setStep] = useState<number>(1);
   const [nextScreen, setNextScreen] = useState<string>(
-    "/createProfile/(content)/height"
+    "/(app)/createProfile/(content)/height"
   );
 
   const defaultValues = {
@@ -144,30 +144,30 @@ export const FormDataProvider = ({ children }: PropsWithChildren) => {
   });
 
   useEffect(() => {
-    switch (segments[2]) {
+    switch (segments[3]) {
       case "weight":
         setStep(1);
-        setNextScreen("/createProfile/(content)/height");
+        setNextScreen("/(app)/createProfile/(content)/height");
         break;
       case "height":
         setStep(2);
-        setNextScreen("/createProfile/(content)/goal");
+        setNextScreen("/(app)/createProfile/(content)/goal");
         break;
       case "goal":
         setStep(3);
-        setNextScreen("/createProfile/(content)/activityLevel");
+        setNextScreen("/(app)/createProfile/(content)/activityLevel");
         break;
       case "activityLevel":
         setStep(4);
-        setNextScreen("/createProfile/(content)/birthDate");
+        setNextScreen("/(app)/createProfile/(content)/birthDate");
         break;
       case "birthDate":
         setStep(5);
-        setNextScreen("/createProfile/(content)/sex");
+        setNextScreen("/(app)/createProfile/(content)/sex");
         break;
       case "sex":
         setStep(6);
-        setNextScreen("/createProfile/(content)/thankYou");
+        setNextScreen("/(app)/createProfile/(content)/thankYou");
         break;
       case "thankYou":
         setStep(7);
@@ -175,7 +175,7 @@ export const FormDataProvider = ({ children }: PropsWithChildren) => {
         break;
       default:
         setStep(1);
-        setNextScreen("/createProfile/(content)/height");
+        setNextScreen("/(app)/createProfile/(content)/height");
     }
   }, [segments]);
 

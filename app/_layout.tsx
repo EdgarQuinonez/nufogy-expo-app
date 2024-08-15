@@ -58,11 +58,7 @@ function RootLayoutNav() {
     <Provider>
       <ThemeProvider value={DefaultTheme}>
         <SessionProvider>
-          <ProfileProvider>
-            <FormDataProvider>
-              <Slot />
-            </FormDataProvider>
-          </ProfileProvider>
+          <Slot />
         </SessionProvider>
       </ThemeProvider>
     </Provider>

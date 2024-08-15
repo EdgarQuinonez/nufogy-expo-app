@@ -1,11 +1,29 @@
-import { Tabs, useLocalSearchParams } from "expo-router";
-import { useTheme } from "tamagui";
+import { Redirect, Tabs, useLocalSearchParams } from "expo-router";
+import { Paragraph, useTheme } from "tamagui";
 import { Bot, LayoutGrid, Notebook, Salad } from "@tamagui/lucide-icons";
 import TopBar from "@components/TopBar";
+import { hasEmptyFields, useProfile } from "@providers/ProfileContext";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { globalStyles } from "globalStyles";
 
 export default function TabLayout() {
   const theme = useTheme();
   const params = useLocalSearchParams();
+  const { userProfile, isLoading } = useProfile();
+
+  if (isLoading) {
+    return (
+      <SafeAreaView
+        style={{ ...globalStyles.container, justifyContent: "center" }}
+      >
+        <Paragraph>Loading...</Paragraph>
+      </SafeAreaView>
+    );
+  }
+
+  if (!userProfile || hasEmptyFields(userProfile)) {
+    return <Redirect href="/createProfile" />;
+  }
 
   return (
     <Tabs

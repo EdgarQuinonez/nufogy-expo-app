@@ -190,9 +190,7 @@ function ActivityDetails({ level }: { level: string }) {
           return (
             <XStack key={index} gap="$1" ml={"$6"} w={"100%"}>
               <Dot color={colors.text.main} />
-              <Paragraph color={colors.text.main} textWrap={"wrap"}>
-                {point.slice(3)}
-              </Paragraph>
+              <Paragraph color={colors.text.main}>{point.slice(3)}</Paragraph>
             </XStack>
           );
         } else {
