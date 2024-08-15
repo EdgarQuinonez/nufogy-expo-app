@@ -35,7 +35,12 @@ export default function CreateProfileLayout() {
   } = useFormData();
   const segments = useSegments();
   const { session, isLoading } = useSession();
-  const { userProfile, isLoading: profileIsLoading, profileKey } = useProfile();
+  const {
+    userProfile,
+    isLoading: profileIsLoading,
+    profileKey,
+    setUserProfile,
+  } = useProfile();
 
   if (isLoading || profileIsLoading) {
     return <Text>Loading...</Text>;
@@ -76,6 +81,7 @@ export default function CreateProfileLayout() {
       if (response.status >= 200 && response.status < 300 && response.data) {
         const responseData = response.data;
         if (profileKey) {
+          setUserProfile(responseData);
           await setItem(profileKey, responseData);
         }
 

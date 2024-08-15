@@ -9,12 +9,14 @@ interface ProfileContextValue {
   userProfile: UserProfile | null;
   isLoading: boolean;
   profileKey: string | null;
+  setUserProfile: (profile: UserProfile) => void;
 }
 
 const ProfileContext = createContext<ProfileContextValue>({
   userProfile: null,
   isLoading: true,
   profileKey: null,
+  setUserProfile: () => {},
 });
 
 export function useProfile() {
@@ -32,8 +34,7 @@ export function ProfileProvider({ children }: any) {
   const { session, isLoading: sessionIsLoading } = useSession();
   const [isLoading, setIsLoading] = useState(true);
   const [profileKey, setProfileKey] = useState<string | null>(null);
-  console.log("session", session);
-  console.log("sessionIsLoading", sessionIsLoading);
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (session) {
@@ -88,6 +89,7 @@ export function ProfileProvider({ children }: any) {
     userProfile,
     isLoading,
     profileKey,
+    setUserProfile,
   };
 
   return session && !sessionIsLoading ? (
