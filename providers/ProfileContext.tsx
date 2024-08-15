@@ -32,7 +32,8 @@ export function ProfileProvider({ children }: any) {
   const { session, isLoading: sessionIsLoading } = useSession();
   const [isLoading, setIsLoading] = useState(true);
   const [profileKey, setProfileKey] = useState<string | null>(null);
-
+  console.log("session", session);
+  console.log("sessionIsLoading", sessionIsLoading);
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (session) {
@@ -81,7 +82,7 @@ export function ProfileProvider({ children }: any) {
     };
 
     fetchUserProfile();
-  }, [session]);
+  }, [session, sessionIsLoading]);
 
   const contextValue = {
     userProfile,
@@ -89,11 +90,11 @@ export function ProfileProvider({ children }: any) {
     profileKey,
   };
 
-  return (
+  return session && !sessionIsLoading ? (
     <ProfileContext.Provider value={contextValue}>
       {children}
     </ProfileContext.Provider>
-  );
+  ) : null;
 }
 
 export function hasEmptyFields(userProfile: UserProfile): boolean {
