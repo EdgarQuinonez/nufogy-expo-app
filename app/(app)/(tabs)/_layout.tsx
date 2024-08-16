@@ -4,11 +4,9 @@ import { Bot, LayoutGrid, Notebook, Salad } from "@tamagui/lucide-icons";
 import TopBar from "@components/TopBar";
 import { hasEmptyFields, useProfile } from "@providers/ProfileContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { globalStyles } from "globalStyles";
+import { colors, globalStyles } from "globalStyles";
 
 export default function TabLayout() {
-  const theme = useTheme();
-  const params = useLocalSearchParams();
   const { userProfile, isLoading } = useProfile();
 
   if (isLoading) {
@@ -28,7 +26,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: theme.red10.val,
+        tabBarActiveTintColor: colors.secondary,
         header: () => <TopBar />,
       }}
     >
