@@ -10,6 +10,7 @@ import { FoodContext } from "@providers/FoodContext";
 import FoodInfoSlides from "@components/FoodInfoSlides";
 import { Goal } from "@tamagui/lucide-icons";
 import useRDI from "@utils/useRDI";
+import TopBar from "@components/TopBar";
 
 export default function DiaryScreen() {
   const { rdi, macrosTargets } = useRDI();
@@ -23,9 +24,11 @@ export default function DiaryScreen() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView bg={colors.background.diary}>
+      <TopBar title="Diario" />
+
       {/* Day summary  */}
-      <YStack pb="$4" w={"100%"}>
+      <YStack pt="$4" pb={"$2"} w={"100%"}>
         <FoodInfoSlides
           slides={[
             <XStack w={"100%"}>

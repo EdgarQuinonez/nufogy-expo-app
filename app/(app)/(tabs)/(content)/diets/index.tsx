@@ -1,6 +1,12 @@
+import TopBar from "@components/TopBar";
 import React from "react";
-import { Paragraph } from "tamagui";
+import { Paragraph, View } from "tamagui";
 
 export default function DietsScreen() {
-  return <Paragraph>DietsScreen</Paragraph>;
+  return (
+    <View>
+      <TopBar title="Dietas" />
+      <Paragraph>DietsScreen</Paragraph>
+    </View>
+  );
 }

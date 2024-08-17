@@ -5,9 +5,9 @@ import { StatusBar } from "expo-status-bar";
 import { colors } from "globalStyles";
 
 import React from "react";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Paragraph, View } from "tamagui";
+import { Paragraph, ScrollView, View } from "tamagui";
 
 export default function TabLayout() {
   const router = useRouter();
@@ -28,15 +28,13 @@ export default function TabLayout() {
     default:
       bgColor = colors.background.main;
   }
-  console.log(bgColor);
 
   return (
     <View bg={bgColor} flex={1}>
       <StatusBar style="dark" />
-
-      <Paragraph>Hola</Paragraph>
-      <TopBar />
-      <Slot />
+      <SafeAreaView style={{ flex: 1 }}>
+        <Slot />
+      </SafeAreaView>
     </View>
   );
 }

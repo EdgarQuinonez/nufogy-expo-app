@@ -1,6 +1,12 @@
+import TopBar from "@components/TopBar";
 import React from "react";
-import { Paragraph } from "tamagui";
+import { Paragraph, View } from "tamagui";
 
 export default function JackScreen() {
-  return <Paragraph>JackScreen</Paragraph>;
+  return (
+    <View>
+      <TopBar title="Jack: Asistente Virtual" />
+      <Paragraph>Jack Screen</Paragraph>
+    </View>
+  );
 }
