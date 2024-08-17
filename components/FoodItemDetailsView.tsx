@@ -11,6 +11,7 @@ import {
   H4,
   H2,
   Square,
+  Circle,
 } from "tamagui";
 import React, { useState, useMemo, useEffect, useContext } from "react";
 import {
@@ -166,16 +167,13 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
   }, [defaultServing]);
 
   return (
-    <Form onSubmit={handleSubmit(saveFood)} flex={1}>
+    <Form
+      onSubmit={handleSubmit(saveFood)}
+      flex={1}
+      bg={colors.background.main}
+    >
       {loading ? (
-        <YStack f={1} jc={"flex-start"} px={"$2"} pt={"$12"}>
-          <Square
-            h={"$4"}
-            w={"$8"}
-            backgroundColor={"$gray5"}
-            alignSelf="flex-start"
-          />
-        </YStack>
+        <Skeleton />
       ) : error ? (
         <YStack f={1} jc="center" ai="center">
           <H2>Error loading food details</H2>
@@ -192,16 +190,21 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
               {/* Header */}
               <XStack ai={"center"} jc={"space-between"} w={"100%"} py={"$2"}>
                 <Button onPress={() => router.back()} px={"$4"} chromeless>
-                  <ArrowLeft />
+                  <ArrowLeft color={colors.text.main} />
                 </Button>
 
-                <H3>Guardar Alimento</H3>
+                <H4 color={colors.text.main}>Guardar Alimento</H4>
                 <Button px={"$4"} onPress={saveFood} chromeless>
-                  <Check />
+                  <Check color={colors.text.main} />
                 </Button>
               </XStack>
               {/* Food Name */}
-              <H4 alignSelf="flex-start" py={"$4"} color={"$color12"} px={"$2"}>
+              <H4
+                alignSelf="flex-start"
+                py={"$4"}
+                color={colors.text.main}
+                px={"$2"}
+              >
                 {parsedFoodItem?.food_name}
               </H4>
               {/* Food Nutri Info Details Slides */}
@@ -419,5 +422,117 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
         />
       )}
     </Form>
+  );
+}
+
+function Skeleton() {
+  return (
+    <View jc="flex-start" ai="center" mt={"$4"} f={1}>
+      {/* Header */}
+      <XStack ai={"center"} jc={"space-between"} w={"100%"} px={"$4"}>
+        <Square
+          w={48}
+          h={48}
+          bg={colors.background.accent}
+          borderRadius={"$2"}
+        />
+        <Square
+          w={172}
+          h={48}
+          bg={colors.background.accent}
+          borderRadius={"$2"}
+        />
+        <Square
+          w={48}
+          h={48}
+          bg={colors.background.accent}
+          borderRadius={"$2"}
+        />
+      </XStack>
+      {/* Slides */}
+      <YStack px={"$4"} mt={"$4"} w={"100%"}>
+        {/* Food Name */}
+        <Square
+          w={"100%"}
+          h={48}
+          bg={colors.background.accent}
+          borderRadius={"$2"}
+          mb={"$2"}
+        />
+        {/* Slide */}
+        <XStack ai={"center"} jc={"space-between"} w={"100%"} mb={"$2"}>
+          <Circle w={120} h={120} bg={colors.background.accent} mt={"$2"} />
+          {/* Macro inputs */}
+
+          <Square
+            w={216}
+            h={120}
+            bg={colors.background.accent}
+            borderRadius={"$2"}
+          />
+        </XStack>
+        {/* Food Name */}
+        <Square
+          w={"100%"}
+          h={48}
+          bg={colors.background.accent}
+          borderRadius={"$2"}
+          mb={"$2"}
+        />
+      </YStack>
+      {/* Inputs */}
+      <YStack
+        gap={"$2"}
+        w={"100%"}
+        ai={"flex-end"}
+        jc={"center"}
+        px={"$4"}
+        mt={"$6"}
+      >
+        <Square
+          w={182}
+          h={48}
+          bg={colors.background.accent}
+          borderRadius={"$2"}
+        />
+        <Square
+          w={182}
+          h={48}
+          bg={colors.background.accent}
+          borderRadius={"$2"}
+        />
+      </YStack>
+      {/* Jack dice */}
+      <Square
+        w={380}
+        h={164}
+        bg={colors.background.accent}
+        borderRadius={"$2"}
+        px={"$4"}
+        alignSelf="center"
+        mt={"$4"}
+      />
+      <XStack
+        w={"100%"}
+        jc={"flex-end"}
+        ai={"center"}
+        mt={"auto"}
+        gap={"$2"}
+        p={"$2"}
+      >
+        <Square
+          w={116}
+          h={48}
+          bg={colors.background.accent}
+          borderRadius={"$2"}
+        />
+        <Square
+          w={116}
+          h={48}
+          bg={colors.background.accent}
+          borderRadius={"$2"}
+        />
+      </XStack>
+    </View>
   );
 }
