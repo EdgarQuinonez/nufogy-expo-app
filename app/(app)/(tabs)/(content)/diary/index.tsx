@@ -11,6 +11,8 @@ import FoodInfoSlides from "@components/FoodInfoSlides";
 import { Goal } from "@tamagui/lucide-icons";
 import useRDI from "@utils/useRDI";
 import TopBar from "@components/TopBar";
+import TargetSlide from "@components/TargetSlide";
+import MacrosSlide from "@components/MacrosSlide";
 
 export default function DiaryScreen() {
   const { rdi, macrosTargets } = useRDI();
@@ -31,67 +33,12 @@ export default function DiaryScreen() {
       <YStack pt="$4" pb={"$2"} w={"100%"}>
         <FoodInfoSlides
           slides={[
-            <XStack w={"100%"}>
-              <View>
-                <CircularProgress
-                  radius={84}
-                  value={daySummary.calories}
-                  maxValue={
-                    daySummary.calories <= rdi ? rdi : daySummary.calories
-                  }
-                  activeStrokeWidth={18}
-                  inActiveStrokeWidth={18}
-                  progressValueColor={colors.text.main}
-                  activeStrokeColor={colors.primary}
-                  circleBackgroundColor={colors.background.main}
-                  inActiveStrokeColor="#E0E0E0"
-                  title="KCAL"
-                  titleColor={colors.text.main}
-                  titleStyle={{ fontSize: 12, fontWeight: "bold" }}
-                />
-              </View>
-              <View f={1} ai={"flex-end"} jc={"flex-start"} px={"$6"}>
-                <XStack
-                  ai={"center"}
-                  jc={"center"}
-                  px={"$2"}
-                  py={"$3"}
-                  gap={"$4"}
-                  borderRadius={"$2"}
-                  bg={colors.background.main}
-                  w={"100%"}
-                >
-                  <Goal color={colors.secondary} size={32} />
-                  <View>
-                    <Paragraph color={colors.text.dim}>Objetivo: </Paragraph>
-                    <Paragraph
-                      fontSize={"$8"}
-                      fontWeight={"bold"}
-                      color={colors.text.main}
-                    >
-                      {Math.round(rdi)}
-                    </Paragraph>
-                  </View>
-                </XStack>
-              </View>
-            </XStack>,
-            <YStack w={"100%"} gap={"$2"}>
-              <MacroDisplay
-                macroType={"protein"}
-                value={daySummary.protein || 0}
-                target={macrosTargets.protein || 0}
-              />
-              <MacroDisplay
-                macroType={"carbohydrate"}
-                value={daySummary.carbohydrate || 0}
-                target={macrosTargets.carbs || 0}
-              />
-              <MacroDisplay
-                macroType={"fat"}
-                value={daySummary.fat || 0}
-                target={macrosTargets.fat || 0}
-              />
-            </YStack>,
+            <TargetSlide consumedCalories={daySummary.calories} rdi={rdi} />,
+            <MacrosSlide
+              protein={[daySummary.protein, macrosTargets.protein]}
+              carbohydrate={[daySummary.carbohydrate, macrosTargets.carbs]}
+              fat={[daySummary.fat, macrosTargets.fat]}
+            />,
           ]}
         />
       </YStack>

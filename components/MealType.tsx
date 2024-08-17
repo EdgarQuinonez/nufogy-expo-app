@@ -74,7 +74,7 @@ const MacroSummaryItem = ({
         <Paragraph color={colors.text.main} fontWeight={"bold"} fontSize={"$4"}>
           {value}
         </Paragraph>
-        <Paragraph opacity={0.75} fontSize={"$2"} color={"$gray10"}>
+        <Paragraph opacity={0.75} fontSize={"$2"} color={colors.text.dim1}>
           g
         </Paragraph>
       </XStack>
@@ -101,11 +101,11 @@ export default function MealType({ mealTypeId, name, foodLogs }: Props) {
 
   switch (name.toLowerCase()) {
     case "desayuno":
-      icon = <EggFried />;
+      icon = <EggFried color={colors.text.main} />;
       mealTypeColor = colors.breakfast;
       break;
     case "comida":
-      icon = <CookingPot />;
+      icon = <CookingPot color={colors.text.main} />;
       mealTypeColor = colors.lunch;
       break;
     case "cena":
@@ -113,7 +113,7 @@ export default function MealType({ mealTypeId, name, foodLogs }: Props) {
       mealTypeColor = colors.dinner;
       break;
     default:
-      icon = <UtensilsCrossed />;
+      icon = <UtensilsCrossed color={colors.text.main} />;
       mealTypeColor = "$gray6";
   }
 
@@ -134,7 +134,11 @@ export default function MealType({ mealTypeId, name, foodLogs }: Props) {
           <XStack ai={"center"} jc={"flex-start"} gap={"$2"}>
             {icon}
             {/* Title */}
-            <H4 textOverflow={"ellipsis"} overflow={"hidden"}>
+            <H4
+              textOverflow={"ellipsis"}
+              overflow={"hidden"}
+              color={colors.text.main}
+            >
               {name}
             </H4>
           </XStack>
@@ -165,13 +169,15 @@ export default function MealType({ mealTypeId, name, foodLogs }: Props) {
             w={"100%"}
             ai={"center"}
             jc={"center"}
-            h={"$8"}
-            bg={"$yellow1Light"}
+            h={"$6"}
+            bg={colors.background.main}
             // borderRadius={"$4"}
             borderStyle={"dashed"}
             borderWidth={"$0.5"}
           >
-            <Paragraph>No has agregado ningún alimento.</Paragraph>
+            <Paragraph color={colors.text.main}>
+              No has agregado ningún alimento.
+            </Paragraph>
           </View>
         )}
 
@@ -184,16 +190,18 @@ export default function MealType({ mealTypeId, name, foodLogs }: Props) {
           asChild
         >
           <Button
-            icon={PlusCircle}
-            scaleIcon={1.5}
+            bg={colors.text.main}
+            ai={"center"}
+            jc={"center"}
             w={"100%"}
-            variant={"outlined"}
-            backgroundColor={"$background"}
             onPress={() => {
               handleAddFoodPress();
             }}
           >
-            Agregar Comida
+            <Paragraph color={colors.background.main} fontWeight={"bold"}>
+              Agregar
+            </Paragraph>
+            <PlusCircle color={colors.background.main} />
           </Button>
         </Link>
       </YStack>

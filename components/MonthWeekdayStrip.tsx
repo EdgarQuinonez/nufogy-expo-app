@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from "@tamagui/lucide-icons";
-import { colors } from "globalStyles";
+import { colors, globalStyles } from "globalStyles";
 import React, { useState } from "react";
-import { Button, Paragraph, XStack, YStack } from "tamagui";
+import { Button, Paragraph, View, XStack, YStack } from "tamagui";
 
 export type Props = {
   selectedDate: Date;
@@ -83,13 +83,13 @@ export default function MonthWeekdayStrip({
       {/* Month nav */}
       <XStack ai={"center"} jc={"center"} gap={"$2"}>
         <Button onPress={handlePreviousMonth} chromeless>
-          <ChevronLeft />
+          <ChevronLeft color={colors.text.main} />
         </Button>
-        <Paragraph fontWeight={"bold"} fontSize={"$6"}>
+        <Paragraph fontWeight={"bold"} fontSize={"$6"} color={colors.text.main}>
           {months[currentMonth].short}
         </Paragraph>
         <Button onPress={handleNextMonth} chromeless>
-          <ChevronRight />
+          <ChevronRight color={colors.text.main} />
         </Button>
       </XStack>
       {/* Week Days Strip */}
@@ -103,20 +103,33 @@ export default function MonthWeekdayStrip({
               key={day.getTime()}
               ai={"center"}
               jc={"center"}
-              backgroundColor={isSelectedDate ? colors.accent : "transparent"}
+              bg={"$colorTransparent"}
               py={"$2"}
               h={"100%"}
               hoverStyle={{ opacity: 0.8 }}
               pressStyle={{ opacity: 0.9 }}
-              chromeless
               opacity={isCurrentMonth ? 1 : 0.25}
               onPress={() => onSelectDateChange(day)}
+              chromeless
             >
-              <YStack ai={"center"} jc={"center"} gap={"$2"}>
-                <Paragraph opacity={isSelectedDate ? 0.8 : 0.5}>
+              <YStack ai={"center"} jc={"center"} gap={"$1"}>
+                <Paragraph
+                  opacity={isSelectedDate ? 0.8 : 0.5}
+                  color={colors.text.main}
+                  fontWeight={isSelectedDate ? "bold" : "normal"}
+                >
                   {days[day.getDay()]}
                 </Paragraph>
-                <Paragraph fontWeight={"bold"}>{day.getDate()}</Paragraph>
+                <Paragraph fontWeight={"bold"} color={colors.text.main}>
+                  {day.getDate()}
+                </Paragraph>
+                <View
+                  w={8}
+                  h={8}
+                  borderRadius={6}
+                  mt={"$2"}
+                  bg={isSelectedDate ? colors.accent : "$colorTransparent"}
+                />
               </YStack>
             </Button>
           );
