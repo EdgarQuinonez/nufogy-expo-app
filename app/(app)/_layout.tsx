@@ -32,35 +32,33 @@ export default function AppLayout() {
     <ProfileProvider>
       <FoodContextProvider>
         <FormDataProvider>
-          <SafeAreaView style={{ flex: 1 }}>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen
-                name="(tabs)"
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen
-                name="(settings)"
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen
-                name="(addIngredientFormModal)"
-                options={{
-                  headerShown: false,
-                  presentation: "modal",
-                }}
-              />
-              <Stack.Screen
-                name="createProfile"
-                options={{
-                  headerShown: false,
-                }}
-              />
-            </Stack>
-          </SafeAreaView>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="(tabs)"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="(settings)"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="(addIngredientFormModal)"
+              options={{
+                headerShown: false,
+                presentation: "modal",
+              }}
+            />
+            <Stack.Screen
+              name="createProfile"
+              options={{
+                headerShown: false,
+              }}
+            />
+          </Stack>
         </FormDataProvider>
       </FoodContextProvider>
     </ProfileProvider>

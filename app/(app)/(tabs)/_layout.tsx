@@ -1,63 +1,42 @@
-import { Redirect, Tabs, useLocalSearchParams } from "expo-router";
-import { Paragraph, useTheme } from "tamagui";
-import { Bot, LayoutGrid, Notebook, Salad } from "@tamagui/lucide-icons";
 import TopBar from "@components/TopBar";
-import { hasEmptyFields, useProfile } from "@providers/ProfileContext";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { colors, globalStyles } from "globalStyles";
+import { Redirect, Slot, useRouter, useSegments } from "expo-router";
+
+import { StatusBar } from "expo-status-bar";
+import { colors } from "globalStyles";
+
+import React from "react";
+import { SafeAreaView } from "react-native";
+
+import { Paragraph, View } from "tamagui";
 
 export default function TabLayout() {
-  const { userProfile, isLoading } = useProfile();
+  const router = useRouter();
+  const segments = useSegments();
 
-  if (isLoading) {
-    return (
-      <SafeAreaView
-        style={{ ...globalStyles.container, justifyContent: "center" }}
-      >
-        <Paragraph>Loading...</Paragraph>
-      </SafeAreaView>
-    );
-  }
+  let bgColor;
 
-  if (!userProfile || hasEmptyFields(userProfile)) {
-    return <Redirect href="/createProfile" />;
+  switch (segments[3]) {
+    case "diary":
+      bgColor = colors.background.diary;
+      break;
+    case "diets":
+      bgColor = "#0000FF";
+      break;
+    case "jack":
+      bgColor = "#FFFF00";
+      break;
+    default:
+      bgColor = colors.background.main;
   }
+  console.log(bgColor);
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: colors.secondary,
-        header: () => <TopBar />,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Dashboard",
-          tabBarIcon: ({ color }) => <LayoutGrid color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="diary/index"
-        options={{
-          title: "Diario",
-          tabBarIcon: ({ color }) => <Notebook color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="diets/index"
-        options={{
-          title: "Dietas",
-          tabBarIcon: ({ color }) => <Salad color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="jack/index"
-        options={{
-          title: "Jack",
-          tabBarIcon: ({ color }) => <Bot color={color} />,
-        }}
-      />
-    </Tabs>
+    <View bg={bgColor} flex={1}>
+      <StatusBar style="dark" />
+
+      <Paragraph>Hola</Paragraph>
+      <TopBar />
+      <Slot />
+    </View>
   );
 }

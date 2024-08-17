@@ -40,6 +40,7 @@ export const colors = {
   background: {
     main: "#F1EEFE",
     accent: "#e6e3f4",
+    diary: "#ABD3DB",
   },
   primary: "#1E1940",
   secondary: "#D485A6",
