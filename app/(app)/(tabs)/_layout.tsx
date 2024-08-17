@@ -11,21 +11,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Paragraph, ScrollView, Spinner, View } from "tamagui";
 
 export default function TabLayout() {
-  const { userProfile, isLoading } = useProfile();
-
-  if (isLoading) {
-    return (
-      <SafeAreaView
-        style={{ ...globalStyles.container, justifyContent: "center" }}
-      >
-        <Spinner size="large" />
-      </SafeAreaView>
-    );
-  }
-
-  if (!userProfile || hasEmptyFields(userProfile)) {
-    return <Redirect href="/createProfile" />;
-  }
   const segments = useSegments();
 
   let bgColor;
