@@ -12,6 +12,7 @@ import {
   H2,
   Square,
   Circle,
+  useControllableState,
 } from "tamagui";
 import React, { useState, useMemo, useEffect, useContext } from "react";
 import {
@@ -425,7 +426,51 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
   );
 }
 
+const positions = [
+  {
+    x: 0,
+    y: 0,
+    scale: 1,
+    rotate: "0deg",
+  },
+  {
+    x: -3,
+    y: -3,
+    scale: 1.03,
+    rotate: "-5deg",
+    hoverStyle: {
+      scale: 1.05,
+    },
+    pressStyle: {
+      scale: 0.97,
+    },
+  },
+  {
+    x: 3,
+    y: 3,
+    scale: 1,
+    rotate: "5deg",
+    hoverStyle: {
+      scale: 1.03,
+    },
+    pressStyle: {
+      scale: 0.97,
+    },
+  },
+];
+
 function Skeleton() {
+  const [positionI, setPositionI] = useControllableState({
+    strategy: "most-recent-wins",
+    defaultProp: 0,
+  });
+
+  const position = positions[positionI];
+
+  const onPress = () => {
+    setPositionI((x) => (x + 1) % positions.length);
+  };
+
   return (
     <View jc="flex-start" ai="center" mt={"$4"} f={1}>
       {/* Header */}
@@ -435,20 +480,33 @@ function Skeleton() {
           h={48}
           bg={colors.background.accent}
           borderRadius={"$2"}
+          animation="bouncy"
+          animateOnly={["transform"]}
+          onPress={onPress}
+          {...position}
         />
         <Square
           w={172}
           h={48}
           bg={colors.background.accent}
           borderRadius={"$2"}
+          animation="bouncy"
+          animateOnly={["transform"]}
+          onPress={onPress}
+          {...position}
         />
         <Square
           w={48}
           h={48}
           bg={colors.background.accent}
           borderRadius={"$2"}
+          animation="bouncy"
+          animateOnly={["transform"]}
+          onPress={onPress}
+          {...position}
         />
       </XStack>
+
       {/* Slides */}
       <YStack px={"$4"} mt={"$4"} w={"100%"}>
         {/* Food Name */}
@@ -458,19 +516,38 @@ function Skeleton() {
           bg={colors.background.accent}
           borderRadius={"$2"}
           mb={"$2"}
+          animation="bouncy"
+          animateOnly={["transform"]}
+          onPress={onPress}
+          {...position}
         />
+
         {/* Slide */}
         <XStack ai={"center"} jc={"space-between"} w={"100%"} mb={"$2"}>
-          <Circle w={120} h={120} bg={colors.background.accent} mt={"$2"} />
-          {/* Macro inputs */}
+          <Circle
+            w={120}
+            h={120}
+            bg={colors.background.accent}
+            mt={"$2"}
+            animation="bouncy"
+            animateOnly={["transform"]}
+            onPress={onPress}
+            {...position}
+          />
 
+          {/* Macro inputs */}
           <Square
             w={216}
             h={120}
             bg={colors.background.accent}
             borderRadius={"$2"}
+            animation="bouncy"
+            animateOnly={["transform"]}
+            onPress={onPress}
+            {...position}
           />
         </XStack>
+
         {/* Food Name */}
         <Square
           w={"100%"}
@@ -478,8 +555,13 @@ function Skeleton() {
           bg={colors.background.accent}
           borderRadius={"$2"}
           mb={"$2"}
+          animation="bouncy"
+          animateOnly={["transform"]}
+          onPress={onPress}
+          {...position}
         />
       </YStack>
+
       {/* Inputs */}
       <YStack
         gap={"$2"}
@@ -494,14 +576,23 @@ function Skeleton() {
           h={48}
           bg={colors.background.accent}
           borderRadius={"$2"}
+          animation="bouncy"
+          animateOnly={["transform"]}
+          onPress={onPress}
+          {...position}
         />
         <Square
           w={182}
           h={48}
           bg={colors.background.accent}
           borderRadius={"$2"}
+          animation="bouncy"
+          animateOnly={["transform"]}
+          onPress={onPress}
+          {...position}
         />
       </YStack>
+
       {/* Jack dice */}
       <Square
         w={380}
@@ -511,7 +602,12 @@ function Skeleton() {
         px={"$4"}
         alignSelf="center"
         mt={"$4"}
+        animation="bouncy"
+        animateOnly={["transform"]}
+        onPress={onPress}
+        {...position}
       />
+
       <XStack
         w={"100%"}
         jc={"flex-end"}
@@ -525,12 +621,20 @@ function Skeleton() {
           h={48}
           bg={colors.background.accent}
           borderRadius={"$2"}
+          animation="bouncy"
+          animateOnly={["transform"]}
+          onPress={onPress}
+          {...position}
         />
         <Square
           w={116}
           h={48}
           bg={colors.background.accent}
           borderRadius={"$2"}
+          animation="bouncy"
+          animateOnly={["transform"]}
+          onPress={onPress}
+          {...position}
         />
       </XStack>
     </View>
