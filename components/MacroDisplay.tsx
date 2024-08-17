@@ -55,21 +55,17 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
           jc="space-between"
           pl="$2"
           zIndex={3}
-          h={48}
+          h={36}
         >
           <XStack gap="$2">
             {icon}
-            <Paragraph mr="$2" fontWeight="bold" color={colors.text.main}>
+            <Paragraph mr="$2" color={colors.text.main}>
               {label}
             </Paragraph>
           </XStack>
           {/* { Progress Percentage } */}
           <XStack w={"$6"} ai={"center"} jc={"flex-end"} pr={"$2"}>
-            <Paragraph
-              fontWeight={"bold"}
-              fontSize={"$6"}
-              color={colors.text.main}
-            >
+            <Paragraph fontSize={"$6"} color={colors.text.main}>
               {Math.round((value / target) * 100)}&nbsp;
             </Paragraph>
             <Paragraph color={colors.text.dim} pl={"$1"}>
@@ -93,7 +89,7 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
             zIndex: 2,
           }}
           width={null}
-          height={48}
+          height={36}
         />
         {/* Custom Bar Background */}
         <View
@@ -112,11 +108,9 @@ const MacroDisplay: FunctionComponent<MacroDisplayProps> = ({
       {/* Target amount */}
       <XStack gap={"$1"} w={"$7"} ai={"center"} jc={"flex-start"} ml={"$2"}>
         <Paragraph color={colors.text.main}>{Math.round(value)}</Paragraph>
-        <Paragraph fontWeight={"bold"} color={colors.text.main}>
-          /
-        </Paragraph>
+        <Paragraph color={colors.text.main}>/</Paragraph>
         <Paragraph color={colors.text.main}>{Math.round(target)}</Paragraph>
-        <Paragraph fontWeight={"bold"} color={colors.text.main}>
+        <Paragraph fontWeight={400} color={colors.text.main}>
           {unit}
         </Paragraph>
       </XStack>

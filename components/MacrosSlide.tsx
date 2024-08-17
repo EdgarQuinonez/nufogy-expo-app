@@ -12,7 +12,7 @@ export type Props = {
 
 export default function MacrosSlide({ protein, carbohydrate, fat }: Props) {
   return (
-    <YStack w={"100%"} gap={"$2"}>
+    <YStack w={"100%"} gap={"$2"} px={"$2"}>
       <MacroDisplay
         macroType={"protein"}
         value={protein[0] || 0}

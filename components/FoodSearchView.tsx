@@ -1,7 +1,15 @@
 import React, { useRef, useState } from "react";
 import { ArrowLeft, Check } from "@tamagui/lucide-icons";
 
-import { Button, H3, Paragraph, ScrollView, View, XStack } from "tamagui";
+import {
+  Button,
+  H3,
+  Paragraph,
+  ScrollView,
+  Spinner,
+  View,
+  XStack,
+} from "tamagui";
 import SearchBar from "@components/SearchBar";
 import FoodSearchItem from "@components/FoodSearchItem";
 import { FoodSearchResponseData } from "@types";
@@ -11,6 +19,7 @@ import { debounce } from "tamagui";
 
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useSession } from "@providers/AuthContext";
+import { colors } from "globalStyles";
 
 export type Props = {};
 
@@ -40,18 +49,18 @@ export default function FoodSearchView({}: Props) {
   );
 
   return (
-    <View flex={1} px={"$4"}>
+    <View flex={1} px={"$4"} bg={colors.background.main}>
       {/* TopBar */}
       <XStack w={"100%"} ai={"center"} jc={"space-between"} py={"$4"}>
         <Button
-          icon={<ArrowLeft size={24} />}
+          icon={<ArrowLeft size={24} color={colors.text.main} />}
           w={"$4"}
           px={"$2"}
           onPress={() => router.back()}
           chromeless
         />
 
-        <H3>Añadir comida</H3>
+        <H3 color={colors.text.main}>Añadir comida</H3>
         <View w={"$4"} px={"$2"} backgroundColor={"$colorTransparent"} />
       </XStack>
 
@@ -62,14 +71,14 @@ export default function FoodSearchView({}: Props) {
       <View
         marginTop={"$4"}
         flex={1}
-        borderColor={"$border"}
+        borderColor={colors.text.dim}
         borderWidth={1}
-        borderRadius={"$2"}
+        borderRadius={"$4"}
       >
         {loading ? (
           <View flex={1} justifyContent="center" alignItems="center" w={"100%"}>
             {/* Center the loading message */}
-            <Paragraph>Cargando alimentos...</Paragraph>
+            <Spinner size={"large"} />
           </View>
         ) : error ? (
           <View flex={1} justifyContent="center" alignItems="center" w={"100%"}>

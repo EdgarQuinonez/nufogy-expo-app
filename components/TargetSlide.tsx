@@ -11,7 +11,7 @@ export type Props = {
 
 export default function TargetSlide({ consumedCalories, rdi }: Props) {
   return (
-    <XStack w={"100%"}>
+    <XStack w={"100%"} px={"$4"}>
       <View>
         <CircularProgress
           radius={72}
@@ -36,12 +36,14 @@ export default function TargetSlide({ consumedCalories, rdi }: Props) {
           py={"$3"}
           gap={"$4"}
           borderRadius={"$2"}
-          bg={colors.background.main}
+          //   bg={colors.background.main}
           w={"100%"}
         >
-          <Goal color={colors.secondary} size={32} />
+          <Goal color={colors.primary} size={32} />
           <View>
-            <Paragraph color={colors.text.dim}>Objetivo: </Paragraph>
+            <Paragraph color={colors.text.main} fontWeight={300}>
+              Objetivo:{" "}
+            </Paragraph>
             <Paragraph
               fontSize={"$8"}
               fontWeight={"bold"}

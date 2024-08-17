@@ -1,16 +1,31 @@
 import TopBar from "@components/TopBar";
+import { hasEmptyFields, useProfile } from "@providers/ProfileContext";
 import { Redirect, Slot, useRouter, useSegments } from "expo-router";
 
 import { StatusBar } from "expo-status-bar";
-import { colors } from "globalStyles";
+import { colors, globalStyles } from "globalStyles";
 
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Paragraph, ScrollView, View } from "tamagui";
+import { Paragraph, ScrollView, Spinner, View } from "tamagui";
 
 export default function TabLayout() {
-  const router = useRouter();
+  const { userProfile, isLoading } = useProfile();
+
+  if (isLoading) {
+    return (
+      <SafeAreaView
+        style={{ ...globalStyles.container, justifyContent: "center" }}
+      >
+        <Spinner size="large" />
+      </SafeAreaView>
+    );
+  }
+
+  if (!userProfile || hasEmptyFields(userProfile)) {
+    return <Redirect href="/createProfile" />;
+  }
   const segments = useSegments();
 
   let bgColor;

@@ -7,22 +7,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, globalStyles } from "globalStyles";
 
 export default function TabContentLayout() {
-  const { userProfile, isLoading } = useProfile();
-
-  if (isLoading) {
-    return (
-      <SafeAreaView
-        style={{ ...globalStyles.container, justifyContent: "center" }}
-      >
-        <Paragraph>Loading...</Paragraph>
-      </SafeAreaView>
-    );
-  }
-
-  if (!userProfile || hasEmptyFields(userProfile)) {
-    return <Redirect href="/createProfile" />;
-  }
-
   return (
     <Tabs
       screenOptions={{
