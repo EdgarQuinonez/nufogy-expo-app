@@ -103,26 +103,35 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
           dateTime: selectedDate.toISOString(),
         };
 
-        const response = await axios.post(apiEndpoint, bodyData, {
-          headers: {
-            Authorization: `Token ${session}`,
-            "Content-Type": "application/json",
-          },
+        // Make the POST request in the background
+        axios
+          .post(apiEndpoint, bodyData, {
+            headers: {
+              Authorization: `Token ${session}`,
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => {
+            if (response.status === 201) {
+              toast.show("Alimento guardado con éxito", {
+                message: "¡Buen provecho!",
+              });
+              const newFoodLog = response.data;
+              setFoodLogs((prevLogs) => [...prevLogs, newFoodLog]);
+            } else {
+              toast.show("Error", {
+                message: "Hubo un error al guardar el alimento.",
+              });
+              console.error("Failed to save food:", response.status);
+            }
+          })
+          .catch((error) => {
+            console.error("Error saving food:", error.message);
+          });
+        router.back();
+        toast.show("Guardando tu registro", {
+          message: "En progreso...",
         });
-
-        if (response.status === 201) {
-          toast.show("Alimento guardado con éxito", {
-            message: "¡Buen provecho!",
-          });
-          const newFoodLog = response.data;
-          setFoodLogs((prevLogs) => [...prevLogs, newFoodLog]);
-          router.back();
-        } else {
-          toast.show("Error", {
-            message: "Hubo un error al guardar el alimento.",
-          });
-          console.error("Failed to save food:", response.status);
-        }
       }
     } catch (error) {
       console.error("Error saving food:", (error as any).message);
