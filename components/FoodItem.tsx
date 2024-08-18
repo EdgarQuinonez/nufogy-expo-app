@@ -40,7 +40,7 @@ export default function FoodItem({ foodLog }: Props) {
         px={"$2"}
       >
         <View pr={"$2"}>
-          <Utensils />
+          <Utensils color={colors.text.main} />
         </View>
 
         <YStack flex={1} ai={"flex-start"} jc={"space-between"}>
@@ -48,24 +48,30 @@ export default function FoodItem({ foodLog }: Props) {
           <XStack flex={1} w={"100%"} ai={"center"} jc={"space-between"}>
             {/* Food Name */}
             <XStack ai={"flex-start"} jc={"center"}>
-              <View ai={"center"} jc={"center"}>
+              <View ai={"center"} jc={"center"} maxWidth={"$12"}>
                 {/* TODO: Figure out text wrap and text overflow */}
-                <Paragraph numberOfLines={2} maxWidth={"$12"}>
+                <Paragraph numberOfLines={2} color={colors.text.main}>
                   {foodName}
                 </Paragraph>
               </View>
-              <Dot color={"$gray7"} />
-              <Paragraph>{Math.round(metric_serving_amount)}</Paragraph>
-              <Paragraph ml={"$1"} color={"$gray10"}>
+              <Dot color={colors.text.dim1} />
+              <Paragraph color={colors.text.main}>
+                {Math.round(metric_serving_amount)}
+              </Paragraph>
+              <Paragraph ml={"$1"} color={colors.text.dim1}>
                 {servingData.metric_serving_unit}
               </Paragraph>
             </XStack>
             {/* Calories */}
             <XStack gap={"$1"}>
-              <Paragraph fontWeight={"bold"} fontSize={"$6"}>
+              <Paragraph
+                fontWeight={"bold"}
+                fontSize={"$6"}
+                color={colors.text.main}
+              >
                 {Math.round(calculatedNutritionValues.calories)}
               </Paragraph>
-              <Paragraph color={"$gray10"}>kcal</Paragraph>
+              <Paragraph color={colors.text.dim1}>kcal</Paragraph>
             </XStack>
           </XStack>
           {/* Lower */}
@@ -107,8 +113,8 @@ function MacroDisplay({
   return (
     <XStack ai={"center"} jc={"center"} gap={"$1"} w={"$4"}>
       <View bg={color} h={"$0.75"} w={"$0.75"} borderRadius={"$true"} />
-      <Paragraph>{Math.round(amount || 0)}</Paragraph>
-      <Paragraph color={"$gray10"}>{unit}</Paragraph>
+      <Paragraph color={colors.text.main}>{Math.round(amount || 0)}</Paragraph>
+      <Paragraph color={colors.text.dim1}>{unit}</Paragraph>
     </XStack>
   );
 }
