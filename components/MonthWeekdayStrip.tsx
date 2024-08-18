@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "@tamagui/lucide-icons";
+import { Calendar, ChevronLeft, ChevronRight } from "@tamagui/lucide-icons";
 import { colors, globalStyles } from "globalStyles";
 import React, { useState } from "react";
 import { Button, Paragraph, View, XStack, YStack } from "tamagui";
@@ -6,11 +6,13 @@ import { Button, Paragraph, View, XStack, YStack } from "tamagui";
 export type Props = {
   selectedDate: Date;
   onSelectDateChange: (date: Date) => void;
+  setShowDatePicker: (show: boolean) => void;
 };
 
 export default function MonthWeekdayStrip({
   selectedDate,
   onSelectDateChange,
+  setShowDatePicker,
 }: Props) {
   const [currentMonth, setCurrentMonth] = useState(selectedDate.getMonth());
 
@@ -81,15 +83,30 @@ export default function MonthWeekdayStrip({
   return (
     <YStack ai={"center"} jc={"center"} maxWidth={"100%"}>
       {/* Month nav */}
-      <XStack ai={"center"} jc={"center"} gap={"$2"}>
-        <Button onPress={handlePreviousMonth} chromeless>
-          <ChevronLeft color={colors.text.main} />
-        </Button>
-        <Paragraph fontWeight={"bold"} fontSize={"$6"} color={colors.text.main}>
-          {months[currentMonth].short}
-        </Paragraph>
-        <Button onPress={handleNextMonth} chromeless>
-          <ChevronRight color={colors.text.main} />
+      <XStack ai={"center"} jc={"space-between"}>
+        <View w={24} h={24} />
+        <XStack ai={"center"} jc={"center"} gap={"$2"}>
+          <Button onPress={handlePreviousMonth} chromeless>
+            <ChevronLeft color={colors.text.main} />
+          </Button>
+          <Paragraph
+            fontWeight={"bold"}
+            fontSize={"$6"}
+            color={colors.text.main}
+          >
+            {months[currentMonth].short}
+          </Paragraph>
+          <Button onPress={handleNextMonth} chromeless>
+            <ChevronRight color={colors.text.main} />
+          </Button>
+        </XStack>
+        <Button
+          p={0}
+          pressStyle={{ opacity: 0.5 }}
+          onPress={() => setShowDatePicker(true)}
+          chromeless
+        >
+          <Calendar color={colors.text.dim1} size={24} />
         </Button>
       </XStack>
       {/* Week Days Strip */}

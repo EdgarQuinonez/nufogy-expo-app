@@ -354,11 +354,13 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                   gap={"$2"}
                   pb={"$2"}
                 >
-                  <Shapes />
-                  <Paragraph fontWeight={"bold"}>Patrón alimenticio</Paragraph>
+                  <Shapes color={colors.text.main} />
+                  <Paragraph fontWeight={"bold"} color={colors.text.main}>
+                    Patrón alimenticio
+                  </Paragraph>
                 </XStack>
 
-                <Paragraph>
+                <Paragraph color={colors.text.main}>
                   {/* TODO: Replace with actual gpt output */}
                   Has consumido Chicken Breast los últimos 5 días de la semana,
                   recuerda variar tus fuentes de proteína para asegurar una

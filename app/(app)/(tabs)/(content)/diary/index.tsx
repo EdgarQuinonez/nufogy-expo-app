@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Paragraph, ScrollView, View, XStack, YStack } from "tamagui";
 import { colors, globalStyles } from "globalStyles";
@@ -13,16 +13,27 @@ import useRDI from "@utils/useRDI";
 import TopBar from "@components/TopBar";
 import TargetSlide from "@components/TargetSlide";
 import MacrosSlide from "@components/MacrosSlide";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function DiaryScreen() {
   const { rdi, macrosTargets } = useRDI();
   const { selectedDate, setSelectedDate, getDayFilteredFoodLogs, daySummary } =
     useContext(FoodContext);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const dayFilteredFoodLogs = getDayFilteredFoodLogs(selectedDate);
 
   const onSelectedDateChange = (date: Date) => {
     setSelectedDate(date);
+  };
+
+  const onChangeDateTime = (event: any, selectedDate: Date | undefined) => {
+    setShowDatePicker(false);
+    if (selectedDate instanceof Date) {
+      setSelectedDate(selectedDate);
+    } else {
+      console.warn("Invalid date selected:", selectedDate);
+    }
   };
 
   return (
@@ -53,12 +64,21 @@ export default function DiaryScreen() {
           <MonthWeekdayStrip
             selectedDate={selectedDate}
             onSelectDateChange={onSelectedDateChange}
+            setShowDatePicker={setShowDatePicker}
           />
           {dayFilteredFoodLogs && (
             <DiaryDayView foodLogs={dayFilteredFoodLogs} />
           )}
         </YStack>
       </View>
+
+      {showDatePicker && (
+        <DateTimePicker
+          value={selectedDate}
+          display="default"
+          onChange={onChangeDateTime}
+        />
+      )}
     </ScrollView>
   );
 }

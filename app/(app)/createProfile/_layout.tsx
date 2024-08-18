@@ -16,11 +16,11 @@ import { differenceInYears } from "date-fns";
 import { Redirect, Slot, Stack, useRouter, useSegments } from "expo-router";
 
 import { StatusBar } from "expo-status-bar";
-import { colors } from "globalStyles";
+import { colors, globalStyles } from "globalStyles";
 import React from "react";
 import { SubmitHandler } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Form, Text, View } from "tamagui";
+import { Button, Form, Spinner, Text, View } from "tamagui";
 
 export default function CreateProfileLayout() {
   const router = useRouter();
@@ -43,7 +43,13 @@ export default function CreateProfileLayout() {
   } = useProfile();
 
   if (isLoading || profileIsLoading) {
-    return <Text>Loading...</Text>;
+    return (
+      <SafeAreaView
+        style={{ ...globalStyles.container, justifyContent: "center" }}
+      >
+        <Spinner size="large" />
+      </SafeAreaView>
+    );
   }
 
   if (!session) {

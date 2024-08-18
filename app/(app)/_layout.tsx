@@ -1,4 +1,4 @@
-import { Form, Text } from "tamagui";
+import { Form, Spinner, Text } from "tamagui";
 import { Redirect, Stack } from "expo-router";
 
 import { useSession } from "@providers/AuthContext";
@@ -18,8 +18,10 @@ export default function AppLayout() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={globalStyles.container}>
-        <Text>Loading...</Text>
+      <SafeAreaView
+        style={{ ...globalStyles.container, justifyContent: "center" }}
+      >
+        <Spinner size="large" />
       </SafeAreaView>
     );
   }
