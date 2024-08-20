@@ -39,7 +39,9 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.51.5",
     "react-native": "0.74.1",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-circular-progress-indicator": "^4.4.2",
+    "react-native-gesture-handler": "~2.16.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-progress": "^5.0.1",
     "react-native-reanimated": "~3.10.1",
@@ -49,8 +51,7 @@
     "react-native-web": "^0.19.12",
     "tamagui": "^1.100.3",
     "yup": "^1.4.0",
-    "zxcvbn": "^4.4.2",
-    "react-native-gesture-handler": "~2.16.1"
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",

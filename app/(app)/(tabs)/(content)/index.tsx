@@ -1,23 +1,47 @@
 import TopBar from "@components/TopBar";
-import {
-  BellRing,
-  MousePointer,
-  MousePointerClick,
-} from "@tamagui/lucide-icons";
+import { BellRing, MousePointerClick } from "@tamagui/lucide-icons";
 import { Link } from "expo-router";
 import { colors } from "globalStyles";
 import React from "react";
-import { Button, H1, Paragraph, XStack, YStack } from "tamagui";
-import { Image } from "react-native";
+import {
+  Button,
+  H4,
+  Paragraph,
+  ScrollView,
+  View,
+  XStack,
+  YStack,
+} from "tamagui";
+import { Dimensions, Image } from "react-native";
 import activeStreak from "@assets/images/active-streak.webp";
 import inactiveStreak from "@assets/images/inactive-streak.webp";
+import { LineChart } from "react-native-chart-kit";
 
 const activeStreakUri = Image.resolveAssetSource(activeStreak).uri;
 const inactiveStreakUri = Image.resolveAssetSource(inactiveStreak).uri;
 
 export default function HomeScreen() {
+  // TODO: Replace with actual data
+  const minCalorieCount = 2343;
+  const maxCalorieCount = 2514;
+  const calorieCountData = Array.from(
+    { length: 15 },
+    () =>
+      Math.floor(Math.random() * (maxCalorieCount - minCalorieCount)) +
+      minCalorieCount
+  );
+
+  const dayLabels = Array.from({ length: 15 }, (_, i) => {
+    const reverseIndex = 14 - i;
+
+    const number =
+      new Date(Date.now() - reverseIndex * 24 * 60 * 60 * 1000).getDate() + 1;
+
+    return number.toString();
+  });
+
   return (
-    <YStack f={1} ai="center" gap="$8" bg={colors.background.main}>
+    <ScrollView f={1} bg={colors.background.main}>
       <TopBar title="Dashboard" />
       {/* Demo Btn */}
       <Link href={"/"} asChild>
@@ -44,7 +68,9 @@ export default function HomeScreen() {
         <WeekStreakItem />
       </XStack>
       {/* Histogram 15 days calorie count */}
-    </YStack>
+      <H4 color={colors.text.main}>Consumo de los últimos 15 días</H4>
+      <BezierChart labels={dayLabels} data={calorieCountData} />
+    </ScrollView>
   );
 }
 
@@ -81,5 +107,49 @@ function WeekStreakItem() {
       {/* Day Calorie Count */}
       <Paragraph color={colors.text.dim1}>2516</Paragraph>
     </YStack>
+  );
+}
+
+type BezierChartProps = {
+  labels: string[];
+  data: number[];
+};
+
+function BezierChart({ labels, data }: BezierChartProps) {
+  return (
+    <View>
+      <LineChart
+        data={{
+          labels: labels,
+          datasets: [
+            {
+              data: data,
+            },
+          ],
+        }}
+        width={Dimensions.get("window").width - 16}
+        height={220}
+        yAxisInterval={1}
+        chartConfig={{
+          backgroundGradientFrom: colors.background.main,
+          backgroundGradientTo: colors.background.main,
+          fillShadowGradientFrom: colors.background.main,
+          fillShadowGradientTo: colors.background.main,
+          decimalPlaces: 0,
+          color: (opacity = 1) => `rgba(104, 71, 253, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(52, 52, 52, ${opacity})`,
+
+          propsForDots: {
+            r: "3",
+            strokeWidth: "1",
+            stroke: colors.accent,
+          },
+        }}
+        withVerticalLabels={false}
+        withVerticalLines={false}
+        withHorizontalLines={false}
+        bezier
+      />
+    </View>
   );
 }
