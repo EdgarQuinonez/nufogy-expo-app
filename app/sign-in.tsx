@@ -103,6 +103,7 @@ const LoginScreen = () => {
                   bg={colors.background.accent}
                   placeholder="ej. pedroelfire"
                   autoCapitalize="none"
+                  autoComplete="off"
                   returnKeyType="next"
                   autoCorrect={false}
                   onChangeText={onChange}

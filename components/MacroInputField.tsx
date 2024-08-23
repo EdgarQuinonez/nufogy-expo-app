@@ -82,6 +82,7 @@ export default function MacroInputField({
               unstyled={true}
               keyboardType="numeric"
               returnKeyType="done"
+              autoComplete="off"
               placeholder={displayedPlaceholder}
               // value={amount.toFixed(1)}
               flex={1}

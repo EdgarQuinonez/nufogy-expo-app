@@ -1,10 +1,11 @@
 import React from "react";
-import { Paragraph, View, YStack, H4, Square } from "tamagui";
+import { Paragraph, View, YStack, H4, Square, Button } from "tamagui";
 import MealType from "@components/MealType";
 import { DiaryFoodLog, MealType as MealTypeTypes } from "@types";
 import useFetch from "@utils/useFetch";
 import { useSession } from "@providers/AuthContext";
 import { colors } from "globalStyles";
+import { Wand2 } from "@tamagui/lucide-icons";
 
 export type Props = {
   foodLogs: DiaryFoodLog[];
@@ -25,9 +26,29 @@ export default function DiaryDayView({ foodLogs }: Props) {
 
   return (
     <View maxWidth={"100%"}>
-      <H4 pl={"$4"} py={"$2"} color={colors.text.main}>
+      <H4 color={colors.text.main} pl={"$4"} py={"$2"}>
         Comidas del día
       </H4>
+      <View px={"$4"}>
+        <Button
+          px={"$2"}
+          py={"$3"}
+          ai={"center"}
+          jc={"center"}
+          bg={colors.accent}
+          borderColor={colors.text.main}
+          borderWidth={1}
+        >
+          <Paragraph
+            color={colors.background.main}
+            fontWeight={"bold"}
+            lineHeight={16}
+          >
+            Generar Dieta
+          </Paragraph>
+          <Wand2 color={colors.background.main} />
+        </Button>
+      </View>
 
       {loading ? (
         <YStack

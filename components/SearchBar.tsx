@@ -34,6 +34,7 @@ export default function SearchBar({
         flex={1}
         size={size}
         value={text}
+        autoComplete="off"
         onChangeText={setText}
         color={colors.text.main}
         placeholderTextColor={colors.text.dim1}

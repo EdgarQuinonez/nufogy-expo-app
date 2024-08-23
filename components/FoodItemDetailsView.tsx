@@ -281,6 +281,8 @@ export default function FoodItemDetailsView({ mealTypeId, foodItemId }: Props) {
                         unstyled={true}
                         keyboardType="numeric"
                         returnKeyType="done"
+                        autoComplete="off"
+                        color={colors.text.main}
                         placeholder={(
                           Math.round(
                             calculatedNutritionValues.number_of_units * 10

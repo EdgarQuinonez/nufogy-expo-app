@@ -144,6 +144,7 @@ const RegisterScreen = () => {
                   bg={colors.background.accent}
                   onChangeText={onChange}
                   autoCapitalize="none"
+                  autoComplete="off"
                   returnKeyType="next"
                   autoCorrect={false}
                   onBlur={onBlur}

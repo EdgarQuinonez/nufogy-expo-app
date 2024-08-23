@@ -19,6 +19,7 @@ export default function TargetSlide({ consumedCalories, rdi }: Props) {
           maxValue={consumedCalories <= rdi ? rdi : consumedCalories}
           activeStrokeWidth={18}
           inActiveStrokeWidth={18}
+          strokeLinecap={"square"}
           progressValueColor={colors.text.main}
           activeStrokeColor={colors.primary}
           circleBackgroundColor={colors.background.main}

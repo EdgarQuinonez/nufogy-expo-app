@@ -40,7 +40,7 @@ export default function GoalScreen() {
         <View
           w={118}
           h={118}
-          bg={colors.accent}
+          bg={colors.secondary}
           ai={"center"}
           jc={"center"}
           borderRadius={"$4"}
@@ -55,6 +55,7 @@ export default function GoalScreen() {
                   unstyled
                   keyboardType="numeric"
                   returnKeyType={"done"}
+                  autoComplete="off"
                   color={colors.text.main}
                   placeholder={"0"}
                   placeholderTextColor={colors.text.main}

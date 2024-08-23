@@ -44,6 +44,7 @@ export default function PasswordInput({
         unstyled={true}
         returnKeyType="done"
         autoCapitalize="none"
+        autoComplete="off"
         autoCorrect={false}
         flex={1}
         onChangeText={onChange}

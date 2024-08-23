@@ -56,6 +56,7 @@ export default function HeightScreen() {
                   unstyled
                   keyboardType="numeric"
                   returnKeyType={"done"}
+                  autoComplete="off"
                   color={colors.text.main}
                   placeholder={"0"}
                   placeholderTextColor={colors.text.main}
