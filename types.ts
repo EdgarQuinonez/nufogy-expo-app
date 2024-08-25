@@ -142,6 +142,7 @@ export interface FoodLogRequestBody {
 }
 
 export interface DiaryFoodLog {
+  id: number;
   dateTime: string;
   fs_id: number;
   fs_object: FoodItemString;

@@ -20,6 +20,7 @@
     "@react-native-community/datetimepicker": "^8.1.1",
     "@react-navigation/native": "^6.1.17",
     "@tamagui/config": "^1.100.3",
+    "@tamagui/linear-gradient": "^1.109.3",
     "@tamagui/lucide-icons": "^1.100.3",
     "@tamagui/toast": "^1.100.3",
     "axios": "^1.7.2",
@@ -51,7 +52,8 @@
     "react-native-web": "^0.19.12",
     "tamagui": "^1.100.3",
     "yup": "^1.4.0",
-    "zxcvbn": "^4.4.2"
+    "zxcvbn": "^4.4.2",
+    "expo-linear-gradient": "~13.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",

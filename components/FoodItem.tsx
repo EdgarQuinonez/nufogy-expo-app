@@ -48,12 +48,23 @@ export default function FoodItem({ foodLog }: Props) {
           <XStack flex={1} w={"100%"} ai={"center"} jc={"space-between"}>
             {/* Food Name */}
             <XStack ai={"flex-start"} jc={"center"}>
-              <View ai={"center"} jc={"center"} maxWidth={"$12"}>
+              <XStack
+                ai={"center"}
+                jc={"center"}
+                maxWidth={"$12"}
+                overflow="hidden"
+                h={23}
+              >
                 {/* TODO: Figure out text wrap and text overflow */}
-                <Paragraph numberOfLines={2} color={colors.text.main}>
+                <Text
+                  numberOfLines={1}
+                  color={colors.text.main}
+                  ellipse={true}
+                  ellipsizeMode="tail"
+                >
                   {foodName}
-                </Paragraph>
-              </View>
+                </Text>
+              </XStack>
               <Dot color={colors.text.dim1} />
               <Paragraph color={colors.text.main}>
                 {Math.round(metric_serving_amount)}

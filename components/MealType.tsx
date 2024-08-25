@@ -8,6 +8,7 @@ import {
   Paragraph,
   H5,
   H4,
+  Square,
 } from "tamagui";
 import {
   Coffee,
@@ -28,6 +29,7 @@ import useFetch from "@utils/useFetch";
 import { DiaryFoodLog, FoodLogRequestBody } from "@types";
 
 import calculateNutritionSummary from "@utils/nutritionSummary";
+import { LinearGradient } from "@tamagui/linear-gradient";
 
 const MacroSummaryItem = ({
   label,
@@ -86,9 +88,15 @@ export type Props = {
   mealTypeId: number;
   name: string;
   foodLogs: DiaryFoodLog[];
+  isGeneratingDiet: boolean;
 };
 
-export default function MealType({ mealTypeId, name, foodLogs }: Props) {
+export default function MealType({
+  mealTypeId,
+  name,
+  foodLogs,
+  isGeneratingDiet,
+}: Props) {
   const { handleAddFoodPress } = useContext(FoodContext);
 
   let icon: React.ReactElement<IconProps>;
@@ -158,11 +166,18 @@ export default function MealType({ mealTypeId, name, foodLogs }: Props) {
         </XStack>
         {/* Food Items */}
 
-        {filteredFoodLogs.length > 0 ? (
+        {filteredFoodLogs.length > 0 || isGeneratingDiet ? (
           <YStack w={"100%"} gap={"$1"}>
             {filteredFoodLogs.map((foodLog, i) => (
               <FoodItem key={i} foodLog={foodLog} />
             ))}
+            {isGeneratingDiet && (
+              <YStack w={"100%"} ai={"center"} jc={"flex-start"}>
+                <FoodItemSkeleton />
+                <FoodItemSkeleton />
+                <FoodItemSkeleton />
+              </YStack>
+            )}
           </YStack>
         ) : (
           <View
@@ -209,5 +224,22 @@ export default function MealType({ mealTypeId, name, foodLogs }: Props) {
         Total de calorías: {Math.round(mealSummary.calories)}
       </Paragraph>
     </View>
+  );
+}
+
+function FoodItemSkeleton() {
+  return (
+    <LinearGradient
+      colors={[
+        colors.background.accent,
+        colors.background.main,
+        colors.background.accent,
+      ]}
+      start={[0, 0]}
+      end={[1, 1]}
+      height={72}
+      width={"100%"}
+      borderRadius={"$4"}
+    />
   );
 }
