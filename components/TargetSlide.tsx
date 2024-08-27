@@ -13,10 +13,11 @@ export default function TargetSlide({ consumedCalories, rdi }: Props) {
   return (
     <XStack w={"100%"} px={"$4"}>
       <View>
+        {/* TODO: Fix BUG: Circular progress progressLine regressing when going over maxValue */}
         <CircularProgress
           radius={72}
           value={consumedCalories}
-          maxValue={consumedCalories <= rdi ? rdi : consumedCalories}
+          maxValue={rdi >= consumedCalories ? rdi : consumedCalories}
           activeStrokeWidth={18}
           inActiveStrokeWidth={18}
           strokeLinecap={"square"}
@@ -37,7 +38,6 @@ export default function TargetSlide({ consumedCalories, rdi }: Props) {
           py={"$3"}
           gap={"$4"}
           borderRadius={"$2"}
-          //   bg={colors.background.main}
           w={"100%"}
         >
           <Goal color={colors.primary} size={32} />

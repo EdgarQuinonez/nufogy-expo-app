@@ -77,7 +77,7 @@ export default function DonutGraph({ data }: Props) {
                   strokeWidth={strokeWidth}
                   strokeDasharray={circleCircumference}
                   strokeDashoffset={dashOffset}
-                  strokeLinecap="round"
+                  strokeLinecap="square"
                 />
               );
             })}

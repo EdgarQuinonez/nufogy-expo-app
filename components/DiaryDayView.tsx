@@ -10,6 +10,7 @@ import { useProfile } from "@providers/ProfileContext";
 import axios from "axios";
 import useRDI from "@utils/useRDI";
 import { FoodContext } from "@providers/FoodContext";
+import simulatedDiet from "@assets/diet2600.json";
 
 export type Props = {
   foodLogs: DiaryFoodLog[];
@@ -17,7 +18,7 @@ export type Props = {
 
 export default function DiaryDayView({ foodLogs }: Props) {
   const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/diary/mealtype/`;
-  const { setFoodLogs } = useContext(FoodContext);
+  const { setFoodLogs, selectedDate } = useContext(FoodContext);
   const { session } = useSession();
   const { rdi, macrosTargets } = useRDI();
 
@@ -39,12 +40,12 @@ export default function DiaryDayView({ foodLogs }: Props) {
       const newFoodLogs = await simulateGenerateDiet(
         foodLogs,
         session,
-        rdi,
-        macrosTargets
+        mealTypes,
+        selectedDate
       );
 
       if (newFoodLogs) {
-        setFoodLogs(newFoodLogs);
+        setFoodLogs((prevFoodLogs) => [...prevFoodLogs, ...newFoodLogs]);
       }
       // TODO: POST newFoodLogs to the API in bulk
     } catch (error) {
@@ -184,8 +185,8 @@ async function generateDiet(
 async function simulateGenerateDiet(
   existingFoodLogs: DiaryFoodLog[],
   session: string | null | undefined,
-  calorieGoal: number,
-  macrosTargets: { protein: number; carbs: number; fat: number },
+  mealTypes: MealTypeTypes[] | undefined,
+  selectedDate: Date,
   timeout = 2000
 ) {
   let isLoading = false;
@@ -199,7 +200,28 @@ async function simulateGenerateDiet(
     const simulatedResponse = new Promise<{ data: DiaryFoodLog[] }>(
       (resolve, reject) => {
         setTimeout(() => {
-          resolve({ data: existingFoodLogs });
+          const jsonDiet: DiaryFoodLog[] = JSON.parse(
+            JSON.stringify(simulatedDiet)
+          );
+          if (mealTypes) {
+            const mealTypeIDs = mealTypes.map((mealType) => mealType.id);
+
+            const newFoodLogs = jsonDiet.map((foodLog) => {
+              const mealType =
+                foodLog.meal_type === 46
+                  ? mealTypeIDs[0]
+                  : foodLog.meal_type === 47
+                  ? mealTypeIDs[1]
+                  : mealTypeIDs[2];
+
+              return {
+                ...foodLog,
+                meal_type: mealType,
+                dateTime: selectedDate.toISOString(),
+              };
+            });
+            resolve({ data: newFoodLogs });
+          }
         }, timeout);
       }
     );
@@ -207,7 +229,7 @@ async function simulateGenerateDiet(
     const response = await Promise.race<{ data: DiaryFoodLog[] }>([
       simulatedResponse,
       new Promise((_, reject) =>
-        setTimeout(reject, timeout, new Error("Timeout"))
+        setTimeout(reject, timeout + 2000, new Error("Timeout"))
       ),
     ]);
 

@@ -29,7 +29,7 @@ import useFetch from "@utils/useFetch";
 import { DiaryFoodLog, FoodLogRequestBody } from "@types";
 
 import calculateNutritionSummary from "@utils/nutritionSummary";
-import { LinearGradient } from "@tamagui/linear-gradient";
+import { LinearGradient } from "expo-linear-gradient";
 
 const MacroSummaryItem = ({
   label,
@@ -172,7 +172,7 @@ export default function MealType({
               <FoodItem key={i} foodLog={foodLog} />
             ))}
             {isGeneratingDiet && (
-              <YStack w={"100%"} ai={"center"} jc={"flex-start"}>
+              <YStack w={"100%"} ai={"center"} jc={"flex-start"} gap={"$1"}>
                 <FoodItemSkeleton />
                 <FoodItemSkeleton />
                 <FoodItemSkeleton />
@@ -237,9 +237,11 @@ function FoodItemSkeleton() {
       ]}
       start={[0, 0]}
       end={[1, 1]}
-      height={72}
-      width={"100%"}
-      borderRadius={"$4"}
+      style={{
+        height: 54,
+        width: "100%",
+        borderRadius: 4,
+      }}
     />
   );
 }
