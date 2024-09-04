@@ -1,6 +1,6 @@
 import { View, Text, XStack, YStack, Input, Select, Paragraph } from "tamagui";
 import React from "react";
-import { Dot, Utensils, X } from "@tamagui/lucide-icons";
+import { ArrowLeftRight, Dot, Utensils, X } from "@tamagui/lucide-icons";
 import { colors, globalStyles } from "globalStyles";
 import { DiaryFoodLog, FoodItemServing } from "@types";
 import SelectDropdown from "@components/SelectDropdown";
@@ -8,18 +8,51 @@ import useNutritionCalculator from "@utils/useNutritionCalculator";
 import parseFoodItemString from "@utils/parseFoodItemString";
 import { calculateNutritionValues } from "@utils/nutritionValuesCalculator";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { useSharedValue } from "react-native-reanimated";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  interpolateColor,
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { useWindowDimensions } from "react-native";
 
 export default function SwipeableFoodItem({ foodLog }: FoodItemProps) {
   const transalateX = useSharedValue(0);
+  const width = useWindowDimensions().width;
+  const direction = useSharedValue(0);
 
-  const pan = Gesture.Pan().onUpdate(({ translationX }) => {
-    console.log(translationX);
+  const renderLeftActions = () => {};
+
+  const pan = Gesture.Pan()
+    .onUpdate(({ translationX }) => {
+      const isSwipeRight = translationX > 0;
+      direction.value = isSwipeRight ? 1 : -1;
+      transalateX.value = translationX;
+    })
+    .onEnd(() => {
+      if (Math.abs(transalateX.value) > 150) {
+        transalateX.value = withTiming(width * direction.value);
+        // TODO: Render skeleton loading
+      } else {
+        transalateX.value = withTiming(0, { duration: 500 });
+      }
+    });
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: transalateX.value }],
+    };
   });
 
   return (
     <GestureDetector gesture={pan}>
-      <FoodItem foodLog={foodLog} />
+      <Animated.View style={animatedStyle}>
+        {/* <LeftActions translateX={transalateX} width={width} /> */}
+        <FoodItem foodLog={foodLog} />
+      </Animated.View>
     </GestureDetector>
   );
 }
@@ -125,6 +158,35 @@ export function FoodItem({ foodLog }: FoodItemProps) {
         </YStack>
       </XStack>
     )
+  );
+}
+
+export interface LeftActionsProps {
+  translateX: SharedValue<number>;
+  width: number;
+}
+
+export function LeftActions({ translateX, width }: LeftActionsProps) {
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      width: interpolate(
+        translateX.value,
+        [0, width],
+        [0, width],
+        Extrapolation.CLAMP
+      ),
+      backgroundColor: colors.text.main,
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      left: 0,
+    };
+  });
+
+  return (
+    <Animated.View style={animatedStyle}>
+      <ArrowLeftRight color={colors.background.main} />
+    </Animated.View>
   );
 }
 
