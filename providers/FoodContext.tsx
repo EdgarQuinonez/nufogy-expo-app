@@ -16,6 +16,7 @@ interface FoodContextProps {
   getDayFilteredFoodLogs: (date: Date) => DiaryFoodLog[];
   selectedDate: Date;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
+  swapMeal: (foodLog: number) => void;
 }
 
 const FoodContext = createContext<FoodContextProps>({
@@ -37,6 +38,7 @@ const FoodContext = createContext<FoodContextProps>({
   getDayFilteredFoodLogs: () => [],
   selectedDate: new Date(),
   setSelectedDate: () => {},
+  swapMeal: () => {},
 });
 
 const FoodContextProvider = ({ children }: any) => {
@@ -92,6 +94,10 @@ const FoodContextProvider = ({ children }: any) => {
     setIsModalVisible(false);
   };
 
+  const swapMeal = (foodLog: number) => {
+    console.log("Swapped meal", foodLog);
+  };
+
   return (
     <FoodContext.Provider
       value={{
@@ -105,6 +111,7 @@ const FoodContextProvider = ({ children }: any) => {
         getDayFilteredFoodLogs,
         selectedDate,
         setSelectedDate,
+        swapMeal,
       }}
     >
       {children}

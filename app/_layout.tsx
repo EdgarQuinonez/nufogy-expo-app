@@ -17,6 +17,7 @@ import { SessionProvider } from "@providers/AuthContext";
 import { ProfileProvider } from "@providers/ProfileContext";
 import { FoodContextProvider } from "@providers/FoodContext";
 import { FormDataProvider } from "@providers/FormProfileContext";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -58,7 +59,9 @@ function RootLayoutNav() {
     <Provider>
       <ThemeProvider value={DefaultTheme}>
         <SessionProvider>
-          <Slot />
+          <GestureHandlerRootView>
+            <Slot />
+          </GestureHandlerRootView>
         </SessionProvider>
       </ThemeProvider>
     </Provider>

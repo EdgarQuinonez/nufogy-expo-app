@@ -7,12 +7,28 @@ import SelectDropdown from "@components/SelectDropdown";
 import useNutritionCalculator from "@utils/useNutritionCalculator";
 import parseFoodItemString from "@utils/parseFoodItemString";
 import { calculateNutritionValues } from "@utils/nutritionValuesCalculator";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { useSharedValue } from "react-native-reanimated";
 
-export type Props = {
+export default function SwipeableFoodItem({ foodLog }: FoodItemProps) {
+  const transalateX = useSharedValue(0);
+
+  const pan = Gesture.Pan().onUpdate(({ translationX }) => {
+    console.log(translationX);
+  });
+
+  return (
+    <GestureDetector gesture={pan}>
+      <FoodItem foodLog={foodLog} />
+    </GestureDetector>
+  );
+}
+
+export type FoodItemProps = {
   foodLog: DiaryFoodLog;
 };
 
-export default function FoodItem({ foodLog }: Props) {
+export function FoodItem({ foodLog }: FoodItemProps) {
   const { fs_object, fs_serving, metric_serving_amount } = foodLog;
   const foodName = fs_object.food_name;
 
