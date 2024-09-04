@@ -1,8 +1,13 @@
 import { View, Text, XStack, YStack, Input, Select, Paragraph } from "tamagui";
-import React from "react";
+import React, { useContext } from "react";
 import { ArrowLeftRight, Dot, Utensils, X } from "@tamagui/lucide-icons";
 import { colors, globalStyles } from "globalStyles";
-import { DiaryFoodLog, FoodItemServing } from "@types";
+import {
+  DiaryFoodLog,
+  FoodItemServing,
+  SwapMealBody,
+  SwapMealResponse,
+} from "@types";
 import SelectDropdown from "@components/SelectDropdown";
 import useNutritionCalculator from "@utils/useNutritionCalculator";
 import parseFoodItemString from "@utils/parseFoodItemString";
@@ -18,11 +23,41 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useWindowDimensions } from "react-native";
+import { FoodContext } from "@providers/FoodContext";
+import axios from "axios";
 
 export default function SwipeableFoodItem({ foodLog }: FoodItemProps) {
+  const { foodLogs, setFoodLogs } = useContext(FoodContext);
   const transalateX = useSharedValue(0);
   const width = useWindowDimensions().width;
   const direction = useSharedValue(0);
+
+  const swapMeal = async () => {
+    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/jack/swapmeal/`;
+    try {
+      // POST request to swap meal
+      const bodyFoodLog = parseFoodLog(foodLog);
+
+      const response = await axios.post(apiEndpoint, bodyFoodLog);
+
+      if (response.status === 200) {
+        const updatedFoodLog = response.data;
+
+        setFoodLogs((prevLogs) => {
+          const newLogs = prevLogs.filter((log) => log.id !== foodLog.id);
+          return [...newLogs, updatedFoodLog];
+        });
+      } else {
+        console.error(
+          "Failed to swap the meal:",
+          response.status,
+          response.data
+        );
+      }
+    } catch (error) {
+      console.log("Error swaping meal: ", error);
+    }
+  };
 
   const renderLeftActions = () => {};
 
@@ -34,8 +69,16 @@ export default function SwipeableFoodItem({ foodLog }: FoodItemProps) {
     })
     .onEnd(() => {
       if (Math.abs(transalateX.value) > 150) {
-        transalateX.value = withTiming(width * direction.value);
-        // TODO: Render skeleton loading
+        transalateX.value = withTiming(
+          width * direction.value,
+          undefined,
+          (isFinished) => {
+            if (isFinished) {
+              console.log(typeof swapMeal);
+              swapMeal();
+            }
+          }
+        );
       } else {
         transalateX.value = withTiming(0, { duration: 500 });
       }
@@ -206,4 +249,28 @@ function MacroDisplay({
       <Paragraph color={colors.text.dim1}>{unit}</Paragraph>
     </XStack>
   );
+}
+
+function parseFoodLog(foodLog: DiaryFoodLog): SwapMealBody {
+  const { fs_object } = foodLog;
+
+  const servingData = Array.isArray(fs_object.servings.serving)
+    ? fs_object.servings.serving[0]
+    : fs_object?.servings.serving;
+
+  if (!servingData) {
+    throw new Error("Serving data not found");
+  }
+
+  return {
+    ingredient: {
+      ...foodLog,
+      fs_object: {
+        ...fs_object,
+        servings: {
+          serving: servingData,
+        },
+      },
+    },
+  };
 }

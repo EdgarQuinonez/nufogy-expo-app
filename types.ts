@@ -153,6 +153,49 @@ export interface DiaryFoodLog {
   user_id: number;
 }
 
+export interface SwapMealResponse {
+  ingredient: {
+    dateTime: string;
+    fs_id: number;
+    fs_object: {
+      food_id: string;
+      food_name: string;
+      food_type: string;
+      food_url: string;
+      servings: {
+        serving: FoodItemServingString;
+      };
+    };
+    fs_serving: number;
+    meal_type: number;
+    metric_serving_amount: number;
+    metric_serving_unit: string;
+    user_id: number;
+  };
+}
+
+export interface SwapMealBody {
+  ingredient: {
+    id: number;
+    dateTime: string;
+    fs_id: number;
+    fs_object: {
+      food_id: string;
+      food_name: string;
+      food_type: string;
+      food_url: string;
+      servings: {
+        serving: FoodItemServingString;
+      };
+    };
+    fs_serving: number;
+    meal_type: number;
+    metric_serving_amount: number;
+    metric_serving_unit: string;
+    user_id: number;
+  };
+}
+
 export interface DaySummary {
   protein: number;
   carbohydrate: number;
