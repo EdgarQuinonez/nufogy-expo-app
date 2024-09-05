@@ -1,5 +1,5 @@
-import { View, Text, XStack, YStack, Input, Select, Paragraph } from "tamagui";
-import React, { useContext } from "react";
+import { View, Text, XStack, YStack, Input, Select, Paragraph, Button } from "tamagui";
+import React, { useContext, useState } from "react";
 import { ArrowLeftRight, Dot, Utensils, X } from "@tamagui/lucide-icons";
 import { colors, globalStyles } from "globalStyles";
 import {
@@ -25,14 +25,16 @@ import Animated, {
 import { useWindowDimensions } from "react-native";
 import { FoodContext } from "@providers/FoodContext";
 import axios from "axios";
+import { useSession } from "@providers/AuthContext";
 
 export default function SwipeableFoodItem({ foodLog }: FoodItemProps) {
   const { foodLogs, setFoodLogs } = useContext(FoodContext);
   const transalateX = useSharedValue(0);
   const width = useWindowDimensions().width;
   const direction = useSharedValue(0);
-
-  const swapMeal = async () => {
+  
+  async function swapMeal() {
+    console.log()
     const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/jack/swapmeal/`;
     try {
       // POST request to swap meal
@@ -74,8 +76,7 @@ export default function SwipeableFoodItem({ foodLog }: FoodItemProps) {
           undefined,
           (isFinished) => {
             if (isFinished) {
-              console.log(typeof swapMeal);
-              swapMeal();
+              swapMeal()
             }
           }
         );
@@ -106,7 +107,44 @@ export type FoodItemProps = {
 
 export function FoodItem({ foodLog }: FoodItemProps) {
   const { fs_object, fs_serving, metric_serving_amount } = foodLog;
+  const {setFoodLogs} = useContext(FoodContext);
   const foodName = fs_object.food_name;
+  const [isPressed, setIsPressed] = useState(false);
+  const { session } = useSession();
+
+
+  async function swapMeal() {
+    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/jack/swapmeal/`;
+    try {
+      // POST request to swap meal
+      const bodyFoodLog = parseFoodLog(foodLog);
+      const response = await axios.post(apiEndpoint, bodyFoodLog, {headers: {
+        Authorization: `Token ${session}`
+      }});
+
+      if (response.status === 200) {
+        const updatedFoodLog = response.data;
+
+        setFoodLogs((prevLogs) => {
+          const newLogs = prevLogs.filter((log) => log.id !== foodLog.id);
+          return [...newLogs, updatedFoodLog];
+        });
+
+      } else {
+        console.error(
+          "Failed to swap the meal:",
+          response.status,
+          response.data
+        );
+      }
+    } catch (error) {
+      // console.log("Error swaping meal: ", (error as any).response.data );
+    } finally {
+      setIsPressed(false);
+
+    }
+  };
+
 
   const foodItem = parseFoodItemString(fs_object);
 
@@ -122,84 +160,98 @@ export function FoodItem({ foodLog }: FoodItemProps) {
   return (
     servingData &&
     calculatedNutritionValues && (
-      <XStack
-        ai={"center"}
-        jc={"flex-start"}
-        w={"100%"}
-        backgroundColor={"$background"}
-        borderRadius={"$4"}
-        py={"$1"}
-        px={"$2"}
-      >
-        <View pr={"$2"}>
-          <Utensils color={colors.text.main} />
-        </View>
+      <View>
+      
+    {
+      !isPressed ? (
+        <Button onPress={()=> setIsPressed(true)}>
+          <XStack
+            ai={"center"}
+            jc={"flex-start"}
+            w={"100%"}
+            backgroundColor={"$background"}
+            borderRadius={"$4"}
+            py={"$1"}
+            px={"$2"}
+          >
+            <View pr={"$2"}>
+              <Utensils color={colors.text.main} />
+            </View>
 
-        <YStack flex={1} ai={"flex-start"} jc={"space-between"}>
-          {/* Upper */}
-          <XStack flex={1} w={"100%"} ai={"center"} jc={"space-between"}>
-            {/* Food Name */}
-            <XStack ai={"flex-start"} jc={"center"}>
-              <XStack
-                ai={"center"}
-                jc={"center"}
-                maxWidth={"$12"}
-                overflow="hidden"
-                h={23}
-              >
-                {/* TODO: Figure out text wrap and text overflow */}
-                <Text
-                  numberOfLines={1}
-                  color={colors.text.main}
-                  ellipse={true}
-                  ellipsizeMode="tail"
-                >
-                  {foodName}
-                </Text>
+            <YStack flex={1} ai={"flex-start"} jc={"space-between"}>
+              {/* Upper */}
+              <XStack flex={1} w={"100%"} ai={"center"} jc={"space-between"}>
+                {/* Food Name */}
+                <XStack ai={"flex-start"} jc={"center"}>
+                  <XStack
+                    ai={"center"}
+                    jc={"center"}
+                    maxWidth={"$12"}
+                    overflow="hidden"
+                    h={23}
+                  >
+                    {/* TODO: Figure out text wrap and text overflow */}
+                    <Text
+                      numberOfLines={1}
+                      color={colors.text.main}
+                      ellipse={true}
+                      ellipsizeMode="tail"
+                    >
+                      {foodName}
+                    </Text>
+                  </XStack>
+                  <Dot color={colors.text.dim1} />
+                  <Paragraph color={colors.text.main}>
+                    {Math.round(metric_serving_amount)}
+                  </Paragraph>
+                  <Paragraph ml={"$1"} color={colors.text.dim1}>
+                    {servingData.metric_serving_unit}
+                  </Paragraph>
+                </XStack>
+                {/* Calories */}
+                <XStack gap={"$1"}>
+                  <Paragraph
+                    fontWeight={"bold"}
+                    fontSize={"$6"}
+                    color={colors.text.main}
+                  >
+                    {Math.round(calculatedNutritionValues.calories)}
+                  </Paragraph>
+                  <Paragraph color={colors.text.dim1}>kcal</Paragraph>
+                </XStack>
               </XStack>
-              <Dot color={colors.text.dim1} />
-              <Paragraph color={colors.text.main}>
-                {Math.round(metric_serving_amount)}
-              </Paragraph>
-              <Paragraph ml={"$1"} color={colors.text.dim1}>
-                {servingData.metric_serving_unit}
-              </Paragraph>
-            </XStack>
-            {/* Calories */}
-            <XStack gap={"$1"}>
-              <Paragraph
-                fontWeight={"bold"}
-                fontSize={"$6"}
-                color={colors.text.main}
-              >
-                {Math.round(calculatedNutritionValues.calories)}
-              </Paragraph>
-              <Paragraph color={colors.text.dim1}>kcal</Paragraph>
-            </XStack>
+              {/* Lower */}
+              <XStack flex={1} gap={"$2"}>
+                {/* Protein */}
+                <MacroDisplay
+                  color={colors.protein}
+                  amount={calculatedNutritionValues?.protein}
+                  unit="g"
+                />
+                {/* Carbs */}
+                <MacroDisplay
+                  color={colors.carbohydrate}
+                  amount={calculatedNutritionValues?.carbohydrate}
+                  unit="g"
+                />
+                {/* Fat */}
+                <MacroDisplay
+                  color={colors.fat}
+                  amount={calculatedNutritionValues?.fat}
+                  unit="g"
+                />
+              </XStack>
+            </YStack>
           </XStack>
-          {/* Lower */}
-          <XStack flex={1} gap={"$2"}>
-            {/* Protein */}
-            <MacroDisplay
-              color={colors.protein}
-              amount={calculatedNutritionValues?.protein}
-              unit="g"
-            />
-            {/* Carbs */}
-            <MacroDisplay
-              color={colors.carbohydrate}
-              amount={calculatedNutritionValues?.carbohydrate}
-              unit="g"
-            />
-            {/* Fat */}
-            <MacroDisplay
-              color={colors.fat}
-              amount={calculatedNutritionValues?.fat}
-              unit="g"
-            />
-          </XStack>
-        </YStack>
-      </XStack>
+        </Button>
+      ) : (
+        <Button onPress={swapMeal} bg={colors.text.main}>
+          <ArrowLeftRight color={colors.background.main}/>
+        </Button>
+
+      )
+    }  
+      </View>
     )
   );
 }

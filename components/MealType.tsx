@@ -22,7 +22,7 @@ import {
 import type { IconProps } from "@tamagui/helpers-icon";
 import React, { useContext } from "react";
 import { colors, globalStyles } from "globalStyles";
-import SwipeableFoodItem from "@components/FoodItem";
+import SwipeableFoodItem, { FoodItem } from "@components/FoodItem";
 import { FoodContext } from "@providers/FoodContext";
 import { Link } from "expo-router";
 import useFetch from "@utils/useFetch";
@@ -169,7 +169,7 @@ export default function MealType({
         {filteredFoodLogs.length > 0 || isGeneratingDiet ? (
           <YStack w={"100%"} gap={"$1"}>
             {filteredFoodLogs.map((foodLog, i) => (
-              <SwipeableFoodItem key={i} foodLog={foodLog} />
+              <FoodItem key={i} foodLog={foodLog} />
             ))}
             {isGeneratingDiet && (
               <YStack w={"100%"} ai={"center"} jc={"flex-start"} gap={"$1"}>
