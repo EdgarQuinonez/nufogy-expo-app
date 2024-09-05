@@ -10,7 +10,7 @@ export interface Props  {
 export default function JackInputText({ setPrompt }: Props) {
   return (
     <XStack w={"100%"} h={72} bg={colors.background.accent} borderRadius={16}>
-        <Input color={colors.text.main}/>
+        <Input color={colors.text.main} onChangeText={(text) => setPrompt(text)}/>
         <Form.Trigger asChild>
 
         <Button h={32} w={32} bg={colors.primary}>
