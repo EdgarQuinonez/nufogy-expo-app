@@ -2,6 +2,7 @@ import TopBar from "@components/TopBar";
 import {
   BellRing,
   Bot,
+  Mail,
   Mic,
   Mic2,
   MousePointerClick,
@@ -55,9 +56,9 @@ export default function HomeScreen() {
       <TopBar title="Dashboard" />
       <YStack gap={"$4"} p={"$2"}>
         {/* TODO: Notification Island Swipeable component*/}
-        <NotificationIsland />
+        {/* <NotificationIsland /> */}
         {/* Demo Btn */}
-        <Link href={"/"} asChild>
+        {/* <Link href={"/"} asChild>
           <Button
             px={"$2"}
             py={"$3"}
@@ -76,7 +77,7 @@ export default function HomeScreen() {
             </Paragraph>
             <MousePointerClick color={colors.background.main} />
           </Button>
-        </Link>
+        </Link> */}
 
         {/* Streak Week */}
         {/* TODO: Dynamically render WeekStreakItem. 6 items. Determine Status inactive, active, count from last 6 days */}
@@ -120,6 +121,7 @@ export default function HomeScreen() {
             hoy?
           </Paragraph>
         </View>
+        <Link href={"talkJack"} asChild>
         <Button
           px={"$2"}
           py={"$3"}
@@ -129,7 +131,7 @@ export default function HomeScreen() {
           borderColor={colors.text.main}
           borderWidth={1}
         >
-          <Mic color={colors.text.main} />
+          <Mail color={colors.text.main}/>
           <Paragraph
             color={colors.text.main}
             fontWeight={"bold"}
@@ -138,6 +140,7 @@ export default function HomeScreen() {
             Habla con Jack
           </Paragraph>
         </Button>
+        </Link>
       </YStack>
     </ScrollView>
   );

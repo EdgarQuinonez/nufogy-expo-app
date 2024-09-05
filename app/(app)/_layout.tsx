@@ -55,6 +55,13 @@ export default function AppLayout() {
               }}
             />
             <Stack.Screen
+              name="talkJack"
+              options={{
+                headerShown: false,
+                presentation: "modal",
+              }}
+            />
+            <Stack.Screen
               name="createProfile"
               options={{
                 headerShown: false,
