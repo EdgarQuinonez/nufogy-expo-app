@@ -34,7 +34,6 @@ export default function SwipeableFoodItem({ foodLog }: FoodItemProps) {
   const direction = useSharedValue(0);
   
   async function swapMeal() {
-    console.log()
     const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/jack/swapmeal/`;
     try {
       // POST request to swap meal
@@ -44,6 +43,7 @@ export default function SwipeableFoodItem({ foodLog }: FoodItemProps) {
 
       if (response.status === 200) {
         const updatedFoodLog = response.data;
+        console.log(response.data)
 
         setFoodLogs((prevLogs) => {
           const newLogs = prevLogs.filter((log) => log.id !== foodLog.id);
@@ -123,7 +123,8 @@ export function FoodItem({ foodLog }: FoodItemProps) {
       }});
 
       if (response.status === 200) {
-        const updatedFoodLog = response.data;
+        const updatedFoodLog = response.data.ingredient;
+        console.log(updatedFoodLog);
 
         setFoodLogs((prevLogs) => {
           const newLogs = prevLogs.filter((log) => log.id !== foodLog.id);
@@ -138,7 +139,7 @@ export function FoodItem({ foodLog }: FoodItemProps) {
         );
       }
     } catch (error) {
-      // console.log("Error swaping meal: ", (error as any).response.data );
+      console.error("Error swaping meal: ", (error as any).response.data );
     } finally {
       setIsPressed(false);
 
