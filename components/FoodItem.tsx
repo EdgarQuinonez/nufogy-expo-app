@@ -27,79 +27,79 @@ import { FoodContext } from "@providers/FoodContext";
 import axios from "axios";
 import { useSession } from "@providers/AuthContext";
 
-export default function SwipeableFoodItem({ foodLog }: FoodItemProps) {
-  const { foodLogs, setFoodLogs } = useContext(FoodContext);
-  const transalateX = useSharedValue(0);
-  const width = useWindowDimensions().width;
-  const direction = useSharedValue(0);
-  
-  async function swapMeal() {
-    const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/jack/swapmeal/`;
-    try {
-      // POST request to swap meal
-      const bodyFoodLog = parseFoodLog(foodLog);
+  // export default function SwipeableFoodItem({ foodLog }: FoodItemProps) {
+  //   const { foodLogs, setFoodLogs } = useContext(FoodContext);
+  //   const transalateX = useSharedValue(0);
+  //   const width = useWindowDimensions().width;
+  //   const direction = useSharedValue(0);
+    
+  //   async function swapMeal() {
+  //     const apiEndpoint = `${process.env.EXPO_PUBLIC_API_BASE_URL}/jack/swapmeal/`;
+  //     try {
+  //       // POST request to swap meal
+  //       const bodyFoodLog = parseFoodLog(foodLog);
 
-      const response = await axios.post(apiEndpoint, bodyFoodLog);
+  //       const response = await axios.post(apiEndpoint, bodyFoodLog);
 
-      if (response.status === 200) {
-        const updatedFoodLog = response.data;
-        console.log(response.data)
+  //       if (response.status === 200) {
+  //         const updatedFoodLog = response.data;
+  //         console.log(response.data)
 
-        setFoodLogs((prevLogs) => {
-          const newLogs = prevLogs.filter((log) => log.id !== foodLog.id);
-          return [...newLogs, updatedFoodLog];
-        });
-      } else {
-        console.error(
-          "Failed to swap the meal:",
-          response.status,
-          response.data
-        );
-      }
-    } catch (error) {
-      console.log("Error swaping meal: ", error);
-    }
-  };
+  //         setFoodLogs((prevLogs) => {
+  //           const newLogs = prevLogs.filter((log) => log.id !== foodLog.id);
+  //           return [...newLogs, updatedFoodLog];
+  //         });
+  //       } else {
+  //         console.error(
+  //           "Failed to swap the meal:",
+  //           response.status,
+  //           response.data
+  //         );
+  //       }
+  //     } catch (error) {
+  //       console.log("Error swaping meal: ", error);
+  //     }
+  //   };
 
-  const renderLeftActions = () => {};
+  //   const renderLeftActions = () => {};
 
-  const pan = Gesture.Pan()
-    .onUpdate(({ translationX }) => {
-      const isSwipeRight = translationX > 0;
-      direction.value = isSwipeRight ? 1 : -1;
-      transalateX.value = translationX;
-    })
-    .onEnd(() => {
-      if (Math.abs(transalateX.value) > 150) {
-        transalateX.value = withTiming(
-          width * direction.value,
-          undefined,
-          (isFinished) => {
-            if (isFinished) {
-              swapMeal()
-            }
-          }
-        );
-      } else {
-        transalateX.value = withTiming(0, { duration: 500 });
-      }
-    });
+  //   const pan = Gesture.Pan()
+  //     .onUpdate(({ translationX }) => {
+  //       const isSwipeRight = translationX > 0;
+  //       direction.value = isSwipeRight ? 1 : -1;
+  //       transalateX.value = translationX;
+  //     })
+  //     .onEnd(() => {
+  //       if (Math.abs(transalateX.value) > 150) {
+  //         transalateX.value = withTiming(
+  //           width * direction.value,
+  //           undefined,
+  //           (isFinished) => {
+  //             if (isFinished) {
+  //               swapMeal()
+  //             }
+  //           }
+  //         );
+  //       } else {
+  //         transalateX.value = withTiming(0, { duration: 500 });
+  //       }
+  //     });
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: transalateX.value }],
-    };
-  });
+  //   const animatedStyle = useAnimatedStyle(() => {
+  //     return {
+  //       transform: [{ translateX: transalateX.value }],
+  //     };
+  //   });
 
-  return (
-    <GestureDetector gesture={pan}>
-      <Animated.View style={animatedStyle}>
-        {/* <LeftActions translateX={transalateX} width={width} /> */}
-        <FoodItem foodLog={foodLog} />
-      </Animated.View>
-    </GestureDetector>
-  );
-}
+  //   return (
+  //     <GestureDetector gesture={pan}>
+  //       <Animated.View style={animatedStyle}>
+  //         {/* <LeftActions translateX={transalateX} width={width} /> */}
+  //         <FoodItem foodLog={foodLog} />
+  //       </Animated.View>
+  //     </GestureDetector>
+  //   );
+  // }
 
 export type FoodItemProps = {
   foodLog: DiaryFoodLog;
@@ -118,37 +118,42 @@ export function FoodItem({ foodLog }: FoodItemProps) {
     try {
       // POST request to swap meal
       const bodyFoodLog = parseFoodLog(foodLog);
-      const response = await axios.post(apiEndpoint, bodyFoodLog, {headers: {
-        Authorization: `Token ${session}`
-      }});
-
+      const response = await axios.post(apiEndpoint, bodyFoodLog, {
+        headers: {
+          Authorization: `Token ${session}`,
+        },
+      });
+  
       if (response.status === 200) {
-        const updatedFoodLog = response.data.ingredient;
-        console.log(updatedFoodLog);
-
+        const updatedFoodLog = response.data.ingredient; // Ensure this matches DiaryFoodLog structure
+        console.log('Updated Food Log:', updatedFoodLog);
+        
         setFoodLogs((prevLogs) => {
+          // Check if new food log is properly formatted
+          if (!updatedFoodLog || !updatedFoodLog.id) {
+            console.error('Invalid updated food log:', updatedFoodLog);
+            return prevLogs; // Return the old state if the new one is invalid
+          }
+  
           const newLogs = prevLogs.filter((log) => log.id !== foodLog.id);
           return [...newLogs, updatedFoodLog];
         });
-
       } else {
         console.error(
-          "Failed to swap the meal:",
+          'Failed to swap the meal:',
           response.status,
           response.data
         );
       }
     } catch (error) {
-      console.error("Error swaping meal: ", (error as any).response.data );
+      console.error('Error swapping meal:', (error as any).response?.data || error);
     } finally {
       setIsPressed(false);
-
     }
-  };
-
+  }
+  
 
   const foodItem = parseFoodItemString(fs_object);
-
   const servingData = Array.isArray(foodItem?.servings.serving)
     ? foodItem?.servings.serving.find((ser) => ser.serving_id === fs_serving)
     : foodItem?.servings.serving;
